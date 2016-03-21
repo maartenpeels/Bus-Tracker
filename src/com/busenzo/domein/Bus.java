@@ -3,6 +3,7 @@ package com.busenzo.domein;
 import java.util.ArrayList;
 
 public class Bus {
+    
 	private int nummer;
 	private int lon;
 	private int lat;
@@ -11,6 +12,7 @@ public class Bus {
 
 	public Bus(int nummer) {
 		throw new UnsupportedOperationException();
+                //TODO
 	}
 
 	public void updateLocatie(int lon, int lat) {
