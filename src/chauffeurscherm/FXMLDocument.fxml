@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="461.0" prefWidth="616.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="chauffeurscherm.FXMLDocumentController">
+   <children>
+      <Label id="lijnLabel" layoutX="249.0" layoutY="20.0" text="Buslijn 121">
+         <font>
+            <Font name="System Bold" size="23.0" />
+         </font>
+      </Label>
+      <TitledPane animated="false" layoutX="25.0" layoutY="90.0" prefHeight="332.0" prefWidth="250.0" text="Melding doorgeven aan beheerder">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="276.0" prefWidth="248.0">
+               <children>
+                  <ComboBox id="cbMelding" layoutX="12.0" layoutY="21.0" prefHeight="25.0" prefWidth="222.0" />
+                  <ListView id="meldingList" layoutX="12.0" layoutY="64.0" prefHeight="179.0" prefWidth="219.0" />
+                  <Button id="verstuurButton" layoutX="17.0" layoutY="267.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="215.0" text="Verstuur melding" />
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
+      <TitledPane animated="false" layoutX="322.0" layoutY="90.0" prefHeight="332.0" prefWidth="272.0" text="Haltes">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="380.0" prefWidth="270.0">
+               <children>
+                  <Label id="halteLabel" layoutX="14.0" layoutY="14.0" text="Volgende halte: Kerkakers" />
+                  <ListView id="haltesList" layoutX="11.0" layoutY="42.0" prefHeight="254.0" prefWidth="250.0" />
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
+      <Label layoutX="322.0" layoutY="431.0" text="Verwachte aankomsttijd:" />
+      <Label id="aankomsttijdLabel" layoutX="458.0" layoutY="431.0" text="9:15" />
+   </children>
+</AnchorPane>
