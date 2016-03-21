@@ -20,6 +20,6 @@ public class Melding {
 	}
 
 	public void setActief(Boolean actief) {
-		this.actief = actief;
+	 	this.actief = actief;
 	}
 }
