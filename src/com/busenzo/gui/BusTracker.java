@@ -9,7 +9,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,12 +21,18 @@ public class BusTracker extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
+        Alert altert = new Alert(Alert.AlertType.ERROR);
+        altert.setHeaderText("example for Sergio");
+        altert.setContentText("Good.");
+        altert.showAndWait();
         
-        Scene scene = new Scene(root);
-        
-        stage.setScene(scene);
-        stage.show();
+//        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+//        
+//        Scene scene = new Scene(root);
+//        
+//        stage.setScene(scene);
+//        stage.show();
     }
 
     /**

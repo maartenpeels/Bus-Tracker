@@ -6,9 +6,59 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bustracker.FXMLDocumentController">
-    <children>
-        <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
-    </children>
+<AnchorPane id="AnchorPane" minHeight="437.9609375" prefHeight="460.9609375" prefWidth="804.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="bustracker.FXMLDocumentController">
+  <children>
+    <Label layoutX="18.0" layoutY="14.0" text="Geselecteerde halte:" />
+    <AnchorPane layoutX="18.0" layoutY="32.0" minHeight="0.0" minWidth="0.0" prefHeight="193.0" prefWidth="161.0">
+      <children>
+        <ComboBox id="cbMelding" layoutX="48.0" layoutY="14.0" prefHeight="25.0" prefWidth="107.0" promptText="&lt;busNummers&gt;" />
+        <ListView id="meldingList" layoutX="12.0" layoutY="46.0" prefHeight="113.0" prefWidth="143.0" />
+        <Button id="verstuurButton" layoutX="12.0" layoutY="167.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Verstuur melding" />
+        <Label layoutX="12.0" layoutY="19.0" prefWidth="36.0" text="Bus:" />
+        <Label layoutX="12.0" layoutY="0.0" text="Tijden" />
+      </children>
+    </AnchorPane>
+    <AnchorPane layoutX="628.0" layoutY="242.0" minHeight="0.0" minWidth="0.0" prefHeight="206.0" prefWidth="161.0">
+      <children>
+        <ListView id="meldingList" layoutX="12.0" layoutY="47.0" prefHeight="113.0" prefWidth="143.0" />
+        <Button id="verstuurButton" layoutX="12.0" layoutY="167.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Omleiding geven" />
+        <Label layoutX="12.0" layoutY="31.0" prefWidth="36.0" text="Haltes" />
+        <Label layoutX="12.0" layoutY="-11.0" text="Object info:" />
+        <Label layoutX="12.0" layoutY="14.0" text="Bus:" />
+        <Label layoutX="43.0" layoutY="15.0" text="&lt;nummer&gt;" />
+        <Label layoutX="113.0" layoutY="15.0" text="&lt;id&gt;" />
+      </children>
+    </AnchorPane>
+    <AnchorPane layoutX="628.0" layoutY="22.0" minHeight="0.0" minWidth="0.0" prefHeight="49.0" prefWidth="162.0">
+      <children>
+        <CheckBox layoutX="10.0" layoutY="8.0" mnemonicParsing="false" text="Bussen weergeven" />
+        <CheckBox layoutX="10.0" layoutY="24.0" mnemonicParsing="false" text="Haltes weergeven" />
+      </children>
+    </AnchorPane>
+    <AnchorPane id="Map" disable="false" focusTraversable="false" layoutX="186.0" layoutY="0.0" minHeight="0.0" minWidth="0.0" prefHeight="461.0" prefWidth="442.0" visible="true">
+      <children>
+        <AnchorPane layoutX="-171.0" layoutY="259.0" minHeight="0.0" minWidth="0.0" prefHeight="193.0" prefWidth="161.0">
+          <children>
+            <ListView id="meldingList" layoutX="9.0" layoutY="22.0" prefHeight="62.0" prefWidth="143.0" />
+            <Button id="verstuurButton" layoutX="12.0" layoutY="167.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Melding verwijderen" />
+            <Label layoutX="14.0" layoutY="135.0" prefWidth="96.0" text="&lt;melding&gt;" />
+            <Label layoutX="12.0" layoutY="0.0" text="" />
+            <Label layoutX="14.0" layoutY="6.0" text="Kies een bus..." />
+            <Label layoutX="14.0" layoutY="119.0" prefWidth="96.0" text="&lt;melding&gt;" />
+            <Label layoutX="14.0" layoutY="103.0" prefWidth="96.0" text="&lt;melding&gt;" />
+          </children>
+        </AnchorPane>
+      </children>
+    </AnchorPane>
+    <Label layoutX="18.0" layoutY="238.0" text="Meldingen:" />
+    <Label layoutX="637.0" layoutY="11.0" text="Filters:" />
+    <AnchorPane layoutX="637.0" layoutY="86.0" minHeight="0.0" minWidth="0.0" prefHeight="79.0" prefWidth="162.0">
+      <children>
+        <Label layoutX="5.0" layoutY="6.0" text="Zoeken halte of busnummer:" />
+        <TextField layoutX="5.0" layoutY="24.0" prefWidth="148.0001220703125" text="Search" />
+        <Button id="verstuurButton" layoutX="5.0" layoutY="53.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Search" />
+      </children>
+    </AnchorPane>
+    <Button id="verstuurButton" layoutX="642.0" layoutY="187.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Reset map" />
+  </children>
 </AnchorPane>
