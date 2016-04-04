@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import com.busenzo.administratie.Administratie;
 
 /**
  *
@@ -34,8 +35,7 @@ public class BusTracker extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        com.busenzo.administratie.Administratie am = new com.busenzo.administratie.Administratie();
-        am.getHalteData();
+       
         launch(args);
         
     }
