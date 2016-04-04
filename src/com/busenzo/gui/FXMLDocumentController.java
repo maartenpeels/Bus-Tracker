@@ -97,5 +97,28 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             
         System.out.println("Added " + this.mapHaltes.size() + " items to map");
     }
+    /*
+    public void loadMapRitten()
+    {
+        for(Halte a : this.mapHaltes){
+            double cordsX = a.getCoordinaten()[0];
+            double cordsY = a.getCoordinaten()[1];
+            LatLong mappos = new LatLong(cordsX, cordsY);
+            MarkerOptions pointeropts = new MarkerOptions();
+            //pointeropts.icon("C:\\Users\\Gebruiker\\Documents\\NetBeansProjects\\Bus-Tracker\\src\\com\\busenzo\\gui\\bstop.png");
+            pointeropts.position(mappos);
+            Marker pointer = new Marker(pointeropts);
+            pointeropts.title(a.getNaam());
+            //InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+            //infoWindowOptions.content(a.getNaam());
+            //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+            //pointerInfoWindow.open(map, pointer);
+            map.addMarker( pointer );
+        }
+       
+        System.out.println("Added " + this.mapHaltes.size() + " items to map");
+        
+    }
+    */
     
 }

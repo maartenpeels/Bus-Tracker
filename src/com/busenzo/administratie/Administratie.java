@@ -166,10 +166,6 @@ public class Administratie {
     public ArrayList<Halte> getHaltes() {
         return this.haltes;
     }
-    public void pullData()
-    {
-        
-    }
     public void getHalteData() throws Exception
     {
         String query = "stops";
@@ -186,5 +182,22 @@ public class Administratie {
               this.haltes.add(addHalte);
         }
         System.out.println("Added " + this.haltes.size() + " to application");
-    }     
+    }
+    public void getRouteData() throws Exception
+    {
+        String query = "ritten";
+        JSONObject rittenData = this.getJSONfromWeb(query);
+        JSONArray rittenArray = (JSONArray) rittenData.get("data");
+        for(int i = 0; i < rittenArray.size(); i++)
+        {
+              JSONObject objects = (JSONObject)rittenArray.get(i);
+              String ritID = objects.get("id").toString();
+              String halteNaam = objects.get("name").toString();
+              String halteLat = objects.get("lat").toString(); //Nog niet af :(
+              String halteLon = objects.get("lon").toString();
+              Halte addHalte = new Halte(ritID, halteNaam, halteLon, halteLat);
+              this.haltes.add(addHalte);
+        }
+        System.out.println("Added " + this.haltes.size() + " to application");
+    }
 }
