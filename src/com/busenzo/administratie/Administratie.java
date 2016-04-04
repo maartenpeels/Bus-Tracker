@@ -6,18 +6,64 @@ import com.busenzo.domein.Lijn;
 import com.busenzo.domein.Halte;
 import java.util.Collections;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Iterator;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class Administratie {
-    
+    private String restServer = "http://37.97.149.53/busenzo/api/";
+    private String restKey = "9709d02bfb3b1460fd0dd45f6706a81a8c33afaf";
     public ArrayList<Bus> bussen = new ArrayList<>();
     public ArrayList<Lijn> lijnen = new ArrayList<>();
     private ArrayList<Halte> haltes = new ArrayList<>();
+    
+    
+    /**
+     * JSON webrequest
+     * URL opgebouwd via Restserver/restkey/query
+     * Geeft JSON object terug
+     */
+    public JSONObject getJSONfromWeb(String query) throws Exception{
+        String getUrl = this.restServer + "/" + this.restKey + "/" + query;
+        JSONParser parser = new JSONParser();
+        String json = readUrl(getUrl);
+        // Page page = gson.fromJson(json, Page.class);
+        Object obj = parser.parse(json);
+        JSONObject jdata = (JSONObject)obj;
+        return jdata;
+    }
+     /**
+     * URL datareader functie
+     * Geeft databuffer terug
+     */
+    private static String readUrl(String urlString) throws Exception {
+        BufferedReader reader = null;
+        try {
+            URL url = new URL(urlString);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuilder buffer = new StringBuilder();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+                buffer.append(chars, 0, read); 
+
+            return buffer.toString();
+        } finally {
+            if (reader != null)
+                reader.close();
+        }
+
+    }
 
     /**
      * Maak een nieuwe administratie aan
      */
     public Administratie() {
-            throw new UnsupportedOperationException();
+            //throw new UnsupportedOperationException();
     }
 
     /**
@@ -117,8 +163,28 @@ public class Administratie {
      * haal de lijst van haltes op
      * @return een onwijzigbare lijst van haltes
      */
-    public List<Halte> getHaltes() {
-        return Collections.unmodifiableList(haltes);
+    public ArrayList<Halte> getHaltes() {
+        return this.haltes;
     }
-          
+    public void pullData()
+    {
+        
+    }
+    public void getHalteData() throws Exception
+    {
+        String query = "stops";
+        JSONObject halteData = this.getJSONfromWeb(query);
+        JSONArray halteArray = (JSONArray) halteData.get("data");
+        for(int i = 0; i < halteArray.size(); i++)
+        {
+              JSONObject objects = (JSONObject)halteArray.get(i);
+              String halteID = objects.get("id").toString();
+              String halteNaam = objects.get("name").toString();
+              String halteLat = objects.get("lat").toString();
+              String halteLon = objects.get("lon").toString();
+              Halte addHalte = new Halte(halteID, halteNaam, halteLon, halteLat);
+              this.haltes.add(addHalte);
+        }
+        System.out.println("Added " + this.haltes.size() + " to application");
+    }     
 }
