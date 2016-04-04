@@ -33,8 +33,11 @@ public class BusTracker extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        com.busenzo.administratie.Administratie am = new com.busenzo.administratie.Administratie();
+        am.getHalteData();
         launch(args);
+        
     }
 
 }
