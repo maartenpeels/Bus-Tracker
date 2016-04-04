@@ -18,21 +18,16 @@ import javax.swing.JOptionPane;
  * @author Alex
  */
 public class BusTracker extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
-        JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
-        Alert altert = new Alert(Alert.AlertType.ERROR);
-        altert.setHeaderText("example for Sergio");
-        altert.setContentText("Good.");
-        altert.showAndWait();
-        
-//        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-//        
-//        Scene scene = new Scene(root);
-//        
-//        stage.setScene(scene);
-//        stage.show();
+
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**
@@ -41,5 +36,5 @@ public class BusTracker extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
