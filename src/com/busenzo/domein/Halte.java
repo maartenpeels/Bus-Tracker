@@ -17,10 +17,10 @@ public class Halte {
      * @param lon: Longditude van de halte, mag niet null zijn
      * @param lat: Ladditude van de halte, mag niet null zijn
      */
-    public Halte(String naam, int lon, int lat, String id) {
+    public Halte(String id, String naam, String lon, String lat) {
             this.naam = naam;
-            this.lat = lat;
-            this.lon = lon;
+            this.lat = Double.parseDouble(lat);
+            this.lon = Double.parseDouble(lon);
             this.id = id;
     }
 
