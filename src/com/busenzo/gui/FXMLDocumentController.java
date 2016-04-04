@@ -5,6 +5,8 @@
  */
 package com.busenzo.gui;
 
+import com.busenzo.administratie.Administratie;
+import com.busenzo.domein.Halte;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
@@ -19,6 +21,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import com.busenzo.gui.FXMLDocumentController;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Button;
 
 /**
@@ -26,8 +33,8 @@ import javafx.scene.control.Button;
  * @author Beheerders
  */
 public class FXMLDocumentController implements Initializable, MapComponentInitializedListener {
-    
     @FXML
+    private ArrayList<Halte> mapHaltes;
     private Button button;
     
     @FXML
@@ -38,17 +45,20 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Administratie am = new Administratie();
+        try {
+            am.getHalteData();
+            this.mapHaltes = am.getHaltes();
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
        mapView.addMapInializedListener(this);
+        
     }    
 
     @Override
     public void mapInitialized() {
-        LatLong joeSmithLocation = new LatLong(51.44368, 365.47948);
-        LatLong joshAndersonLocation = new LatLong(51.45445, 365.47734);
-        LatLong bobUnderwoodLocation = new LatLong(51.47167, 365.55523);
-        LatLong tomChoiceLocation = new LatLong(51.45478, 365.52475);
-        
-        
+
         //Set the initial properties of the map.
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(51.44799, 365.46328))
@@ -64,37 +74,28 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         map = mapView.createMap(mapOptions);
 
         //Add markers to the map
-        MarkerOptions markerOptions1 = new MarkerOptions();
-        markerOptions1.position(joeSmithLocation);
+        this.loadMapHaltes();
         
-        MarkerOptions markerOptions2 = new MarkerOptions();
-        markerOptions2.position(joshAndersonLocation);
-        
-        MarkerOptions markerOptions3 = new MarkerOptions();
-        markerOptions3.position(bobUnderwoodLocation);
-        
-        MarkerOptions markerOptions4 = new MarkerOptions();
-        markerOptions4.position(tomChoiceLocation);
-        
-        
-        Marker joeSmithMarker = new Marker(markerOptions1);
-        Marker joshAndersonMarker = new Marker(markerOptions2);
-        Marker bobUnderwoodMarker = new Marker(markerOptions3);
-        Marker tomChoiceMarker= new Marker(markerOptions4);
-        
-        map.addMarker( joeSmithMarker );
-        map.addMarker( joshAndersonMarker );
-        map.addMarker( bobUnderwoodMarker );
-        map.addMarker( tomChoiceMarker );
-      //  map.addMarker( fredWilkieMarker );
-        
-      //  InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
-      //  infoWindowOptions.content("<h2>Fred Wilkie</h2>"
-      //                          + "Current Location: Safeway<br>"
-      //                          + "ETA: 45 minutes" );
-
-      //  InfoWindow fredWilkeInfoWindow = new InfoWindow(infoWindowOptions);
-        //fredWilkeInfoWindow.open(map, fredWilkieMarker);
+    }
+    public void loadMapHaltes()
+    {
+        for(Halte a : this.mapHaltes){
+            double cordsX = a.getCoordinaten()[0];
+            double cordsY = a.getCoordinaten()[1];
+            LatLong mappos = new LatLong(cordsX, cordsY);
+            MarkerOptions pointeropts = new MarkerOptions();
+            //pointeropts.icon("C:\\Users\\Gebruiker\\Documents\\NetBeansProjects\\Bus-Tracker\\src\\com\\busenzo\\gui\\bstop.png");
+            pointeropts.position(mappos);
+            Marker pointer = new Marker(pointeropts);
+            pointeropts.title(a.getNaam());
+            //InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+            //infoWindowOptions.content(a.getNaam());
+            //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+            //pointerInfoWindow.open(map, pointer);
+            map.addMarker( pointer );
+        }
+            
+        System.out.println("Added " + this.mapHaltes.size() + " items to map");
     }
     
 }

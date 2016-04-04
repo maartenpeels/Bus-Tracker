@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.lynden.gmapsfx.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.lynden.gmapsfx.*?>
+<?scenebuilder-classpath-element ../../../../GMapsFX-2.0.5-SNAPSHOT.jar?>
 
-<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
-    
-    <children>
+<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="985.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.busenzo.gui.FXMLDocumentController">
+  <children>
     <Label layoutX="18.0" layoutY="14.0" text="Geselecteerde halte:" />
     <AnchorPane layoutX="810.0" layoutY="238.0" minHeight="0.0" minWidth="0.0" prefHeight="206.0" prefWidth="161.0">
       <children>
@@ -29,11 +29,9 @@
       </children>
     </AnchorPane>
     <AnchorPane id="Map" disable="false" focusTraversable="false" layoutX="186.0" minHeight="0.0" minWidth="0.0" prefHeight="461.0" prefWidth="624.0" visible="true">
-      <children>        
+      <children>
         <GoogleMapView fx:id="mapView" maxHeight="700.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-        <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="26.0" layoutY="29.0" prefHeight="78.0" prefWidth="21.0" spacing="10.0" styleClass="panel-background" stylesheets="@../styles/Styles.css" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-900.0" AnchorPane.topAnchor="88.0" BorderPane.alignment="CENTER" />
-    </children>
-        <children>
+        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="78.0" prefWidth="21.0" spacing="10.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-900.0" AnchorPane.topAnchor="88.0" />
         <AnchorPane layoutX="-171.0" layoutY="259.0" minHeight="0.0" minWidth="0.0" prefHeight="193.0" prefWidth="161.0">
           <children>
             <ListView id="meldingList" layoutX="9.0" layoutY="22.0" prefHeight="62.0" prefWidth="143.0" />
@@ -57,13 +55,13 @@
       </children>
     </AnchorPane>
     <Button id="verstuurButton" layoutX="816.0" layoutY="186.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Reset map" />
-      <AnchorPane layoutX="14.0" layoutY="38.0" minHeight="0.0" minWidth="0.0" prefHeight="193.0" prefWidth="161.0">
-         <children>
-            <ListView id="meldingList" layoutX="12.0" layoutY="47.0" prefHeight="113.0" prefWidth="143.0" />
-            <Label layoutX="12.0" layoutY="-11.0" text="Object info:" />
-            <Label layoutX="12.0" layoutY="14.0" text="Bus:" />
-            <ComboBox layoutX="48.0" layoutY="10.0" prefHeight="25.0" prefWidth="107.0" />
-         </children>
-      </AnchorPane>
+    <AnchorPane layoutX="14.0" layoutY="38.0" minHeight="0.0" minWidth="0.0" prefHeight="193.0" prefWidth="161.0">
+      <children>
+        <ListView id="meldingList" layoutX="12.0" layoutY="47.0" prefHeight="113.0" prefWidth="143.0" />
+        <Label layoutX="12.0" layoutY="-11.0" text="Object info:" />
+        <Label layoutX="12.0" layoutY="14.0" text="Bus:" />
+        <ComboBox layoutX="48.0" layoutY="10.0" prefHeight="25.0" prefWidth="107.0" />
+      </children>
+    </AnchorPane>
   </children>
 </AnchorPane>
