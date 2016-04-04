@@ -6,8 +6,9 @@ import java.util.List;
 public class Halte {
     
     private String naam;
-    private int lon;
-    private int lat;
+    private double lon;
+    private double lat;
+    private String id;
     public ArrayList<Lijn> lijnen = new ArrayList<>();
 
     /**
@@ -16,8 +17,11 @@ public class Halte {
      * @param lon: Longditude van de halte, mag niet null zijn
      * @param lat: Ladditude van de halte, mag niet null zijn
      */
-    public Halte(String naam, int lon, int lat) {
-            throw new UnsupportedOperationException();
+    public Halte(String naam, int lon, int lat, String id) {
+            this.naam = naam;
+            this.lat = lat;
+            this.lon = lon;
+            this.id = id;
     }
 
     /**
@@ -42,14 +46,15 @@ public class Halte {
      * @return De naam van deze halte
      */
     public String getNaam(){
-        throw new UnsupportedOperationException();
+        return this.naam;
     }
 
     /**
      * Vraag de coordinaten op van deze halte
      * @return Een int array met hierin lon en lat
      */
-    public int[] getCoordinaten(){
-        throw new UnsupportedOperationException();
+    public double[] getCoordinaten(){
+        double[] cords = {this.lat, this.lon};
+        return cords;
     }
 }
