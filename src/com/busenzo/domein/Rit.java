@@ -3,58 +3,69 @@ package com.busenzo.domein;
 import java.util.Date;
 
 public class Rit {
-	private Date vertrekTijd;
-	private Date verwachteAankomstTijd;
-	private Date aankomstTijd;
-	private Bus bus;
-	private Lijn lijn;
-	public Bus voertuig;
-	public Lijn unnamed_Lijn_;
+    
+    private Date vertrekTijd;
+    private Date verwachteAankomstTijd;
+    private Date aankomstTijd;
+    private Bus bus;
+    private Lijn lijn;
 
-        /**
-         * Maak een rit aan op een bepaalde lijn met een specifieke vertrektijd
-         * @param vertrekTijd De vertrektijd bij de eerste halte, nooit null
-         * @param lijn: De lijn waarbij deze rit hoort, nooit null
-         */
-	public Rit(Object vertrekTijd, Object lijn) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Maak een rit aan op een bepaalde lijn met een specifieke vertrektijd
+     * @param vertrekTijd De vertrektijd bij de eerste halte, nooit null
+     * @param verwachtteAankomstTijd De verwachtte aankomsttijd bij de eindhalte
+     * @param lijn: De lijn waarbij deze rit hoort, nooit null
+     */
+    public Rit(Date vertrekTijd, Date verwachtteAankomstTijd, Lijn lijn) {
+        throw new UnsupportedOperationException();
+    }
 
-        /**
-         * Haal de vertrektijd van deze rit op
-         * @return Vertrektijd van de rit bij de eerste halte
-         */
-	public Date getVertrekTijd() {
-		return this.vertrekTijd;
-	}
+    /**
+     * Haal de vertrektijd van deze rit op
+     * @return Vertrektijd van de rit bij de eerste halte
+     */
+    public Date getVertrekTijd() {
+        return this.vertrekTijd;
+    }
 
-        /**
-         * Haal de bus op die deze rit rijdt. Kan null zijn als de rit nog niet vertrokken is
-         */
-	public void getBus() {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Haal de bus op die deze rit rijdt. 
+     * @return De bus die deze rit rijdt. Kan null zijn als de rit nog niet vertrokken is
+     */
+    public Bus getBus() {
+        return this.bus;
+    }
 
-        /**
-         * Voeg de bus toe die deze rit rijdt. Moet gebeuren voor de vertrektijd van deze rit.
-         * @param bus De bus die deze rit rijdt.
-         */
-	public void setBus(Object bus) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Haal de lijn op waarbij deze rit hoort
+     * @return De lijn waarop deze rit rijdt 
+     */
+    public Lijn getLijn() {
+        return this.lijn;
+    }
 
-        /**
-         * Haal de lijn op waarbij deze rit hoort
-         */
-	public void getLijn() {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Haal de verwachtte aankomsttijd bij de eindhalte op
+     * @return de verwachtte aankomsttijd bij de eindhalte
+     */
+    public Date getVerwachteAankomstTijd() {
+        return verwachteAankomstTijd;
+    }
 
-        /**
-         * Zet de lijn waarbij deze rit hoort.
-         * @param lijn De lijn waarbij deze rit hoort. Nooit null.
-         */
-	public void setLijn(Object lijn) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Vraag de verwachtte aankomsttijd op bij de volgende halte
+     * @return De verwachtte aankomsttijd bij de volgende halte
+     */
+    public Date getAankomstTijd() {
+        return aankomstTijd;
+    }
+
+    /**
+     * Voeg een bus toe welke deze rit gaat rijden. 
+     * @param bus : De bus die deze rit gaat rijden, mag niet null zijn
+     */
+    public void setBus(Bus bus) {
+        this.bus = bus;
+    }
+
 }
