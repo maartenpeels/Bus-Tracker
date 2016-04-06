@@ -48,6 +48,14 @@ public class Halte {
     public String getNaam(){
         return this.naam;
     }
+    
+    /**
+     * Vraag het id op
+     * @return De id van deze halte
+     */
+    public String getId(){
+        return this.id;
+    }
 
     /**
      * Vraag de coordinaten op van deze halte
