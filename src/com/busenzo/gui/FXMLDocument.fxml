@@ -8,15 +8,15 @@
 <?import javafx.scene.layout.*?>
 <?scenebuilder-classpath-element ../../../../GMapsFX-2.0.5-SNAPSHOT.jar?>
 
-<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="1171.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="1076.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
   <children>
-    <AnchorPane id="Map" disable="false" focusTraversable="false" layoutX="209.0" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="746.0" visible="true">
+    <AnchorPane id="Map" disable="false" focusTraversable="false" layoutX="209.0" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="650.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="0.0">
       <children>
         <GoogleMapView fx:id="mapView" maxHeight="700.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="78.0" prefWidth="21.0" spacing="10.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-900.0" AnchorPane.topAnchor="88.0" />
       </children>
     </AnchorPane>
-      <AnchorPane layoutX="964.0" layoutY="10.0" prefHeight="450.0" prefWidth="200.0">
+      <AnchorPane layoutX="877.0" layoutY="10.0" prefHeight="450.0" prefWidth="194.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
          <children>
           <Label layoutX="5.0" layoutY="1.0" text="Filters:" />
           <Button id="verstuurButton" fx:id="btnReset" layoutX="5.0" layoutY="172.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
@@ -31,10 +31,10 @@
         <TextField layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
         <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
         <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
-        <CheckBox fx:id="chStops" layoutX="5.0" layoutY="49.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
+        <CheckBox fx:id="cbStops" layoutX="5.0" layoutY="49.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="14.0" layoutY="10.0" prefHeight="450.0" prefWidth="186.0">
+      <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="450.0" prefWidth="186.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
           <Label layoutX="5.0" layoutY="4.0" text="Geselecteerde halte:" />
           <Label layoutX="5.0" layoutY="224.0" text="Meldingen:" />
