@@ -38,27 +38,25 @@ import netscape.javascript.JSObject;
  * @author Beheerders
  */
 public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler {
-    
+
     @FXML
     private ArrayList<Halte> mapHaltes;
     private Button button;
-    
+
     @FXML
     private CheckBox cbStops;
-    
+
     @FXML
     private TextField tfSearch;
-    
+
     @FXML
     private CheckBox cbBusses;
-    
-    
+
     @FXML
     private GoogleMapView mapView;
-    
+
     private GoogleMap map;
-    
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Administratie am = new Administratie();
@@ -68,9 +66,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-       mapView.addMapInializedListener(this);
-        
-    }    
+        mapView.addMapInializedListener(this);
+
+    }
 
     @Override
     public void mapInitialized() {
@@ -86,44 +84,42 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 .streetViewControl(false)
                 .zoomControl(false)
                 .zoom(12);
-                   
+
         map = mapView.createMap(mapOptions);
-       map.addUIEventHandler(UIEventType.click, this);
+        map.addUIEventHandler(UIEventType.click, this);
 
         //Add markers to the map
         //this.loadMapHaltes(true);
-        
     }
-    
+
     public void showBusses() {
-        
+
     }
-    
+
     @FXML
     public void showStops() {
-       if(cbStops.isSelected()){
-        loadMapHaltes(true);
-       } else {
-        loadMapHaltes(false);
-        System.out.println("deselected");
-       }
+        if (cbStops.isSelected()) {
+            loadMapHaltes(true);
+        } else {
+            loadMapHaltes(false);
+            System.out.println("deselected");
+        }
     }
-    
-    public void searchBusOrStop () throws InterruptedException {
+
+    public void searchBusOrStop() throws InterruptedException {
         searchHalte(tfSearch.getText());
     }
-    
+
     public void resetMap() {
-        
+
     }
-    
+
     public void showBusDetails() {
-        
+
     }
-    
-    public void loadMapHaltes(boolean show)
-    {
-        for(Halte a : this.mapHaltes){
+
+    public void loadMapHaltes(boolean show) {
+        for (Halte a : this.mapHaltes) {
             double cordsX = a.getCoordinaten()[0];
             double cordsY = a.getCoordinaten()[1];
             LatLong mappos = new LatLong(cordsX, cordsY);
@@ -136,19 +132,18 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             //infoWindowOptions.content(a.getNaam());
             //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
             //pointerInfoWindow.open(map, pointer);
-            if(show){
-            map.addMarker( pointer );
+            if (show) {
+                map.addMarker(pointer);
             } else {
-            map.removeMarker( pointer );
+                map.removeMarker(pointer);
             }
         }
-            
-       // System.out.println("Added " + this.mapHaltes.size() + " items to map");
+
+        // System.out.println("Added " + this.mapHaltes.size() + " items to map");
     }
-    
-    public void searchHalte(String naam) throws InterruptedException
-    {
-        for(Halte a : this.mapHaltes){
+
+    public void searchHalte(String naam) throws InterruptedException {
+        for (Halte a : this.mapHaltes) {
             double cordsX = a.getCoordinaten()[0];
             double cordsY = a.getCoordinaten()[1];
             LatLong mappos = new LatLong(cordsX, cordsY);
@@ -157,22 +152,23 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             pointeropts.position(mappos);
             Marker pointer = new Marker(pointeropts);
             pointeropts.title(a.getNaam());
-            if(a.getNaam().toLowerCase().contains(naam.toLowerCase())){
-            map.setCenter(mappos);
-            map.setZoom(18);
-            //map.addMarker( pointer );
-            Thread.sleep(1000);
-            InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
-            infoWindowOptions.content(a.getNaam());
-            InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
-            pointerInfoWindow.open(map, pointer);
-            } else {
-            map.removeMarker( pointer );
-            }
+            if (a.getNaam().toLowerCase().contains(naam.toLowerCase())) {
+                map.setCenter(mappos);
+                map.setZoom(18);
+                //map.addMarker( pointer );
+                InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+                infoWindowOptions.content(a.getNaam());
+                InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+                pointeropts.position(mappos);
+                pointer = new Marker(pointeropts);
+                pointerInfoWindow.open(map, pointer);
+                break;
+            } 
         }
-            
+
         System.out.println("Added " + this.mapHaltes.size() + " items to map");
     }
+
     /*
     public void loadMapRitten()
     {
@@ -195,11 +191,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         System.out.println("Added " + this.mapHaltes.size() + " items to map");
         
     }
-    */
+     */
 
     @Override
     public void handle(JSObject obj) {
-       System.out.println("Click");
+        System.out.println("Click");
     }
-    
+
 }
