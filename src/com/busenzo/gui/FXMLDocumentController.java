@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import netscape.javascript.JSObject;
 
 /**
@@ -44,6 +45,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     
     @FXML
     private CheckBox cbStops;
+    
+    @FXML
+    private TextField tfSearch;
     
     @FXML
     private CheckBox cbBusses;
@@ -105,9 +109,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
        }
     }
     
-    public void searchBusOrStop () {
-        System.out.println("selected");
-        
+    public void searchBusOrStop () throws InterruptedException {
+        searchHalte(tfSearch.getText());
     }
     
     public void resetMap() {
@@ -143,7 +146,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
        // System.out.println("Added " + this.mapHaltes.size() + " items to map");
     }
     
-    public void searchHalte(String naam)
+    public void searchHalte(String naam) throws InterruptedException
     {
         for(Halte a : this.mapHaltes){
             double cordsX = a.getCoordinaten()[0];
@@ -154,9 +157,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             pointeropts.position(mappos);
             Marker pointer = new Marker(pointeropts);
             pointeropts.title(a.getNaam());
-            if(a.getNaam().contains(naam)){
-            //map.addMarker( pointer );
+            if(a.getNaam().toLowerCase().contains(naam.toLowerCase())){
             map.setCenter(mappos);
+            map.setZoom(18);
+            //map.addMarker( pointer );
+            Thread.sleep(1000);
+            InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+            infoWindowOptions.content(a.getNaam());
+            InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+            pointerInfoWindow.open(map, pointer);
             } else {
             map.removeMarker( pointer );
             }
