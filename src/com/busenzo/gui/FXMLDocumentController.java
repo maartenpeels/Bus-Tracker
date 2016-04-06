@@ -93,7 +93,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 .zoom(12);
 
         map = mapView.createMap(mapOptions);
-        map.addUIEventHandler(UIEventType.click, this);
 
         //Add markers to the map
         //this.loadMapHaltes(true);
@@ -160,6 +159,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             //pointerInfoWindow.open(map, pointer);
             this.mapMarkers.add(pointer);
             map.addMarker(pointer);
+            map.addUIEventHandler(pointer, UIEventType.click, this);
             //removeMarker werkt hier niet omdat er steeds nieuwe instanties van een Marker wordt aagemaakt
         }
 
@@ -186,6 +186,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     //pointerInfoWindow.open(map, pointer);
                     this.mapBussen.add(pointer);
                     map.addMarker(pointer);
+                    map.addUIEventHandler(pointer, UIEventType.click, this);
                     //removeMarker werkt hier niet omdat er steeds nieuwe instanties van een Marker wordt aagemaakt
                 }
             }
@@ -290,7 +291,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     @Override
     public void handle(JSObject obj) {
-        System.out.println("Click");
+        System.out.println(obj.toString());
     }
 
 }
