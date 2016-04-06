@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Lijn {
     
-    private int id;
+    private String id;
     private int nummer;
     private Richting richting;
     private String beschrijving;
@@ -18,7 +18,7 @@ public class Lijn {
      * @param richting: De richting van de lijn
      * @param beschrijving Beschrijving van de lijn.
      */
-    public Lijn(int nummer, Richting richting, String beschrijving) {
+    public Lijn(String id, int nummer, Richting richting, String beschrijving, ArrayList<Halte> haltes) {
             throw new UnsupportedOperationException();
     }
 
