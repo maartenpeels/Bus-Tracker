@@ -22,20 +22,32 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import com.busenzo.gui.FXMLDocumentController;
+import com.lynden.gmapsfx.javascript.event.UIEventHandler;
+import com.lynden.gmapsfx.javascript.event.UIEventType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import netscape.javascript.JSObject;
 
 /**
  *
  * @author Beheerders
  */
-public class FXMLDocumentController implements Initializable, MapComponentInitializedListener {
+public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler {
+    
     @FXML
     private ArrayList<Halte> mapHaltes;
     private Button button;
+    
+    @FXML
+    private CheckBox cbStops;
+    
+    @FXML
+    private CheckBox cbBusses;
+    
     
     @FXML
     private GoogleMapView mapView;
@@ -72,12 +84,41 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 .zoom(12);
                    
         map = mapView.createMap(mapOptions);
+       map.addUIEventHandler(UIEventType.click, this);
 
         //Add markers to the map
-        this.loadMapHaltes();
+        //this.loadMapHaltes(true);
         
     }
-    public void loadMapHaltes()
+    
+    public void showBusses() {
+        
+    }
+    
+    @FXML
+    public void showStops() {
+       if(cbStops.isSelected()){
+        loadMapHaltes(true);
+       } else {
+        loadMapHaltes(false);
+        System.out.println("deselected");
+       }
+    }
+    
+    public void searchBusOrStop () {
+        System.out.println("selected");
+        
+    }
+    
+    public void resetMap() {
+        
+    }
+    
+    public void showBusDetails() {
+        
+    }
+    
+    public void loadMapHaltes(boolean show)
     {
         for(Halte a : this.mapHaltes){
             double cordsX = a.getCoordinaten()[0];
@@ -92,7 +133,33 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             //infoWindowOptions.content(a.getNaam());
             //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
             //pointerInfoWindow.open(map, pointer);
+            if(show){
             map.addMarker( pointer );
+            } else {
+            map.removeMarker( pointer );
+            }
+        }
+            
+       // System.out.println("Added " + this.mapHaltes.size() + " items to map");
+    }
+    
+    public void searchHalte(String naam)
+    {
+        for(Halte a : this.mapHaltes){
+            double cordsX = a.getCoordinaten()[0];
+            double cordsY = a.getCoordinaten()[1];
+            LatLong mappos = new LatLong(cordsX, cordsY);
+            MarkerOptions pointeropts = new MarkerOptions();
+            //pointeropts.icon("C:\\Users\\Gebruiker\\Documents\\NetBeansProjects\\Bus-Tracker\\src\\com\\busenzo\\gui\\bstop.png");
+            pointeropts.position(mappos);
+            Marker pointer = new Marker(pointeropts);
+            pointeropts.title(a.getNaam());
+            if(a.getNaam().contains(naam)){
+            //map.addMarker( pointer );
+            map.setCenter(mappos);
+            } else {
+            map.removeMarker( pointer );
+            }
         }
             
         System.out.println("Added " + this.mapHaltes.size() + " items to map");
@@ -120,5 +187,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         
     }
     */
+
+    @Override
+    public void handle(JSObject obj) {
+       System.out.println("Click");
+    }
     
 }
