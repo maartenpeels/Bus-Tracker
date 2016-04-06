@@ -1,31 +1,23 @@
 package com.busenzo.domein;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Rit {
     
-    private Date vertrekTijd;
-    private Date verwachteAankomstTijd;
-    private Date aankomstTijd;
+    private LocalDateTime verwachteAankomstTijd;
+    private LocalDateTime aankomstTijd;
     private Bus bus;
     private Lijn lijn;
 
     /**
-     * Maak een rit aan op een bepaalde lijn met een specifieke vertrektijd
-     * @param vertrekTijd De vertrektijd bij de eerste halte, nooit null
+     * Maak een rit aan op een bepaalde lijn
      * @param verwachtteAankomstTijd De verwachtte aankomsttijd bij de eindhalte
      * @param lijn: De lijn waarbij deze rit hoort, nooit null
      */
-    public Rit(Date vertrekTijd, Date verwachtteAankomstTijd, Lijn lijn) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Haal de vertrektijd van deze rit op
-     * @return Vertrektijd van de rit bij de eerste halte
-     */
-    public Date getVertrekTijd() {
-        return this.vertrekTijd;
+    public Rit(LocalDateTime verwachtteAankomstTijd, Lijn lijn) {
+        this.lijn = lijn;
+        this.verwachteAankomstTijd = verwachtteAankomstTijd;
     }
 
     /**
@@ -34,6 +26,11 @@ public class Rit {
      */
     public Bus getBus() {
         return this.bus;
+    }
+    
+    public void setAankomstTijd(LocalDateTime aankomstTijd)
+    {
+        this.aankomstTijd = aankomstTijd;
     }
 
     /**
@@ -48,7 +45,7 @@ public class Rit {
      * Haal de verwachtte aankomsttijd bij de eindhalte op
      * @return de verwachtte aankomsttijd bij de eindhalte
      */
-    public Date getVerwachteAankomstTijd() {
+    public LocalDateTime getVerwachteAankomstTijd() {
         return verwachteAankomstTijd;
     }
 
@@ -56,7 +53,7 @@ public class Rit {
      * Vraag de verwachtte aankomsttijd op bij de volgende halte
      * @return De verwachtte aankomsttijd bij de volgende halte
      */
-    public Date getAankomstTijd() {
+    public LocalDateTime getAankomstTijd() {
         return aankomstTijd;
     }
 

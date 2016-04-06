@@ -62,6 +62,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         Administratie am = new Administratie();
         try {
             am.getHalteData();
+            am.getLineData();
+            am.getRouteData();
             this.mapHaltes = am.getHaltes();
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);

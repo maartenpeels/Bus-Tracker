@@ -5,12 +5,17 @@ import com.busenzo.domein.Bus;
 import com.busenzo.domein.Lijn;
 import com.busenzo.domein.Halte;
 import com.busenzo.domein.Richting;
+import com.busenzo.domein.Rit;
 import java.util.Collections;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.Random;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -70,11 +75,20 @@ public class Administratie {
     
     private Halte findStop(String id)
     {
-        for (Iterator<Halte> it = haltes.iterator(); it.hasNext();) {
-            Halte h = it.next();
-            if(h.getId() == id)
+        for (Halte h : this.haltes) {
+            if(h.getId().equals(id))
             {
                 return h;
+            }
+        }
+        return null;
+    }
+    private Lijn findLijn(String id)
+    {
+        for (Lijn l : this.lijnen) {
+            if(l.getId().equals(id))
+            {
+                return l;
             }
         }
         return null;
@@ -219,26 +233,43 @@ public class Administratie {
     }
     public void getRouteData() throws Exception
     {
+        Random ran = new Random();
+        for(Lijn l : this.lijnen) l.ritten.clear();
         String query = "ritten";
         JSONObject rittenData = this.getJSONfromWeb(query);
         JSONArray rittenArray = (JSONArray) rittenData.get("data");
+        int ride = 0;
         for(int i = 0; i < rittenArray.size(); i++)
         {
             JSONObject objects = (JSONObject)rittenArray.get(i);
-            String ritID = objects.get("id").toString();
-            String halteNaam = objects.get("name").toString();
-            String halteLat = objects.get("lat").toString(); //Nog niet af :(
-            String halteLon = objects.get("lon").toString();
-            Halte addHalte = new Halte(ritID, halteNaam, halteLon, halteLat);
-            this.haltes.add(addHalte);
+            String ritID = objects.get("linekey").toString();
+            String verwachteAankomstTijd = objects.get("exp_arrivaltime").toString();
+            DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime vat = LocalDateTime.parse(verwachteAankomstTijd, frm);
+            String busLat = objects.get("lat").toString();
+            String busLon = objects.get("lon").toString();
+            Lijn l = this.findLijn(ritID);
+            if(l != null)
+            {
+                ride++;
+                //System.out.println("Added rit to line " + l.getId());
+                Rit r = new Rit(vat, l);
+                Bus b = new Bus(ran.nextInt(99999));
+                b.updateLocatie(Double.parseDouble(busLat), Double.parseDouble(busLon));
+                //Is random.. moet nog veranderd worden!1!
+                b.setHuidigeRit(r);
+                r.setBus(b);
+                l.addRit(r);
+            }
         }
-        System.out.println("Added " + this.haltes.size() + " to application");
+        System.out.println("Added " + ride + " current rides to application");
     }
     public void getLineData() throws Exception
     {
         String query = "lijnen";
         JSONObject lijnenData = this.getJSONfromWeb(query);
         JSONArray lijnenArray = (JSONArray) lijnenData.get("data");
+        int blconnection = 0;
         for(int i = 0; i < lijnenArray.size(); i++)
         {
                 JSONObject objects = (JSONObject)lijnenArray.get(i);
@@ -246,22 +277,26 @@ public class Administratie {
                 int lijnNummer = Integer.parseInt(objects.get("linenum").toString());
                 Richting direction = objects.get("direction").toString() == "0" ? Richting.HEEN : Richting.TERUG;
                 String beschrijving = objects.get("name").toString();//direction, halte->id
-              
-                ArrayList<Halte> tempHaltes = new ArrayList<>();
+                Lijn addLijn = new Lijn(lijnId, lijnNummer, direction, beschrijving);
+                //System.out.println("I hadded a line with id " + lijnId);
+                //ArrayList<Halte> tempHaltes = new ArrayList<>();
                 JSONArray haltesArray = (JSONArray) objects.get("stops");
-                for(i = 0; i < haltesArray.size(); i++)
+                for(int x = 0; x < haltesArray.size(); x++)
                 {
-                    objects = (JSONObject)haltesArray.get(i);
-                    Halte h = findStop(objects.get("id").toString());
+                    JSONObject objectsHalte = (JSONObject)haltesArray.get(x);
+                    String stopName = objectsHalte.get("id").toString();
+                    Halte h = findStop(stopName);
                     if(h != null)
                     {
-                        tempHaltes.add(h);
+                        blconnection++;
+                        addLijn.addHalte(h);
                     }
                 }
               
-                Lijn addLijn = new Lijn(lijnId, lijnNummer, direction, beschrijving, tempHaltes);
+                
                 this.lijnen.add(addLijn);
         }
-        System.out.println("Added " + this.haltes.size() + " to application");
+        System.out.println("Added " + this.lijnen.size() + " buslines to application");
+        System.out.println("Added " + blconnection + " busline -> busstop connections");
     }
 }

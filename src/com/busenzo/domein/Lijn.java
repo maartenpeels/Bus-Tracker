@@ -5,21 +5,26 @@ import java.util.List;
 
 public class Lijn {
     
-    private String id;
-    private int nummer;
-    private Richting richting;
-    private String beschrijving;
+    private final String id;
+    private final int nummer;
+    private final Richting richting;
+    private final String beschrijving;
     public ArrayList<Rit> ritten = new ArrayList<>();
     public ArrayList<Halte> haltes = new ArrayList<>();
 
     /**
      * Maak een nieuwe lijn aan. Er mag nog geen lijn bestaan met hetzelfde nummer, richting en beschrijving.
+     * @param id: LijnID geleverd door ov database
      * @param nummer: Het lijnnummer
      * @param richting: De richting van de lijn
      * @param beschrijving Beschrijving van de lijn.
      */
-    public Lijn(String id, int nummer, Richting richting, String beschrijving, ArrayList<Halte> haltes) {
-            throw new UnsupportedOperationException();
+    public Lijn(String id, int nummer, Richting richting, String beschrijving) {
+            this.id = id;
+            this.nummer = nummer;
+            this.richting = richting;
+            this.beschrijving = beschrijving;
+            this.haltes = haltes;
     }
 
     /**
@@ -27,7 +32,7 @@ public class Lijn {
      * @param halte: De toe te voegen halte, deze halte mag bij deze lijn nog niet bestaan.
      */
     public void addHalte(Halte halte) {
-            throw new UnsupportedOperationException();
+            this.haltes.add(halte);
     }
 
     /**
@@ -36,7 +41,7 @@ public class Lijn {
      * nog niet bestaan
      */
     public void addHaltes(Halte[] haltes) {
-            throw new UnsupportedOperationException();
+            for(Halte h : haltes) this.haltes.add(h);
     }
 
     /**
@@ -44,7 +49,7 @@ public class Lijn {
      * @return Een lijst van ritten die bij deze lijn horen
      */
     public List<Rit> haalRitten() {
-            throw new UnsupportedOperationException();
+            return this.ritten;
     }
 
     /**
@@ -52,7 +57,7 @@ public class Lijn {
      * @param rit De toe te voegen rit. Deze rit mag bij deze lijn nog niet bestaan.
      */
     public void addRit(Rit rit) {
-            throw new UnsupportedOperationException();
+            this.ritten.add(rit);
     }
 
     /**
@@ -61,6 +66,10 @@ public class Lijn {
      */
     public int getNummer() {
         return nummer;
+    }
+    
+    public String getId() {
+        return this.id;
     }
 
     /**

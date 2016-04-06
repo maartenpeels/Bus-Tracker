@@ -3,8 +3,8 @@ package com.busenzo.domein;
 public class Bus {
     
     private int nummer;
-    private int lon;
-    private int lat;
+    private double lon;
+    private double lat;
     public Rit huidigeRit;
 
     /**
@@ -12,7 +12,7 @@ public class Bus {
      * @param nummer Het chassisnummer dat deze bus moet krijgen. Altijd groter als 0.
      */
     public Bus(int nummer) {
-            throw new UnsupportedOperationException();
+            this.nummer = nummer;
     }
 
     /**
@@ -20,8 +20,9 @@ public class Bus {
      * @param lon: De nieuwe longditude van deze bus, mag niet null zijn
      * @param lat: De nieuwe ladditude van deze bus, mag niet null zijn
      */
-    public void updateLocatie(int lon, int lat) {
-            throw new UnsupportedOperationException();
+    public void updateLocatie(double lat, double lon) {
+            this.lat = lat;
+            this.lon = lon;
     }
 
     /**
@@ -29,7 +30,7 @@ public class Bus {
      * @return Het nummer van deze bus
      */
     public int getNummer(){
-        throw new UnsupportedOperationException();
+        return this.nummer;
     }
 
     /**
@@ -37,7 +38,7 @@ public class Bus {
      * @return De huidige rit of null als deze bus niet aan een rit bezig is.
      */
     public Rit getHuidigeRit(){
-        throw new UnsupportedOperationException();
+        return this.huidigeRit;
     }
 
     /**
@@ -45,15 +46,16 @@ public class Bus {
      * @param rit De rit die deze bus gaat maken. Nooit null
      */
     public void setHuidigeRit(Rit rit){
-        throw new UnsupportedOperationException();
+        this.huidigeRit = rit;
     }
     
     /**
      * Vraag de coordinaten op van de plek waar deze bus zich momenteel bevind
      * @return Een array met hierin de lon en lat. Kan leeg zijn als de coordinaten van deze bus niet gezet zijn
      */
-    public int[] getCoordinaten(){
-        throw new UnsupportedOperationException();
+    public double[] getCoordinaten(){
+        double[] cords = {this.lat, this.lon};
+        return cords;
     }
        
 }
