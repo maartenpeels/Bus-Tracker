@@ -214,6 +214,10 @@ public class Administratie {
     {
         return this.haltes;
     }
+    public ArrayList<Lijn> getBussen() 
+    {
+        return this.lijnen;
+    }
     public void getHalteData() throws Exception
     {
         String query = "stops";

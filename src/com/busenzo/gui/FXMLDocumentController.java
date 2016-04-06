@@ -6,7 +6,7 @@
 package com.busenzo.gui;
 
 import com.busenzo.administratie.Administratie;
-import com.busenzo.domein.Halte;
+import com.busenzo.domein.*;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
@@ -41,6 +41,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     @FXML
     private ArrayList<Halte> mapHaltes;
+    private ArrayList<Lijn> mapLijnen;
+    private ArrayList<Marker> mapMarkers = new ArrayList<>();
+    private ArrayList<Marker> mapBussen = new ArrayList<>();
+     
     private Button button;
 
     @FXML
@@ -65,6 +69,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             am.getLineData();
             am.getRouteData();
             this.mapHaltes = am.getHaltes();
+            this.mapLijnen = am.getBussen();
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -84,7 +89,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 .rotateControl(false)
                 .scaleControl(false)
                 .streetViewControl(false)
-                .zoomControl(false)
+                .zoomControl(true)
                 .zoom(12);
 
         map = mapView.createMap(mapOptions);
@@ -95,21 +100,40 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     public void showBusses() {
-
+        if (cbBusses.isSelected()) {
+            this.loadMapBussen();
+        } else {
+            this.clearMapBussen();
+            System.out.println("deselected markers");
+        }
     }
 
     @FXML
     public void showStops() {
         if (cbStops.isSelected()) {
-            loadMapHaltes(true);
+            this.loadMapHaltes();
         } else {
-            loadMapHaltes(false);
-            System.out.println("deselected");
+            this.clearMapHaltes();
+            System.out.println("deselected markers");
         }
     }
-
+    public void clearMapHaltes()
+    {
+        for(Marker m : this.mapMarkers)
+        {
+            map.removeMarker(m);
+        }
+    }
+    public void clearMapBussen()
+    {
+        for(Marker m : this.mapBussen)
+        {
+            map.removeMarker(m);
+        }
+    }
     public void searchBusOrStop() throws InterruptedException {
         searchHalte(tfSearch.getText());
+        searchBussen(tfSearch.getText());
     }
 
     public void resetMap() {
@@ -120,13 +144,13 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     }
 
-    public void loadMapHaltes(boolean show) {
+    public void loadMapHaltes() {
         for (Halte a : this.mapHaltes) {
             double cordsX = a.getCoordinaten()[0];
             double cordsY = a.getCoordinaten()[1];
             LatLong mappos = new LatLong(cordsX, cordsY);
             MarkerOptions pointeropts = new MarkerOptions();
-            //pointeropts.icon("C:\\Users\\Gebruiker\\Documents\\NetBeansProjects\\Bus-Tracker\\src\\com\\busenzo\\gui\\bstop.png");
+            pointeropts.icon("http://37.97.149.53/busenzo/external/resources/busstop.png");
             pointeropts.position(mappos);
             Marker pointer = new Marker(pointeropts);
             pointeropts.title(a.getNaam());
@@ -134,10 +158,36 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             //infoWindowOptions.content(a.getNaam());
             //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
             //pointerInfoWindow.open(map, pointer);
-            if (show) {
-                map.addMarker(pointer);
-            } else {
-                map.removeMarker(pointer);
+            this.mapMarkers.add(pointer);
+            map.addMarker(pointer);
+            //removeMarker werkt hier niet omdat er steeds nieuwe instanties van een Marker wordt aagemaakt
+        }
+
+        // System.out.println("Added " + this.mapHaltes.size() + " items to map");
+    }
+    public void loadMapBussen() {
+        for (Lijn l : this.mapLijnen) {
+            for(Rit r : l.ritten)
+            {
+                Bus b = r.getBus();
+                if(b != null)
+                {
+                    double cordsX = b.getCoordinaten()[0];
+                    double cordsY = b.getCoordinaten()[1];
+                    LatLong mappos = new LatLong(cordsX, cordsY);
+                    MarkerOptions pointeropts = new MarkerOptions();
+                    pointeropts.icon("http://37.97.149.53/busenzo/external/resources/bus.png");
+                    pointeropts.position(mappos);
+                    Marker pointer = new Marker(pointeropts);
+                    pointeropts.title(l.getBeschrijving());
+                    //InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+                    //infoWindowOptions.content(a.getNaam());
+                    //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+                    //pointerInfoWindow.open(map, pointer);
+                    this.mapBussen.add(pointer);
+                    map.addMarker(pointer);
+                    //removeMarker werkt hier niet omdat er steeds nieuwe instanties van een Marker wordt aagemaakt
+                }
             }
         }
 
@@ -145,14 +195,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     public void searchHalte(String naam) throws InterruptedException {
+        this.clearMapHaltes();
         for (Halte a : this.mapHaltes) {
             double cordsX = a.getCoordinaten()[0];
             double cordsY = a.getCoordinaten()[1];
             LatLong mappos = new LatLong(cordsX, cordsY);
             MarkerOptions pointeropts = new MarkerOptions();
-            //pointeropts.icon("C:\\Users\\Gebruiker\\Documents\\NetBeansProjects\\Bus-Tracker\\src\\com\\busenzo\\gui\\bstop.png");
+            pointeropts.icon("http://37.97.149.53/busenzo/external/resources/busstop.png");
             pointeropts.position(mappos);
-            Marker pointer = new Marker(pointeropts);
+            Marker pointer;
             pointeropts.title(a.getNaam());
             if (a.getNaam().toLowerCase().contains(naam.toLowerCase())) {
                 map.setCenter(mappos);
@@ -164,11 +215,53 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 pointeropts.position(mappos);
                 pointer = new Marker(pointeropts);
                 pointerInfoWindow.open(map, pointer);
+                this.mapMarkers.add(pointer);
+                map.addMarker(pointer);
                 break;
-            } 
+            }
+           
         }
 
-        System.out.println("Added " + this.mapHaltes.size() + " items to map");
+        System.out.println("Applied filter to map");
+    }
+    public void searchBussen(String naam) throws InterruptedException {
+        this.clearMapBussen();
+        for (Lijn l : this.mapLijnen) {
+            for(Rit r : l.ritten)
+            {
+                Bus b = r.getBus();
+                if(b != null)
+                {
+                    double cordsX = b.getCoordinaten()[0];
+                    double cordsY = b.getCoordinaten()[1];
+                    LatLong mappos = new LatLong(cordsX, cordsY);
+                    MarkerOptions pointeropts = new MarkerOptions();
+                    pointeropts.icon("http://37.97.149.53/busenzo/external/resources/bus.png");
+                    pointeropts.position(mappos);
+                    Marker pointer;
+                    pointeropts.title(l.getBeschrijving());
+                    int busNummer = l.getNummer();
+                    String busNumberSearcher = String.valueOf(busNummer);
+                    if (l.getBeschrijving().toLowerCase().contains(naam.toLowerCase()) || busNumberSearcher.contains(naam)){
+                        map.setCenter(mappos);
+                        map.setZoom(18);
+                        //map.addMarker( pointer );
+                        InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+                        infoWindowOptions.content(l.getBeschrijving());
+                        InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+                        pointeropts.position(mappos);
+                        pointer = new Marker(pointeropts);
+                        pointerInfoWindow.open(map, pointer);
+                        this.mapBussen.add(pointer);
+                        map.addMarker(pointer);
+                        break;
+                    }
+                }
+            }
+           
+        }
+
+        System.out.println("Applied filter to map");
     }
 
     /*
