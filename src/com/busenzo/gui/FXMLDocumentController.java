@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 
 /**
@@ -134,7 +135,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         boolean stopFound = searchHalte(tfSearch.getText());
         boolean busFound = searchBussen(tfSearch.getText());
         if (!stopFound && !busFound){
-            System.out.println("No bus or stop found... set message to user");
+            System.out.println("No bus or stop found");
+            JOptionPane.showMessageDialog(null, "Geen bus of halte gevonden, aub wijzig uw zoekterm!");
         }
     }
 
