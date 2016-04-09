@@ -131,8 +131,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         }
     }
     public void searchBusOrStop() throws InterruptedException {
-        searchHalte(tfSearch.getText());
-        searchBussen(tfSearch.getText());
+        boolean stopFound = searchHalte(tfSearch.getText());
+        boolean busFound = searchBussen(tfSearch.getText());
+        if (!stopFound && !busFound){
+            System.out.println("No bus or stop found... set message to user");
+        }
     }
 
     public void resetMap() {
@@ -195,7 +198,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         // System.out.println("Added " + this.mapHaltes.size() + " items to map");
     }
 
-    public void searchHalte(String naam) throws InterruptedException {
+    public boolean searchHalte(String naam) throws InterruptedException {
+        boolean stopfound = false;
         this.clearMapHaltes();
         for (Halte a : this.mapHaltes) {
             double cordsX = a.getCoordinaten()[0];
@@ -207,6 +211,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             Marker pointer;
             pointeropts.title(a.getNaam());
             if (a.getNaam().toLowerCase().contains(naam.toLowerCase())) {
+                stopfound = true;
                 map.setCenter(mappos);
                 map.setZoom(18);
                 //map.addMarker( pointer );
@@ -220,13 +225,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 map.addMarker(pointer);
                 break;
             }
-           
-        }
-
+        } 
         System.out.println("Applied filter to map");
+        
+        return stopfound;
+      
     }
-    public void searchBussen(String naam) throws InterruptedException {
+    public boolean searchBussen(String naam) throws InterruptedException {
         this.clearMapBussen();
+        boolean busFound = false;
         for (Lijn l : this.mapLijnen) {
             for(Rit r : l.ritten)
             {
@@ -255,14 +262,14 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                         pointerInfoWindow.open(map, pointer);
                         this.mapBussen.add(pointer);
                         map.addMarker(pointer);
-                        break;
+                        System.out.println("Applied filter to map");
+                        busFound = true;
                     }
                 }
+                
             }
-           
-        }
-
-        System.out.println("Applied filter to map");
+    }
+        return busFound;
     }
 
     /*
