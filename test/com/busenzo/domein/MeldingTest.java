@@ -25,4 +25,13 @@ public class MeldingTest {
         Melding melding = new Melding("test", 1, 1);
         Assert.fail("Er mag geen melding met ontvanger en verzender aangemaakt worden");
     }
+    
+    @Test
+    public void testMeldingConstructor(){
+        Melding melding = new Melding("test", 1, -1);
+        Assert.assertEquals("test", melding.getBeschrijving());
+        Assert.assertSame(1, melding.getZender());
+        Assert.assertSame(-1, melding.getOntvanger());
+        Assert.assertTrue(melding.getActief());
+    }
 }

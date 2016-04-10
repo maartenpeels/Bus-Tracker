@@ -18,7 +18,16 @@ public class Melding {
      * @param ontvanger: De ontvanger van de melding, -1 als de melding van een bus naar het beheer is 
      */
     public Melding(String beschrijving, int zender, int ontvanger) {
-            throw new UnsupportedOperationException();
+        if((zender == -1 && ontvanger == -1) || (zender >=0 && ontvanger >=0)){
+            throw new IllegalArgumentException();
+        }  
+        else{
+            this.beschrijving = beschrijving;
+            this.zender = zender;
+            this.ontvanger = ontvanger;
+            this.actief = true;
+        }
+        
     }
 
     /**

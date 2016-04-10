@@ -175,7 +175,7 @@ public class Administratie {
      */
     public void addHalte(Halte halte)
     {
-        throw new UnsupportedOperationException();
+        this.haltes.add(halte);
     }
 
     /**
