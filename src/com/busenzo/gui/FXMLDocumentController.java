@@ -39,6 +39,9 @@ import javafx.scene.image.ImageView;
 import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 import java.lang.Runtime;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import javafx.scene.control.Label;
 
 /**
  *
@@ -55,9 +58,16 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private Runnable refreshData;
     @FXML
     private ImageView busEnzoLogo;
-    
+
     @FXML
     private CheckBox cbStops;
+
+    @FXML
+    private Label lblSelectedStop;
+    @FXML
+    private Label lblBusNumber;
+    @FXML
+    private Label lblBusId;
 
     @FXML
     private TextField tfSearch;
@@ -69,10 +79,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private GoogleMapView mapView;
 
     private GoogleMap map;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         Administratie am = new Administratie();
         try {
             am.getHalteData();
@@ -89,11 +99,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 reloadData(am);
             }
         };
-        Runtime.getRuntime().addShutdownHook(new Thread()
-        {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 System.out.println("Application shutdown detected.. Quitting current jobs");
                 executor.shutdown();
             }
@@ -143,24 +151,23 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             System.out.println("deselected markers");
         }
     }
-    public void clearMapHaltes()
-    {
-        for(Marker m : this.mapMarkers)
-        {
+
+    public void clearMapHaltes() {
+        for (Marker m : this.mapMarkers) {
             map.removeMarker(m);
         }
     }
-    public void clearMapBussen()
-    {
-        for(Marker m : this.mapBussen)
-        {
+
+    public void clearMapBussen() {
+        for (Marker m : this.mapBussen) {
             map.removeMarker(m);
         }
     }
+
     public void searchBusOrStop() throws InterruptedException {
         boolean stopFound = searchHalte(tfSearch.getText());
         boolean busFound = searchBussen(tfSearch.getText());
-        if (!stopFound && !busFound){
+        if (!stopFound && !busFound) {
             System.out.println("No bus or stop found");
             JOptionPane.showMessageDialog(null, "Geen bus of halte gevonden, aub wijzig uw zoekterm!");
         }
@@ -198,13 +205,12 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
         // System.out.println("Added " + this.mapHaltes.size() + " items to map");
     }
+
     public void loadMapBussen() {
         for (Lijn l : this.mapLijnen) {
-            for(Rit r : l.ritten)
-            {
+            for (Rit r : l.ritten) {
                 Bus b = r.getBus();
-                if(b != null)
-                {
+                if (b != null) {
                     double cordsX = b.getCoordinaten()[0];
                     double cordsY = b.getCoordinaten()[1];
                     LatLong mappos = new LatLong(cordsX, cordsY);
@@ -255,21 +261,20 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 map.addMarker(pointer);
                 break;
             }
-        } 
+        }
         System.out.println("Applied filter to map");
-        
+
         return stopfound;
-      
+
     }
+
     public boolean searchBussen(String naam) throws InterruptedException {
         this.clearMapBussen();
         boolean busFound = false;
         for (Lijn l : this.mapLijnen) {
-            for(Rit r : l.ritten)
-            {
+            for (Rit r : l.ritten) {
                 Bus b = r.getBus();
-                if(b != null)
-                {
+                if (b != null) {
                     double cordsX = b.getCoordinaten()[0];
                     double cordsY = b.getCoordinaten()[1];
                     LatLong mappos = new LatLong(cordsX, cordsY);
@@ -280,7 +285,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     pointeropts.title(l.getBeschrijving());
                     int busNummer = l.getNummer();
                     String busNumberSearcher = String.valueOf(busNummer);
-                    if (l.getBeschrijving().toLowerCase().contains(naam.toLowerCase()) || busNumberSearcher.contains(naam)){
+                    if (l.getBeschrijving().toLowerCase().contains(naam.toLowerCase()) || busNumberSearcher.contains(naam)) {
                         map.setCenter(mappos);
                         map.setZoom(18);
                         //map.addMarker( pointer );
@@ -296,9 +301,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                         busFound = true;
                     }
                 }
-                
+
             }
-    }
+        }
         return busFound;
     }
 
@@ -325,8 +330,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         
     }
      */
-    public void reloadData(Administratie am)
-    {
+    public void reloadData(Administratie am) {
         System.out.println("Starting data refreshing");
         try {
             am.getRouteData();
@@ -338,9 +342,44 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         showBusses();
         showStops();
     }
+
+    public void clickedHalte(LatLong pos) {
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        for (Halte a : this.mapHaltes) {
+            double cordsX = a.getCoordinaten()[0];
+            double cordsY = a.getCoordinaten()[1];
+            if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
+                lblSelectedStop.setText(a.getNaam());
+            }
+        }
+    }
+
+    public void clickedBus(LatLong pos) {
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        for (Lijn l : this.mapLijnen) {
+            for (Rit r : l.ritten) {
+                Bus b = r.getBus();
+                if (b != null) {
+                    double cordsX = b.getCoordinaten()[0];
+                    double cordsY = b.getCoordinaten()[1];
+                    if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
+                        lblBusId.setText("" + b.getNummer());
+                        lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void handle(JSObject obj) {
-        System.out.println(obj.toString());
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        LatLong pos = new LatLong((JSObject) obj.getMember("latLng"));
+        if (cbBusses.isSelected() && !cbStops.isSelected()) {
+            clickedBus(pos);
+        } else if (cbStops.isSelected() && !cbBusses.isSelected()) {
+            clickedHalte(pos);
+        }
     }
 
 }
