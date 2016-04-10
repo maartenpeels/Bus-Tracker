@@ -13,6 +13,9 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import com.busenzo.administratie.Administratie;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,6 +29,13 @@ public class BusTracker extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
 
         Scene scene = new Scene(root);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
 
         stage.setScene(scene);
         stage.show();
