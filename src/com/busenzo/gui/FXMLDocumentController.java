@@ -26,6 +26,9 @@ import com.lynden.gmapsfx.javascript.event.UIEventHandler;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Button;
@@ -35,6 +38,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
+import java.lang.Runtime;
 
 /**
  *
@@ -47,7 +51,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private ArrayList<Lijn> mapLijnen;
     private ArrayList<Marker> mapMarkers = new ArrayList<>();
     private ArrayList<Marker> mapBussen = new ArrayList<>();
-     
+    public ScheduledExecutorService executor;
+    private Runnable refreshData;
     @FXML
     private ImageView busEnzoLogo;
     
@@ -64,9 +69,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private GoogleMapView mapView;
 
     private GoogleMap map;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         Administratie am = new Administratie();
         try {
             am.getHalteData();
@@ -77,6 +83,22 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.executor = Executors.newSingleThreadScheduledExecutor();
+        this.refreshData = new Runnable() {
+            public void run() {
+                reloadData(am);
+            }
+        };
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+                System.out.println("Application shutdown detected.. Quitting current jobs");
+                executor.shutdown();
+            }
+        });
+        executor.scheduleAtFixedRate(this.refreshData, 2, 2, TimeUnit.MINUTES);
         mapView.addMapInializedListener(this);
     }
 
@@ -103,6 +125,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     public void showBusses() {
         if (cbBusses.isSelected()) {
+            this.clearMapBussen();
             this.loadMapBussen();
         } else {
             this.clearMapBussen();
@@ -113,6 +136,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     @FXML
     public void showStops() {
         if (cbStops.isSelected()) {
+            this.clearMapHaltes();
             this.loadMapHaltes();
         } else {
             this.clearMapHaltes();
@@ -158,7 +182,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             double cordsY = a.getCoordinaten()[1];
             LatLong mappos = new LatLong(cordsX, cordsY);
             MarkerOptions pointeropts = new MarkerOptions();
-            pointeropts.icon("http://37.97.149.53/busenzo/external/resources/busstop.png");
+            pointeropts.icon("http://37.97.149.53//busenzo/external/resources/busstop.png");
             pointeropts.position(mappos);
             Marker pointer = new Marker(pointeropts);
             pointeropts.title(a.getNaam());
@@ -301,7 +325,19 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         
     }
      */
-
+    public void reloadData(Administratie am)
+    {
+        System.out.println("Starting data refreshing");
+        try {
+            am.getRouteData();
+            this.mapLijnen = am.getBussen();
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Refreshing done");
+        showBusses();
+        showStops();
+    }
     @Override
     public void handle(JSObject obj) {
         System.out.println(obj.toString());
