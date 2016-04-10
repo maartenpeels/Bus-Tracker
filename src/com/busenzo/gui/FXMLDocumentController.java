@@ -31,6 +31,8 @@ import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 
@@ -46,8 +48,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private ArrayList<Marker> mapMarkers = new ArrayList<>();
     private ArrayList<Marker> mapBussen = new ArrayList<>();
      
-    private Button button;
-
+    @FXML
+    private ImageView busEnzoLogo;
+    
     @FXML
     private CheckBox cbStops;
 
@@ -75,7 +78,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         mapView.addMapInializedListener(this);
-
     }
 
     @Override
@@ -141,7 +143,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     public void resetMap() {
-
+        LatLong eindhoven = new LatLong(51.44799, 365.46328);
+        map.setCenter(eindhoven);
+        map.setZoom(12);
     }
 
     public void showBusDetails() {
