@@ -22,6 +22,7 @@ import org.json.simple.parser.JSONParser;
 
 public class Administratie {
     private String restServer = "http://37.97.149.53/busenzo/api/";
+    //private String restServer = "https://busenzo.stefanvlems.nl/api/";
     private String restKey = "9709d02bfb3b1460fd0dd45f6706a81a8c33afaf";
     public ArrayList<Bus> bussen = new ArrayList<>();
     public ArrayList<Lijn> lijnen = new ArrayList<>();
@@ -35,7 +36,8 @@ public class Administratie {
      */
     public JSONObject getJSONfromWeb(String query) throws Exception
     {
-        String getUrl = this.restServer + "/" + this.restKey + "/" + query;
+        //String getUrl = this.restServer + "/" + this.restKey + "/" + query;
+        String getUrl = "http://37.97.149.53/busenzo/api/api.php?key=" + restKey+ "&action=" + query;
         JSONParser parser = new JSONParser();
         String json = readUrl(getUrl);
         // Page page = gson.fromJson(json, Page.class);
