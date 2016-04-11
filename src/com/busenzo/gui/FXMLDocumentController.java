@@ -339,8 +339,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Refreshing done");
-        showBusses();
-        showStops();
     }
 
     public void clickedHalte(LatLong pos) {
