@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javax.swing.JOptionPane;
@@ -41,6 +42,10 @@ import netscape.javascript.JSObject;
 import java.lang.Runtime;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 
 /**
@@ -71,6 +76,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     @FXML
     private TextField tfSearch;
+    
+    @FXML
+    private ListView lvStops;
 
     @FXML
     private CheckBox cbBusses;
@@ -79,17 +87,26 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private GoogleMapView mapView;
 
     private GoogleMap map;
+    
+    private String geselecteerdeHalte;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         Administratie am = new Administratie();
+        
         try {
             am.getHalteData();
             am.getLineData();
             am.getRouteData();
             this.mapHaltes = am.getHaltes();
             this.mapLijnen = am.getBussen();
+            lvStops.getSelectionModel().selectedItemProperty().addListener(
+            new ChangeListener<String>() {
+                public void changed(ObservableValue<? extends String> ov, 
+                    String old_val, String selectedHalte) {
+                    geselecteerdeHalte = selectedHalte;
+            }
+        });
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -211,6 +228,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             for (Rit r : l.ritten) {
                 Bus b = r.getBus();
                 if (b != null) {
+                    
                     double cordsX = b.getCoordinaten()[0];
                     double cordsY = b.getCoordinaten()[1];
                     LatLong mappos = new LatLong(cordsX, cordsY);
@@ -275,6 +293,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             for (Rit r : l.ritten) {
                 Bus b = r.getBus();
                 if (b != null) {
+                    
+                    
+                    
                     double cordsX = b.getCoordinaten()[0];
                     double cordsY = b.getCoordinaten()[1];
                     LatLong mappos = new LatLong(cordsX, cordsY);
@@ -286,6 +307,14 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     int busNummer = l.getNummer();
                     String busNumberSearcher = String.valueOf(busNummer);
                     if (l.getBeschrijving().toLowerCase().contains(naam.toLowerCase()) || busNumberSearcher.contains(naam)) {
+                        //set stops/haltes to listview
+                        ArrayList<String> halteNamen = new ArrayList<String>();
+                        for (Halte i : l.haltes){
+                            halteNamen.add(i.getNaam());
+                        }
+                        ObservableList<String> items = FXCollections.observableArrayList(halteNamen);
+                        lvStops.setItems(items);
+                        
                         map.setCenter(mappos);
                         map.setZoom(18);
                         //map.addMarker( pointer );

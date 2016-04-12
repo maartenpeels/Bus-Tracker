@@ -21,14 +21,14 @@
          <children>
           <Label layoutX="5.0" layoutY="1.0" text="Filters:" />
           <Button id="verstuurButton" fx:id="btnReset" layoutX="5.0" layoutY="172.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
-        <ListView id="meldingList" fx:id="lbStops" layoutX="5.0" layoutY="271.0" prefHeight="137.0" prefWidth="170.0" />
-        <Button id="verstuurButton" layoutX="5.0" layoutY="418.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
+        <ListView id="meldingList" fx:id="lvStops" layoutX="5.0" layoutY="271.0" prefHeight="180.0" prefWidth="170.0" />
+        <Button id="verstuurButton" layoutX="5.0" layoutY="470.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
         <Label layoutX="5.0" layoutY="249.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
         <Label layoutX="5.0" layoutY="211.0" text="Object info:" />
         <Label layoutX="5.0" layoutY="229.0" text="Bus:" />
         <Label fx:id="lblBusNumber" layoutX="36.0" layoutY="228.0" text="&lt;nummer&gt;" />
         <Label fx:id="lblBusId" layoutX="107.0" layoutY="228.0" text="&lt;id&gt;" />
-        <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of busnummer:" />
+        <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of lijnnummer:" />
         <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
         <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
         <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
@@ -44,7 +44,7 @@
         <Label layoutX="4.0" layoutY="52.0" text="Object info:" />
         <Label layoutX="6.0" layoutY="82.0" text="Bus:" />
         <ComboBox fx:id="combBus" layoutX="40.0" layoutY="78.0" onAction="#showBusDetails" prefHeight="26.0" prefWidth="137.0" />
-      <ListView id="meldingList" layoutX="5.0" layoutY="278.0" prefHeight="66.0" prefWidth="170.0" />
+      <ListView id="meldingList"  layoutX="5.0" layoutY="278.0" prefHeight="66.0" prefWidth="170.0" />
       <Button id="verstuurButton" layoutX="5.0" layoutY="414.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Melding verwijderen" />
       <Label layoutX="5.0" layoutY="386.0" prefWidth="96.0" text="&lt;melding&gt;" />
       <Label layoutX="5.0" layoutY="259.0" text="Kies een bus..." />
