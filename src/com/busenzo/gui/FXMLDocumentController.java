@@ -293,9 +293,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             for (Rit r : l.ritten) {
                 Bus b = r.getBus();
                 if (b != null) {
-                    
-                    
-                    
                     double cordsX = b.getCoordinaten()[0];
                     double cordsY = b.getCoordinaten()[1];
                     LatLong mappos = new LatLong(cordsX, cordsY);
@@ -309,8 +306,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     if (l.getBeschrijving().toLowerCase().contains(naam.toLowerCase()) || busNumberSearcher.contains(naam)) {
                         //set stops/haltes to listview
                         ArrayList<String> halteNamen = new ArrayList<String>();
-                        for (Halte i : l.haltes){
-                            halteNamen.add(i.getNaam());
+                        for (Halte h : l.haltes){
+                            halteNamen.add(h.getNaam());
                         }
                         ObservableList<String> items = FXCollections.observableArrayList(halteNamen);
                         lvStops.setItems(items);
