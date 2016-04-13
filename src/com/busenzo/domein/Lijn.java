@@ -1,6 +1,7 @@
 package com.busenzo.domein;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Lijn {
@@ -9,8 +10,8 @@ public class Lijn {
     private final int nummer;
     private final Richting richting;
     private final String beschrijving;
-    public ArrayList<Rit> ritten = new ArrayList<>();
-    public ArrayList<Halte> haltes = new ArrayList<>();
+    private ArrayList<Rit> ritten;
+    private ArrayList<Halte> haltes;
 
     /**
      * Maak een nieuwe lijn aan. Er mag nog geen lijn bestaan met hetzelfde
@@ -26,7 +27,8 @@ public class Lijn {
         this.nummer = nummer;
         this.richting = richting;
         this.beschrijving = beschrijving;
-        this.haltes = haltes;
+        this.haltes = new ArrayList<>();
+        this.ritten = new ArrayList<>();
     }
 
     /**
@@ -34,10 +36,11 @@ public class Lijn {
      *
      * @param halte: De toe te voegen halte, deze halte mag bij deze lijn nog
      * niet bestaan.
+     * @return true als de halte succesvol is toegevoegd, anders false
      */
     public boolean addHalte(Halte halte) {
         for (Halte h : haltes) {
-            if (h.getId() == halte.getId()) {
+            if (h.getId().equals(halte.getId())) {
                 return false;
             }
         }
@@ -51,20 +54,19 @@ public class Lijn {
      *
      * @param haltes: Een lijst van de toe te voegen haltes, iedere individuele
      * halte mag bij deze lijn nog niet bestaan
+     * @return true als de halte is toegevoegd, anders false
      */
     public boolean addHaltes(Halte[] haltes) {
         for (Halte h1 : this.haltes) {
             for (Halte h2 : haltes) {
-                if (h1.getId() == h2.getId()) {
+                if (h1.getId().equals(h2.getId())) {
                     return false;
                 }
 
             }
         }
 
-        for (Halte h3 : haltes) {
-            this.haltes.add(h3);
-        }
+        this.haltes.addAll(Arrays.asList(haltes));
         return true;
         
 
@@ -78,21 +80,32 @@ public class Lijn {
     public List<Rit> getRitten() {
         return this.ritten;
     }
+    
+    public ArrayList<String> getHalteNamen(){
+        ArrayList<String> halteNamen = new ArrayList<String>();
+        for (Halte i : haltes){
+            halteNamen.add(i.getNaam());
+        }
+        return halteNamen;
+    }
 
     /**
      * Voeg een rit toe aan de lijn.
      *
      * @param rit De toe te voegen rit. Deze rit mag bij deze lijn nog niet
-     * bestaan.
+     * bestaan, en de rit mag ook niet bij een andere lijn horen.
+     * @return true als de rit is toegevoegd, anders false
      */
     public boolean addRit(Rit rit) {
         for(Rit r : ritten)
         {
-            if(r.getLijn().getId() == rit.getLijn().getId() && r.getVerwachteAankomstTijd() == rit.getVerwachteAankomstTijd()) {
+            if(r.getLijn().getId().equals(rit.getLijn().getId()) && r.getVerwachteAankomstTijd() == rit.getVerwachteAankomstTijd()) {
                 return false;
             }
         }
-        
+        if(rit.getLijn() != null && !rit.getLijn().getId().equals(this.id)){
+            return false;
+        }
         this.ritten.add(rit);
         return true;
     }
@@ -126,5 +139,12 @@ public class Lijn {
      */
     public String getBeschrijving() {
         return beschrijving;
+    }
+    
+    /**
+     * leeg de lijst van ritten
+     */
+    public void clearRitten(){
+        this.ritten.clear();
     }
 }

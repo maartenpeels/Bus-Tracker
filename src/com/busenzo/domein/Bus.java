@@ -5,20 +5,23 @@ public class Bus {
     private int nummer;
     private double lon;
     private double lat;
-    public Rit huidigeRit;
+    private Rit huidigeRit;
 
     /**
      * Maak een nieuwe bus aan met een specifiek chassisnummer. Er mag nog geen bus bestaan met het gegeven nummer
      * @param nummer Het chassisnummer dat deze bus moet krijgen. Altijd groter als 0.
      */
     public Bus(int nummer) {
-            this.nummer = nummer;
+        if(nummer < 0){
+            throw new IllegalArgumentException();
+        }
+        this.nummer = nummer;
     }
 
     /**
      * Update de locatie van deze bus
-     * @param lon: De nieuwe longditude van deze bus, mag niet null zijn
-     * @param lat: De nieuwe ladditude van deze bus, mag niet null zijn
+     * @param lon: De nieuwe longditude van deze bus
+     * @param lat: De nieuwe ladditude van deze bus
      */
     public void updateLocatie(double lat, double lon) {
             this.lat = lat;

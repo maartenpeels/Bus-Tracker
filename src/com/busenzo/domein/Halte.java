@@ -9,7 +9,7 @@ public class Halte {
     private double lon;
     private double lat;
     private String id;
-    public ArrayList<Lijn> lijnen = new ArrayList<>();
+    private ArrayList<Lijn> lijnen = new ArrayList<>();
 
     /**
      * Maak een nieuwe halte aan, er mag nog geen halte bestaan met dezelfde naam en lat/lon

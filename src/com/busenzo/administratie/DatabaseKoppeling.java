@@ -40,7 +40,8 @@ public class DatabaseKoppeling {
      */
     public JSONObject getJSONfromWeb(String query) throws Exception
     {
-        String getUrl = this.restServer + "/" + this.restKey + "/" + query;
+        //String getUrl = this.restServer + "/" + this.restKey + "/" + query;
+        String getUrl = "http://37.97.149.53/busenzo/api/api.php?key=" + restKey+ "&action=" + query;
         JSONParser parser = new JSONParser();
         String json = readUrl(getUrl);
         // Page page = gson.fromJson(json, Page.class);
@@ -48,6 +49,7 @@ public class DatabaseKoppeling {
         JSONObject jdata = (JSONObject)obj;
         return jdata;
     }
+    
      /**
      * URL datareader functie
      * Geeft databuffer terug
@@ -101,7 +103,7 @@ public class DatabaseKoppeling {
     {
         Random ran = new Random();
         //TODO: aanpassen in lijn
-        //for(Lijn l : lijnen) l.clearRitten();
+        for(Lijn l : lijnen) l.clearRitten();
         String query = "ritten";
         JSONObject rittenData = this.getJSONfromWeb(query);
         JSONArray rittenArray = (JSONArray) rittenData.get("data");
