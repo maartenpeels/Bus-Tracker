@@ -25,6 +25,15 @@ import com.busenzo.gui.markers.BusMarker;
 import com.busenzo.gui.markers.HalteMarker;
 import com.lynden.gmapsfx.javascript.event.UIEventHandler;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
+import com.lynden.gmapsfx.javascript.object.DirectionsPane;
+import com.lynden.gmapsfx.service.directions.DirectionStatus;
+import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
+import com.lynden.gmapsfx.service.directions.DirectionsRequest;
+import com.lynden.gmapsfx.service.directions.DirectionsResult;
+import com.lynden.gmapsfx.service.directions.DirectionsService;
+import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
+import com.lynden.gmapsfx.service.directions.DirectionsWaypoint;
+import com.lynden.gmapsfx.service.directions.TravelModes;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,7 +59,7 @@ import javafx.scene.control.ListView;
  *
  * @author Beheerders
  */
-public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler {
+public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler, DirectionsServiceCallback {
 
     private Administratie admin;
     
@@ -88,6 +97,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private GoogleMap map;
     
     private String geselecteerdeHalte;
+    protected DirectionsPane directions;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -137,6 +147,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 .zoom(12);
 
         map = mapView.createMap(mapOptions);
+        directions = mapView.getDirec();
 
         //Add markers to the map
         this.loadMapBussen();
@@ -287,6 +298,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         ArrayList<Lijn> result = new ArrayList<>();
         result.addAll(admin.zoekLijn(naam));
         if (!result.isEmpty()) {
+            //drawRoute(result.get(0));
             for (Marker m : this.mapMarkers) {
                 if (m instanceof BusMarker) {
                     BusMarker bm = (BusMarker) m;
@@ -310,6 +322,27 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         return busFound;
     }
 
+    public void drawRoute(Lijn l){
+       ArrayList<String> haltes = l.getHalteNamen();
+       DirectionsService ds = new DirectionsService();
+       DirectionsRenderer renderer = new DirectionsRenderer(true, map, null);
+        
+        
+        DirectionsWaypoint[] dw = new DirectionsWaypoint[haltes.size()];
+        
+        for(int i = 0; i < haltes.size(); i++){
+        dw[i] = new DirectionsWaypoint(haltes.get(i));
+        }
+        
+        DirectionsRequest dr = new DirectionsRequest(
+                haltes.get(0),
+                haltes.get(haltes.size() - 1),
+                TravelModes.DRIVING,
+                dw);
+        ds.getRoute(dr, this, renderer);
+    }
+    
+    
     public void reloadData() {
         System.out.println("Starting data refreshing");
         try {
@@ -359,6 +392,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } else if (cbStops.isSelected() && !cbBusses.isSelected()) {
             clickedHalte(pos);
         }
+    }
+
+    @Override
+    public void directionsReceived(DirectionsResult dr, DirectionStatus ds) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
