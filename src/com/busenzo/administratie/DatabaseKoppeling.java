@@ -12,21 +12,24 @@ import com.busenzo.domein.Lijn;
 import com.busenzo.domein.Richting;
 import com.busenzo.domein.Rit;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.net.ssl.HttpsURLConnection;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class DatabaseKoppeling {
 
-    private String restServer;// = "http://37.97.149.53/busenzo/api/";
-    private String restKey;// = "9709d02bfb3b1460fd0dd45f6706a81a8c33afaf";
+    private String restServer;
+    private String restKey;
     
     public DatabaseKoppeling(String restServer, String restKey){
         this.restServer = restServer;
@@ -79,7 +82,49 @@ public class DatabaseKoppeling {
         }
 
     }
-    
+   private String httpsGet(final String https_url) {
+        String ret = "";
+
+        URL url;
+        try {
+
+            
+            url = new URL(https_url);
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+            ret = getContent(con);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    private String getContent(HttpsURLConnection con){
+            if(con!=null){
+
+            try {
+
+               BufferedReader br = 
+                    new BufferedReader(
+                            new InputStreamReader(con.getInputStream()));
+
+               String input;
+               StringBuilder rtndata = new StringBuilder();		
+               while ((input = br.readLine()) != null){
+                  rtndata.append(input);
+               }
+               br.close();
+               return rtndata.toString();
+
+            } catch (IOException e) {
+               e.printStackTrace();
+               return "";
+            }	
+           }
+            return "";
+   }
    public ArrayList<Halte> getHalteData() throws Exception
     {
         ArrayList<Halte> output = new ArrayList<>();
@@ -154,8 +199,11 @@ public class DatabaseKoppeling {
                 JSONObject objectsHalte = (JSONObject) haltesArray1;
                 String stopName = objectsHalte.get("id").toString();
                 for(Halte h : haltes){
-                    blconnection++;
-                    addLijn.addHalte(h);
+                    if(h.getId().equals(stopName))
+                    {
+                        blconnection++;
+                        addLijn.addHalte(h);
+                    }
                 }
             }
             output.add(addLijn);
