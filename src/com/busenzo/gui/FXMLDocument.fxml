@@ -9,26 +9,25 @@
 <?import javafx.scene.layout.*?>
 <?scenebuilder-classpath-element ../../../../GMapsFX-2.0.5-SNAPSHOT.jar?>
 
-<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="1076.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="524.0" prefWidth="1076.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
   <children>
-    <AnchorPane id="Map" disable="false" focusTraversable="false" layoutX="209.0" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="650.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane id="Map" disable="false" focusTraversable="false" layoutX="209.0" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="656.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="0.0">
       <children>
         <GoogleMapView fx:id="mapView" maxHeight="700.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="78.0" prefWidth="21.0" spacing="10.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-900.0" AnchorPane.topAnchor="88.0" />
       </children>
     </AnchorPane>
-      <AnchorPane layoutX="877.0" layoutY="10.0" prefHeight="450.0" prefWidth="194.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+      <AnchorPane layoutX="877.0" layoutY="10.0" prefHeight="505.0" prefWidth="194.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
          <children>
           <Label layoutX="5.0" layoutY="1.0" text="Filters:" />
           <Button id="verstuurButton" fx:id="btnReset" layoutX="5.0" layoutY="172.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
         <ListView id="meldingList" fx:id="lvStops" layoutX="5.0" layoutY="271.0" prefHeight="180.0" prefWidth="170.0" />
         <Button id="verstuurButton" layoutX="5.0" layoutY="470.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
         <Label layoutX="5.0" layoutY="249.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
-        <Label layoutX="5.0" layoutY="211.0" text="Object info:" />
         <Label layoutX="5.0" layoutY="229.0" text="Bus:" />
         <Label fx:id="lblBusNumber" layoutX="36.0" layoutY="228.0" text="&lt;nummer&gt;" />
         <Label fx:id="lblBusId" layoutX="107.0" layoutY="228.0" text="&lt;id&gt;" />
-        <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of lijnnummer:" />
+        <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of busnummer:" />
         <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
         <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
         <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
@@ -40,11 +39,10 @@
          <children>
           <Label layoutX="5.0" layoutY="4.0" text="Geselecteerde halte:" />
           <Label layoutX="5.0" layoutY="239.0" text="Meldingen:" />
-        <ListView id="meldingList" fx:id="lbBusInfo" layoutX="8.0" layoutY="112.0" prefHeight="113.0" prefWidth="170.0" />
-        <Label layoutX="4.0" layoutY="52.0" text="Object info:" />
-        <Label layoutX="6.0" layoutY="82.0" text="Bus:" />
-        <ComboBox fx:id="combBus" layoutX="40.0" layoutY="78.0" onAction="#showBusDetails" prefHeight="26.0" prefWidth="137.0" />
-      <ListView id="meldingList"  layoutX="5.0" layoutY="278.0" prefHeight="66.0" prefWidth="170.0" />
+        <ListView id="meldingList" fx:id="lbBusInfo" layoutX="8.0" layoutY="91.0" prefHeight="142.0" prefWidth="170.0" />
+        <Label layoutX="8.0" layoutY="58.0" text="Bus:" />
+        <ComboBox fx:id="combBus" layoutX="42.0" layoutY="54.0" onAction="#showBusDetails" prefHeight="26.0" prefWidth="137.0" />
+      <ListView id="meldingList" layoutX="5.0" layoutY="278.0" prefHeight="66.0" prefWidth="170.0" />
       <Button id="verstuurButton" layoutX="5.0" layoutY="414.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Melding verwijderen" />
       <Label layoutX="5.0" layoutY="386.0" prefWidth="96.0" text="&lt;melding&gt;" />
       <Label layoutX="5.0" layoutY="259.0" text="Kies een bus..." />
