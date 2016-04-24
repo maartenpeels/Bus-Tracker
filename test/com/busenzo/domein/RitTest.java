@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author stasiuz
+ * @author Stan Guldemond
  */
 public class RitTest {
     
@@ -29,11 +29,7 @@ public class RitTest {
         Rit rit1 = new Rit(testLDT, testLijn);
         
         assertEquals(testLijn, rit1.getLijn());
-        
-        // rit zonder lijn
-        Rit rit2 = new Rit(testLDT, null);
-        
-        assertEquals(null, rit2.getLijn());        
+        assertEquals(testLDT, rit1.getVerwachteAankomstTijd());
     }
     
     @Test

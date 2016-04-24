@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Bus.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bus-Enzo&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">com.busenzo.domein</a> &gt; <span class="el_source">Bus.java</span></div><h1>Bus.java</h1><pre class="source lang-java linenums">package com.busenzo.domein;
+
+public class Bus {
+    
+    private int nummer;
+    private double lon;
+    private double lat;
+    public Rit huidigeRit;
+
+    /**
+     * Maak een nieuwe bus aan met een specifiek chassisnummer. Er mag nog geen bus bestaan met het gegeven nummer
+     * @param nummer Het chassisnummer dat deze bus moet krijgen. Altijd groter als 0.
+     */
+<span class="fc" id="L14">    public Bus(int nummer) {</span>
+<span class="fc" id="L15">            this.nummer = nummer;</span>
+<span class="fc" id="L16">    }</span>
+
+    /**
+     * Update de locatie van deze bus
+     * @param lon: De nieuwe longditude van deze bus, mag niet null zijn
+     * @param lat: De nieuwe ladditude van deze bus, mag niet null zijn
+     */
+    public void updateLocatie(double lat, double lon) {
+<span class="fc" id="L24">            this.lat = lat;</span>
+<span class="fc" id="L25">            this.lon = lon;</span>
+<span class="fc" id="L26">    }</span>
+
+    /**
+     * Haal het chassisnummer van de bus op
+     * @return Het nummer van deze bus
+     */
+    public int getNummer(){
+<span class="nc" id="L33">        return this.nummer;</span>
+    }
+
+    /**
+     * Vraag de huidige rit van deze bus op
+     * @return De huidige rit of null als deze bus niet aan een rit bezig is.
+     */
+    public Rit getHuidigeRit(){
+<span class="nc" id="L41">        return this.huidigeRit;</span>
+    }
+
+    /**
+     * Zet de huidige rit van deze bus
+     * @param rit De rit die deze bus gaat maken. Nooit null
+     */
+    public void setHuidigeRit(Rit rit){
+<span class="nc" id="L49">        this.huidigeRit = rit;</span>
+<span class="nc" id="L50">    }</span>
+    
+    /**
+     * Vraag de coordinaten op van de plek waar deze bus zich momenteel bevind
+     * @return Een array met hierin de lon en lat. Kan leeg zijn als de coordinaten van deze bus niet gezet zijn
+     */
+    public double[] getCoordinaten(){
+<span class="nc" id="L57">        double[] cords = {this.lat, this.lon};</span>
+<span class="nc" id="L58">        return cords;</span>
+    }
+       
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

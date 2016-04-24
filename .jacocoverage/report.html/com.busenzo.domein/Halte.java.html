@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Halte.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bus-Enzo&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">com.busenzo.domein</a> &gt; <span class="el_source">Halte.java</span></div><h1>Halte.java</h1><pre class="source lang-java linenums">package com.busenzo.domein;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Halte {
+    
+    private String naam;
+    private double lon;
+    private double lat;
+    private String id;
+<span class="fc" id="L12">    public ArrayList&lt;Lijn&gt; lijnen = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Maak een nieuwe halte aan, er mag nog geen halte bestaan met dezelfde naam en lat/lon
+     * @param naam: Naam van de halte, mag geen lege string zijn
+     * @param lon: Longditude van de halte, mag niet null zijn
+     * @param lat: Ladditude van de halte, mag niet null zijn
+     */
+<span class="fc" id="L20">    public Halte(String id, String naam, String lon, String lat) {</span>
+<span class="fc" id="L21">            this.naam = naam;</span>
+<span class="fc" id="L22">            this.lat = Double.parseDouble(lat);</span>
+<span class="fc" id="L23">            this.lon = Double.parseDouble(lon);</span>
+<span class="fc" id="L24">            this.id = id;</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Voeg een lijn toe die bij deze halte stopt. Dit mag alleen gebeuren als deze halte nog niet 
+     * eerder toegevoegd is.
+     * @param lijn De toe te voegen lijn, mag niet null zijn
+     */
+    public void AddLijn(Lijn lijn) {
+<span class="nc" id="L33">            throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Haal alle lijnen op die bij deze halte stoppen
+     * @return Een lijst van haltes die bij deze lijn stoppen
+     */
+    public List&lt;Lijn&gt; HaalLijnen() {
+<span class="nc" id="L41">            throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Vraag de haltenaam op
+     * @return De naam van deze halte
+     */
+    public String getNaam(){
+<span class="nc" id="L49">        return this.naam;</span>
+    }
+    
+    /**
+     * Vraag het id op
+     * @return De id van deze halte
+     */
+    public String getId(){
+<span class="fc" id="L57">        return this.id;</span>
+    }
+
+    /**
+     * Vraag de coordinaten op van deze halte
+     * @return Een int array met hierin lon en lat
+     */
+    public double[] getCoordinaten(){
+<span class="nc" id="L65">        double[] cords = {this.lat, this.lon};</span>
+<span class="nc" id="L66">        return cords;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

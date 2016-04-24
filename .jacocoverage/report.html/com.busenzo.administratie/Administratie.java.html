@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Administratie.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bus-Enzo&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">com.busenzo.administratie</a> &gt; <span class="el_source">Administratie.java</span></div><h1>Administratie.java</h1><pre class="source lang-java linenums">package com.busenzo.administratie;
+
+import java.util.ArrayList;
+import com.busenzo.domein.Bus;
+import com.busenzo.domein.Lijn;
+import com.busenzo.domein.Halte;
+import com.busenzo.domein.Richting;
+import com.busenzo.domein.Rit;
+import java.util.Collections;
+import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
+import java.util.Random;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+public class Administratie {
+<span class="fc" id="L24">    private String restServer = &quot;http://37.97.149.53/busenzo/api/&quot;;</span>
+<span class="fc" id="L25">    private String restKey = &quot;9709d02bfb3b1460fd0dd45f6706a81a8c33afaf&quot;;</span>
+<span class="fc" id="L26">    public ArrayList&lt;Bus&gt; bussen = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L27">    public ArrayList&lt;Lijn&gt; lijnen = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L28">    private ArrayList&lt;Halte&gt; haltes = new ArrayList&lt;&gt;();</span>
+    
+    
+    /**
+     * JSON webrequest
+     * URL opgebouwd via Restserver/restkey/query
+     * Geeft JSON object terug
+     */
+    public JSONObject getJSONfromWeb(String query) throws Exception
+    {
+<span class="nc" id="L38">        String getUrl = this.restServer + &quot;/&quot; + this.restKey + &quot;/&quot; + query;</span>
+<span class="nc" id="L39">        JSONParser parser = new JSONParser();</span>
+<span class="nc" id="L40">        String json = readUrl(getUrl);</span>
+        // Page page = gson.fromJson(json, Page.class);
+<span class="nc" id="L42">        Object obj = parser.parse(json);</span>
+<span class="nc" id="L43">        JSONObject jdata = (JSONObject)obj;</span>
+<span class="nc" id="L44">        return jdata;</span>
+    }
+     /**
+     * URL datareader functie
+     * Geeft databuffer terug
+     */
+    private static String readUrl(String urlString) throws Exception 
+    {
+<span class="nc" id="L52">        BufferedReader reader = null;</span>
+        try 
+        {
+<span class="nc" id="L55">            URL url = new URL(urlString);</span>
+<span class="nc" id="L56">            reader = new BufferedReader(new InputStreamReader(url.openStream()));</span>
+<span class="nc" id="L57">            StringBuilder buffer = new StringBuilder();</span>
+            int read;
+<span class="nc" id="L59">            char[] chars = new char[1024];</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            while ((read = reader.read(chars)) != -1)</span>
+            {
+<span class="nc" id="L62">                buffer.append(chars, 0, read); </span>
+            }
+
+<span class="nc" id="L65">            return buffer.toString();</span>
+        } finally 
+        {
+<span class="nc bnc" id="L68" title="All 4 branches missed.">            if (reader != null)</span>
+            {
+<span class="nc" id="L70">                reader.close();</span>
+            }
+        }
+
+    }
+    
+    private Halte findStop(String id)
+    {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for (Halte h : this.haltes) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">            if(h.getId().equals(id))</span>
+            {
+<span class="nc" id="L81">                return h;</span>
+            }
+<span class="nc" id="L83">        }</span>
+<span class="nc" id="L84">        return null;</span>
+    }
+    private Lijn findLijn(String id)
+    {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        for (Lijn l : this.lijnen) {</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if(l.getId().equals(id))</span>
+            {
+<span class="nc" id="L91">                return l;</span>
+            }
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">        return null;</span>
+    }
+
+    /**
+     * Maak een nieuwe administratie aan
+     */
+    public Administratie() 
+<span class="fc" id="L101">    {</span>
+            //throw new UnsupportedOperationException();
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Zoek naar een specifieke bus
+     * @param id: ID (chassisnummer) van de bus
+     * @return De bus met het ingevoerde id, null als deze niet bestaat
+     */
+    public Bus zoekBus(int id) 
+    {
+<span class="nc" id="L112">            throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Update de locaties van alle bussen (deze worden opgehaald uit de database)
+     */
+    public void HaalBusLocaties() 
+    {
+<span class="nc" id="L120">            throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Haal alle lijnen op die bij een specifieke halte stoppen
+     * @param halteNaam: De haltenaam waarvan je de lijnen wil weten, mag geen lege string zijn.
+     * @return Een lijst van alle lijnen die bij deze halte stoppen, kan een lege lijst zijn als de halte 
+     * niet gevonden wordt
+     */
+    public List&lt;Lijn&gt; GeefHalteInformatie(String halteNaam) 
+    {
+<span class="nc" id="L131">            throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Haal de haltes op van een specifieke lijn
+     * @param nummer: Het lijnnummer waarvan je de haltes wil weten.
+     * @return Een lijst van haltes waar deze lijn stopt, kan leeg zijn als het lijnnummer niet gevonden wordt
+     */
+    public List&lt;Halte&gt; GeefLijnInformatie(String nummer) 
+    {
+<span class="nc" id="L141">            throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Voeg een nieuwe bus toe aan de administratie
+     * @param bus: De toe te voegen bus, er mag nog geen bus bestaan met hetzelfde chassisnummer 
+     */
+    public void addBus(Bus bus)
+    {
+<span class="nc" id="L150">        throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Voeg meerdere nieuwe bussen toe aan de administratie
+     * @param bussen: Een lijst met bussen die toegevoegd worden. Bussen worden alleen toegevoegd als er nog
+     * geen bus bestaat met dat specifieke chassisnummer
+     */
+    public void addBussen(List&lt;Bus&gt; bussen)
+    {
+<span class="nc" id="L160">        throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Verwijder een specifieke bus uit de administratie
+     * @param bus De te verwijderen bus
+     */
+    public void removeBus(Bus bus)
+    {
+<span class="nc" id="L169">        throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Voeg een halte toe aan de administratie
+     * @param halte De toe te voegen halte, deze wordt alleen toegevoegd als deze halte nog niet bestaat
+     */
+    public void addHalte(Halte halte)
+    {
+<span class="fc" id="L178">        this.haltes.add(halte);</span>
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Voeg meerdere haltes toe aan de administratie
+     * @param haltes Een lijst van toe te voegen haltes, haltes worden alleen toegevoegd als deze nog niet 
+     * bestaan
+     */
+    public void addHaltes(List&lt;Halte&gt; haltes)
+    {
+<span class="nc" id="L188">        throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Voeg een specifieke lijn toe aan de administratie
+     * @param lijn De toe te voegen lijn. Deze wordt alleen toegevoegd als deze lijn nog niet bestaat.
+     */
+    public void addLijn(Lijn lijn)
+    {
+<span class="nc" id="L197">        throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * Voeg meerdere lijnene toe aan de administratie
+     * @param lijnen De toe te voegen lijnen. Lijnen worden alleen toegevoegd als ze nog niet bestaan
+     */
+    public void addLijnen(List&lt;Lijn&gt; lijnen)
+    {
+<span class="nc" id="L206">        throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * haal de lijst van haltes op
+     * @return een onwijzigbare lijst van haltes
+     */
+    public ArrayList&lt;Halte&gt; getHaltes() 
+    {
+<span class="fc" id="L215">        return this.haltes;</span>
+    }
+    public ArrayList&lt;Lijn&gt; getBussen() 
+    {
+<span class="fc" id="L219">        return this.lijnen;</span>
+    }
+    public void getHalteData() throws Exception
+    {
+<span class="nc" id="L223">        String query = &quot;stops&quot;;</span>
+<span class="nc" id="L224">        JSONObject halteData = this.getJSONfromWeb(query);</span>
+<span class="nc" id="L225">        JSONArray halteArray = (JSONArray) halteData.get(&quot;data&quot;);</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        for(int i = 0; i &lt; halteArray.size(); i++)</span>
+        {
+<span class="nc" id="L228">            JSONObject objects = (JSONObject)halteArray.get(i);</span>
+<span class="nc" id="L229">            String halteID = objects.get(&quot;id&quot;).toString();</span>
+<span class="nc" id="L230">            String halteNaam = objects.get(&quot;name&quot;).toString();</span>
+<span class="nc" id="L231">            String halteLat = objects.get(&quot;lat&quot;).toString();</span>
+<span class="nc" id="L232">            String halteLon = objects.get(&quot;lon&quot;).toString();</span>
+<span class="nc" id="L233">            Halte addHalte = new Halte(halteID, halteNaam, halteLon, halteLat);</span>
+<span class="nc" id="L234">            this.haltes.add(addHalte);</span>
+        }
+<span class="nc" id="L236">        System.out.println(&quot;Added &quot; + this.haltes.size() + &quot; to application&quot;);</span>
+<span class="nc" id="L237">    }</span>
+    public void getRouteData() throws Exception
+    {
+<span class="nc" id="L240">        Random ran = new Random();</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">        for(Lijn l : this.lijnen) l.ritten.clear();</span>
+<span class="nc" id="L242">        String query = &quot;ritten&quot;;</span>
+<span class="nc" id="L243">        JSONObject rittenData = this.getJSONfromWeb(query);</span>
+<span class="nc" id="L244">        JSONArray rittenArray = (JSONArray) rittenData.get(&quot;data&quot;);</span>
+<span class="nc" id="L245">        int ride = 0;</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        for(int i = 0; i &lt; rittenArray.size(); i++)</span>
+        {
+<span class="nc" id="L248">            JSONObject objects = (JSONObject)rittenArray.get(i);</span>
+<span class="nc" id="L249">            String ritID = objects.get(&quot;linekey&quot;).toString();</span>
+<span class="nc" id="L250">            String verwachteAankomstTijd = objects.get(&quot;exp_arrivaltime&quot;).toString();</span>
+<span class="nc" id="L251">            DateTimeFormatter frm = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;);</span>
+<span class="nc" id="L252">            LocalDateTime vat = LocalDateTime.parse(verwachteAankomstTijd, frm);</span>
+<span class="nc" id="L253">            String busLat = objects.get(&quot;lat&quot;).toString();</span>
+<span class="nc" id="L254">            String busLon = objects.get(&quot;lon&quot;).toString();</span>
+<span class="nc" id="L255">            Lijn l = this.findLijn(ritID);</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">            if(l != null)</span>
+            {
+<span class="nc" id="L258">                ride++;</span>
+                //System.out.println(&quot;Added rit to line &quot; + l.getId());
+<span class="nc" id="L260">                Rit r = new Rit(vat, l);</span>
+<span class="nc" id="L261">                Bus b = new Bus(ran.nextInt(99999));</span>
+<span class="nc" id="L262">                b.updateLocatie(Double.parseDouble(busLat), Double.parseDouble(busLon));</span>
+                //Is random.. moet nog veranderd worden!1!
+<span class="nc" id="L264">                b.setHuidigeRit(r);</span>
+<span class="nc" id="L265">                r.setBus(b);</span>
+<span class="nc" id="L266">                l.addRit(r);</span>
+            }
+        }
+<span class="nc" id="L269">        System.out.println(&quot;Added &quot; + ride + &quot; current rides to application&quot;);</span>
+<span class="nc" id="L270">    }</span>
+    public void getLineData() throws Exception
+    {
+<span class="nc" id="L273">        String query = &quot;lijnen&quot;;</span>
+<span class="nc" id="L274">        JSONObject lijnenData = this.getJSONfromWeb(query);</span>
+<span class="nc" id="L275">        JSONArray lijnenArray = (JSONArray) lijnenData.get(&quot;data&quot;);</span>
+<span class="nc" id="L276">        int blconnection = 0;</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        for(int i = 0; i &lt; lijnenArray.size(); i++)</span>
+        {
+<span class="nc" id="L279">                JSONObject objects = (JSONObject)lijnenArray.get(i);</span>
+<span class="nc" id="L280">                String lijnId = objects.get(&quot;id&quot;).toString();</span>
+<span class="nc" id="L281">                int lijnNummer = Integer.parseInt(objects.get(&quot;linenum&quot;).toString());</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                Richting direction = objects.get(&quot;direction&quot;).toString() == &quot;0&quot; ? Richting.HEEN : Richting.TERUG;</span>
+<span class="nc" id="L283">                String beschrijving = objects.get(&quot;name&quot;).toString();//direction, halte-&gt;id</span>
+<span class="nc" id="L284">                Lijn addLijn = new Lijn(lijnId, lijnNummer, direction, beschrijving);</span>
+                //System.out.println(&quot;I hadded a line with id &quot; + lijnId);
+                //ArrayList&lt;Halte&gt; tempHaltes = new ArrayList&lt;&gt;();
+<span class="nc" id="L287">                JSONArray haltesArray = (JSONArray) objects.get(&quot;stops&quot;);</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">                for(int x = 0; x &lt; haltesArray.size(); x++)</span>
+                {
+<span class="nc" id="L290">                    JSONObject objectsHalte = (JSONObject)haltesArray.get(x);</span>
+<span class="nc" id="L291">                    String stopName = objectsHalte.get(&quot;id&quot;).toString();</span>
+<span class="nc" id="L292">                    Halte h = findStop(stopName);</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                    if(h != null)</span>
+                    {
+<span class="nc" id="L295">                        blconnection++;</span>
+<span class="nc" id="L296">                        addLijn.addHalte(h);</span>
+                    }
+                }
+              
+                
+<span class="nc" id="L301">                this.lijnen.add(addLijn);</span>
+        }
+<span class="nc" id="L303">        System.out.println(&quot;Added &quot; + this.lijnen.size() + &quot; buslines to application&quot;);</span>
+<span class="nc" id="L304">        System.out.println(&quot;Added &quot; + blconnection + &quot; busline -&gt; busstop connections&quot;);</span>
+<span class="nc" id="L305">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

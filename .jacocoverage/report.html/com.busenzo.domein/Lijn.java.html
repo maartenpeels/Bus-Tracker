@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Lijn.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bus-Enzo&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">com.busenzo.domein</a> &gt; <span class="el_source">Lijn.java</span></div><h1>Lijn.java</h1><pre class="source lang-java linenums">package com.busenzo.domein;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Lijn {
+
+    private final String id;
+    private final int nummer;
+    private final Richting richting;
+    private final String beschrijving;
+<span class="fc" id="L12">    public ArrayList&lt;Rit&gt; ritten = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L13">    public ArrayList&lt;Halte&gt; haltes = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Maak een nieuwe lijn aan. Er mag nog geen lijn bestaan met hetzelfde
+     * nummer, richting en beschrijving.
+     *
+     * @param id: LijnID geleverd door ov database
+     * @param nummer: Het lijnnummer
+     * @param richting: De richting van de lijn
+     * @param beschrijving Beschrijving van de lijn.
+     */
+<span class="fc" id="L24">    public Lijn(String id, int nummer, Richting richting, String beschrijving) {</span>
+<span class="fc" id="L25">        this.id = id;</span>
+<span class="fc" id="L26">        this.nummer = nummer;</span>
+<span class="fc" id="L27">        this.richting = richting;</span>
+<span class="fc" id="L28">        this.beschrijving = beschrijving;</span>
+<span class="fc" id="L29">        this.haltes = haltes;</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * Voeg een halte toe aan deze lijn
+     *
+     * @param halte: De toe te voegen halte, deze halte mag bij deze lijn nog
+     * niet bestaan.
+     */
+    public boolean addHalte(Halte halte) {
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (Halte h : haltes) {</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">            if (h.getId() == halte.getId()) {</span>
+<span class="fc" id="L41">                return false;</span>
+            }
+<span class="fc" id="L43">        }</span>
+
+<span class="fc" id="L45">        this.haltes.add(halte);</span>
+<span class="fc" id="L46">        return true;</span>
+    }
+
+    /**
+     * Voeg een lijst van haltes toe aan deze lijn
+     *
+     * @param haltes: Een lijst van de toe te voegen haltes, iedere individuele
+     * halte mag bij deze lijn nog niet bestaan
+     */
+    public boolean addHaltes(Halte[] haltes) {
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        for (Halte h1 : this.haltes) {</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            for (Halte h2 : haltes) {</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">                if (h1.getId() == h2.getId()) {</span>
+<span class="fc" id="L59">                    return false;</span>
+                }
+
+            }
+<span class="fc" id="L63">        }</span>
+
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (Halte h3 : haltes) {</span>
+<span class="fc" id="L66">            this.haltes.add(h3);</span>
+        }
+<span class="fc" id="L68">        return true;</span>
+        
+
+    }
+
+    /**
+     * Haal de ritten op die bij deze lijn horen.
+     *
+     * @return Een lijst van ritten die bij deze lijn horen
+     */
+    public List&lt;Rit&gt; getRitten() {
+<span class="fc" id="L79">        return this.ritten;</span>
+    }
+
+    /**
+     * Voeg een rit toe aan de lijn.
+     *
+     * @param rit De toe te voegen rit. Deze rit mag bij deze lijn nog niet
+     * bestaan.
+     */
+    public boolean addRit(Rit rit) {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for(Rit r : ritten)</span>
+        {
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">            if(r.getLijn().getId() == rit.getLijn().getId() &amp;&amp; r.getVerwachteAankomstTijd() == rit.getVerwachteAankomstTijd()) {</span>
+<span class="fc" id="L92">                return false;</span>
+            }
+<span class="fc" id="L94">        }</span>
+        
+<span class="fc" id="L96">        this.ritten.add(rit);</span>
+<span class="fc" id="L97">        return true;</span>
+    }
+
+    /**
+     * Vraag het lijnnummer op
+     *
+     * @return Het lijnnummer van deze lijn
+     */
+    public int getNummer() {
+<span class="fc" id="L106">        return nummer;</span>
+    }
+
+    public String getId() {
+<span class="fc" id="L110">        return this.id;</span>
+    }
+
+    /**
+     * Vraag de richting op van de lijn (heen of terug)
+     *
+     * @return De richting van de lijn
+     */
+    public Richting getRichting() {
+<span class="fc" id="L119">        return richting;</span>
+    }
+
+    /**
+     * Vraag de beschrijvin van de lijn op
+     *
+     * @return De lijnbeschrijving
+     */
+    public String getBeschrijving() {
+<span class="fc" id="L128">        return beschrijving;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

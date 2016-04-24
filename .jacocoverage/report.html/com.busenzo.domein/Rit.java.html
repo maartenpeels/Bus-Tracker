@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Rit.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bus-Enzo&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">com.busenzo.domein</a> &gt; <span class="el_source">Rit.java</span></div><h1>Rit.java</h1><pre class="source lang-java linenums">package com.busenzo.domein;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+public class Rit {
+    
+    private LocalDateTime verwachteAankomstTijd;
+    private LocalDateTime aankomstTijd;
+    private Bus bus;
+    private Lijn lijn;
+
+    /**
+     * Maak een rit aan op een bepaalde lijn
+     * @param verwachtteAankomstTijd De verwachtte aankomsttijd bij de eindhalte
+     * @param lijn: De lijn waarbij deze rit hoort, nooit null
+     */
+<span class="fc" id="L18">    public Rit(LocalDateTime verwachtteAankomstTijd, Lijn lijn) {</span>
+<span class="fc" id="L19">        this.lijn = lijn;</span>
+<span class="fc" id="L20">        this.verwachteAankomstTijd = verwachtteAankomstTijd;</span>
+<span class="fc" id="L21">    }</span>
+
+    /**
+     * Haal de bus op die deze rit rijdt. 
+     * @return De bus die deze rit rijdt. Kan null zijn als de rit nog niet vertrokken is
+     */
+    public Bus getBus() {
+<span class="fc" id="L28">        return this.bus;</span>
+    }
+    
+    public void setAankomstTijd(LocalDateTime aankomstTijd)
+    {
+<span class="fc" id="L33">        this.aankomstTijd = aankomstTijd;</span>
+<span class="fc" id="L34">    }</span>
+
+    /**
+     * Haal de lijn op waarbij deze rit hoort
+     * @return De lijn waarop deze rit rijdt 
+     */
+    public Lijn getLijn() {
+<span class="fc" id="L41">        return this.lijn;</span>
+    }
+
+    /**
+     * Haal de verwachtte aankomsttijd bij de eindhalte op
+     * @return de verwachtte aankomsttijd bij de eindhalte
+     */
+    public LocalDateTime getVerwachteAankomstTijd() {
+<span class="fc" id="L49">        return verwachteAankomstTijd;</span>
+    }
+
+    /**
+     * Vraag de verwachtte aankomsttijd op bij de volgende halte
+     * @return De verwachtte aankomsttijd bij de volgende halte
+     */
+    public LocalDateTime getAankomstTijd() {
+<span class="fc" id="L57">        return aankomstTijd;</span>
+    }
+
+    /**
+     * Voeg een bus toe welke deze rit gaat rijden. 
+     * @param bus : De bus die deze rit gaat rijden, mag niet null zijn
+     */
+    public void setBus(Bus bus) {
+<span class="fc" id="L65">        this.bus = bus;</span>
+<span class="fc" id="L66">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FXMLDocumentController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bus-Enzo&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">com.busenzo.gui</a> &gt; <span class="el_source">FXMLDocumentController.java</span></div><h1>FXMLDocumentController.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.busenzo.gui;
+
+import com.busenzo.administratie.Administratie;
+import com.busenzo.domein.*;
+import com.lynden.gmapsfx.GoogleMapView;
+import com.lynden.gmapsfx.MapComponentInitializedListener;
+import com.lynden.gmapsfx.javascript.object.GoogleMap;
+import com.lynden.gmapsfx.javascript.object.InfoWindow;
+import com.lynden.gmapsfx.javascript.object.InfoWindowOptions;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import com.busenzo.gui.FXMLDocumentController;
+import com.lynden.gmapsfx.javascript.event.UIEventHandler;
+import com.lynden.gmapsfx.javascript.event.UIEventType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javax.swing.JOptionPane;
+import netscape.javascript.JSObject;
+import java.lang.Runtime;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import javafx.scene.control.Label;
+
+/**
+ *
+ * @author Beheerders
+ */
+<span class="nc" id="L50">public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler {</span>
+
+    @FXML
+    private ArrayList&lt;Halte&gt; mapHaltes;
+    private ArrayList&lt;Lijn&gt; mapLijnen;
+<span class="nc" id="L55">    private ArrayList&lt;Marker&gt; mapMarkers = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L56">    private ArrayList&lt;Marker&gt; mapBussen = new ArrayList&lt;&gt;();</span>
+    public ScheduledExecutorService executor;
+    private Runnable refreshData;
+    @FXML
+    private ImageView busEnzoLogo;
+
+    @FXML
+    private CheckBox cbStops;
+
+    @FXML
+    private Label lblSelectedStop;
+    @FXML
+    private Label lblBusNumber;
+    @FXML
+    private Label lblBusId;
+
+    @FXML
+    private TextField tfSearch;
+
+    @FXML
+    private CheckBox cbBusses;
+
+    @FXML
+    private GoogleMapView mapView;
+
+    private GoogleMap map;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+
+<span class="nc" id="L86">        Administratie am = new Administratie();</span>
+        try {
+<span class="nc" id="L88">            am.getHalteData();</span>
+<span class="nc" id="L89">            am.getLineData();</span>
+<span class="nc" id="L90">            am.getRouteData();</span>
+<span class="nc" id="L91">            this.mapHaltes = am.getHaltes();</span>
+<span class="nc" id="L92">            this.mapLijnen = am.getBussen();</span>
+<span class="nc" id="L93">        } catch (Exception ex) {</span>
+<span class="nc" id="L94">            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L95">        }</span>
+<span class="nc" id="L96">        this.executor = Executors.newSingleThreadScheduledExecutor();</span>
+<span class="nc" id="L97">        this.refreshData = new Runnable() {</span>
+            public void run() {
+<span class="nc" id="L99">                reloadData(am);</span>
+<span class="nc" id="L100">            }</span>
+        };
+<span class="nc" id="L102">        Runtime.getRuntime().addShutdownHook(new Thread() {</span>
+            @Override
+            public void run() {
+<span class="nc" id="L105">                System.out.println(&quot;Application shutdown detected.. Quitting current jobs&quot;);</span>
+<span class="nc" id="L106">                executor.shutdown();</span>
+<span class="nc" id="L107">            }</span>
+        });
+<span class="nc" id="L109">        executor.scheduleAtFixedRate(this.refreshData, 2, 2, TimeUnit.MINUTES);</span>
+<span class="nc" id="L110">        mapView.addMapInializedListener(this);</span>
+<span class="nc" id="L111">    }</span>
+
+    @Override
+    public void mapInitialized() {
+
+        //Set the initial properties of the map.
+<span class="nc" id="L117">        MapOptions mapOptions = new MapOptions();</span>
+<span class="nc" id="L118">        mapOptions.center(new LatLong(51.44799, 365.46328))</span>
+<span class="nc" id="L119">                .mapType(MapTypeIdEnum.ROADMAP)</span>
+<span class="nc" id="L120">                .overviewMapControl(false)</span>
+<span class="nc" id="L121">                .panControl(false)</span>
+<span class="nc" id="L122">                .rotateControl(false)</span>
+<span class="nc" id="L123">                .scaleControl(false)</span>
+<span class="nc" id="L124">                .streetViewControl(false)</span>
+<span class="nc" id="L125">                .zoomControl(true)</span>
+<span class="nc" id="L126">                .zoom(12);</span>
+
+<span class="nc" id="L128">        map = mapView.createMap(mapOptions);</span>
+
+        //Add markers to the map
+        //this.loadMapHaltes(true);
+<span class="nc" id="L132">    }</span>
+
+    public void showBusses() {
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (cbBusses.isSelected()) {</span>
+<span class="nc" id="L136">            this.clearMapBussen();</span>
+<span class="nc" id="L137">            this.loadMapBussen();</span>
+        } else {
+<span class="nc" id="L139">            this.clearMapBussen();</span>
+<span class="nc" id="L140">            System.out.println(&quot;deselected markers&quot;);</span>
+        }
+<span class="nc" id="L142">    }</span>
+
+    @FXML
+    public void showStops() {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (cbStops.isSelected()) {</span>
+<span class="nc" id="L147">            this.clearMapHaltes();</span>
+<span class="nc" id="L148">            this.loadMapHaltes();</span>
+        } else {
+<span class="nc" id="L150">            this.clearMapHaltes();</span>
+<span class="nc" id="L151">            System.out.println(&quot;deselected markers&quot;);</span>
+        }
+<span class="nc" id="L153">    }</span>
+
+    public void clearMapHaltes() {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        for (Marker m : this.mapMarkers) {</span>
+<span class="nc" id="L157">            map.removeMarker(m);</span>
+<span class="nc" id="L158">        }</span>
+<span class="nc" id="L159">    }</span>
+
+    public void clearMapBussen() {
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        for (Marker m : this.mapBussen) {</span>
+<span class="nc" id="L163">            map.removeMarker(m);</span>
+<span class="nc" id="L164">        }</span>
+<span class="nc" id="L165">    }</span>
+
+    public void searchBusOrStop() throws InterruptedException {
+<span class="nc" id="L168">        boolean stopFound = searchHalte(tfSearch.getText());</span>
+<span class="nc" id="L169">        boolean busFound = searchBussen(tfSearch.getText());</span>
+<span class="nc bnc" id="L170" title="All 4 branches missed.">        if (!stopFound &amp;&amp; !busFound) {</span>
+<span class="nc" id="L171">            System.out.println(&quot;No bus or stop found&quot;);</span>
+<span class="nc" id="L172">            JOptionPane.showMessageDialog(null, &quot;Geen bus of halte gevonden, aub wijzig uw zoekterm!&quot;);</span>
+        }
+<span class="nc" id="L174">    }</span>
+
+    public void resetMap() {
+<span class="nc" id="L177">        LatLong eindhoven = new LatLong(51.44799, 365.46328);</span>
+<span class="nc" id="L178">        map.setCenter(eindhoven);</span>
+<span class="nc" id="L179">        map.setZoom(12);</span>
+<span class="nc" id="L180">    }</span>
+
+    public void showBusDetails() {
+
+<span class="nc" id="L184">    }</span>
+
+    public void loadMapHaltes() {
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        for (Halte a : this.mapHaltes) {</span>
+<span class="nc" id="L188">            double cordsX = a.getCoordinaten()[0];</span>
+<span class="nc" id="L189">            double cordsY = a.getCoordinaten()[1];</span>
+<span class="nc" id="L190">            LatLong mappos = new LatLong(cordsX, cordsY);</span>
+<span class="nc" id="L191">            MarkerOptions pointeropts = new MarkerOptions();</span>
+<span class="nc" id="L192">            pointeropts.icon(&quot;http://37.97.149.53//busenzo/external/resources/busstop.png&quot;);</span>
+<span class="nc" id="L193">            pointeropts.position(mappos);</span>
+<span class="nc" id="L194">            Marker pointer = new Marker(pointeropts);</span>
+<span class="nc" id="L195">            pointeropts.title(a.getNaam());</span>
+            //InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+            //infoWindowOptions.content(a.getNaam());
+            //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+            //pointerInfoWindow.open(map, pointer);
+<span class="nc" id="L200">            this.mapMarkers.add(pointer);</span>
+<span class="nc" id="L201">            map.addMarker(pointer);</span>
+<span class="nc" id="L202">            map.addUIEventHandler(pointer, UIEventType.click, this);</span>
+            //removeMarker werkt hier niet omdat er steeds nieuwe instanties van een Marker wordt aagemaakt
+<span class="nc" id="L204">        }</span>
+
+        // System.out.println(&quot;Added &quot; + this.mapHaltes.size() + &quot; items to map&quot;);
+<span class="nc" id="L207">    }</span>
+
+    public void loadMapBussen() {
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        for (Lijn l : this.mapLijnen) {</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            for (Rit r : l.ritten) {</span>
+<span class="nc" id="L212">                Bus b = r.getBus();</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">                if (b != null) {</span>
+<span class="nc" id="L214">                    double cordsX = b.getCoordinaten()[0];</span>
+<span class="nc" id="L215">                    double cordsY = b.getCoordinaten()[1];</span>
+<span class="nc" id="L216">                    LatLong mappos = new LatLong(cordsX, cordsY);</span>
+<span class="nc" id="L217">                    MarkerOptions pointeropts = new MarkerOptions();</span>
+<span class="nc" id="L218">                    pointeropts.icon(&quot;http://37.97.149.53/busenzo/external/resources/bus.png&quot;);</span>
+<span class="nc" id="L219">                    pointeropts.position(mappos);</span>
+<span class="nc" id="L220">                    Marker pointer = new Marker(pointeropts);</span>
+<span class="nc" id="L221">                    pointeropts.title(l.getBeschrijving());</span>
+                    //InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+                    //infoWindowOptions.content(a.getNaam());
+                    //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+                    //pointerInfoWindow.open(map, pointer);
+<span class="nc" id="L226">                    this.mapBussen.add(pointer);</span>
+<span class="nc" id="L227">                    map.addMarker(pointer);</span>
+<span class="nc" id="L228">                    map.addUIEventHandler(pointer, UIEventType.click, this);</span>
+                    //removeMarker werkt hier niet omdat er steeds nieuwe instanties van een Marker wordt aagemaakt
+                }
+<span class="nc" id="L231">            }</span>
+<span class="nc" id="L232">        }</span>
+
+        // System.out.println(&quot;Added &quot; + this.mapHaltes.size() + &quot; items to map&quot;);
+<span class="nc" id="L235">    }</span>
+
+    public boolean searchHalte(String naam) throws InterruptedException {
+<span class="nc" id="L238">        boolean stopfound = false;</span>
+<span class="nc" id="L239">        this.clearMapHaltes();</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        for (Halte a : this.mapHaltes) {</span>
+<span class="nc" id="L241">            double cordsX = a.getCoordinaten()[0];</span>
+<span class="nc" id="L242">            double cordsY = a.getCoordinaten()[1];</span>
+<span class="nc" id="L243">            LatLong mappos = new LatLong(cordsX, cordsY);</span>
+<span class="nc" id="L244">            MarkerOptions pointeropts = new MarkerOptions();</span>
+<span class="nc" id="L245">            pointeropts.icon(&quot;http://37.97.149.53/busenzo/external/resources/busstop.png&quot;);</span>
+<span class="nc" id="L246">            pointeropts.position(mappos);</span>
+            Marker pointer;
+<span class="nc" id="L248">            pointeropts.title(a.getNaam());</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">            if (a.getNaam().toLowerCase().contains(naam.toLowerCase())) {</span>
+<span class="nc" id="L250">                stopfound = true;</span>
+<span class="nc" id="L251">                map.setCenter(mappos);</span>
+<span class="nc" id="L252">                map.setZoom(18);</span>
+                //map.addMarker( pointer );
+<span class="nc" id="L254">                InfoWindowOptions infoWindowOptions = new InfoWindowOptions();</span>
+<span class="nc" id="L255">                infoWindowOptions.content(a.getNaam());</span>
+<span class="nc" id="L256">                InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);</span>
+<span class="nc" id="L257">                pointeropts.position(mappos);</span>
+<span class="nc" id="L258">                pointer = new Marker(pointeropts);</span>
+<span class="nc" id="L259">                pointerInfoWindow.open(map, pointer);</span>
+<span class="nc" id="L260">                this.mapMarkers.add(pointer);</span>
+<span class="nc" id="L261">                map.addMarker(pointer);</span>
+<span class="nc" id="L262">                break;</span>
+            }
+<span class="nc" id="L264">        }</span>
+<span class="nc" id="L265">        System.out.println(&quot;Applied filter to map&quot;);</span>
+
+<span class="nc" id="L267">        return stopfound;</span>
+
+    }
+
+    public boolean searchBussen(String naam) throws InterruptedException {
+<span class="nc" id="L272">        this.clearMapBussen();</span>
+<span class="nc" id="L273">        boolean busFound = false;</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">        for (Lijn l : this.mapLijnen) {</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">            for (Rit r : l.ritten) {</span>
+<span class="nc" id="L276">                Bus b = r.getBus();</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">                if (b != null) {</span>
+<span class="nc" id="L278">                    double cordsX = b.getCoordinaten()[0];</span>
+<span class="nc" id="L279">                    double cordsY = b.getCoordinaten()[1];</span>
+<span class="nc" id="L280">                    LatLong mappos = new LatLong(cordsX, cordsY);</span>
+<span class="nc" id="L281">                    MarkerOptions pointeropts = new MarkerOptions();</span>
+<span class="nc" id="L282">                    pointeropts.icon(&quot;http://37.97.149.53/busenzo/external/resources/bus.png&quot;);</span>
+<span class="nc" id="L283">                    pointeropts.position(mappos);</span>
+                    Marker pointer;
+<span class="nc" id="L285">                    pointeropts.title(l.getBeschrijving());</span>
+<span class="nc" id="L286">                    int busNummer = l.getNummer();</span>
+<span class="nc" id="L287">                    String busNumberSearcher = String.valueOf(busNummer);</span>
+<span class="nc bnc" id="L288" title="All 4 branches missed.">                    if (l.getBeschrijving().toLowerCase().contains(naam.toLowerCase()) || busNumberSearcher.contains(naam)) {</span>
+<span class="nc" id="L289">                        map.setCenter(mappos);</span>
+<span class="nc" id="L290">                        map.setZoom(18);</span>
+                        //map.addMarker( pointer );
+<span class="nc" id="L292">                        InfoWindowOptions infoWindowOptions = new InfoWindowOptions();</span>
+<span class="nc" id="L293">                        infoWindowOptions.content(l.getBeschrijving());</span>
+<span class="nc" id="L294">                        InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);</span>
+<span class="nc" id="L295">                        pointeropts.position(mappos);</span>
+<span class="nc" id="L296">                        pointer = new Marker(pointeropts);</span>
+<span class="nc" id="L297">                        pointerInfoWindow.open(map, pointer);</span>
+<span class="nc" id="L298">                        this.mapBussen.add(pointer);</span>
+<span class="nc" id="L299">                        map.addMarker(pointer);</span>
+<span class="nc" id="L300">                        System.out.println(&quot;Applied filter to map&quot;);</span>
+<span class="nc" id="L301">                        busFound = true;</span>
+                    }
+                }
+
+<span class="nc" id="L305">            }</span>
+<span class="nc" id="L306">        }</span>
+<span class="nc" id="L307">        return busFound;</span>
+    }
+
+    /*
+    public void loadMapRitten()
+    {
+        for(Halte a : this.mapHaltes){
+            double cordsX = a.getCoordinaten()[0];
+            double cordsY = a.getCoordinaten()[1];
+            LatLong mappos = new LatLong(cordsX, cordsY);
+            MarkerOptions pointeropts = new MarkerOptions();
+            //pointeropts.icon(&quot;C:\\Users\\Gebruiker\\Documents\\NetBeansProjects\\Bus-Tracker\\src\\com\\busenzo\\gui\\bstop.png&quot;);
+            pointeropts.position(mappos);
+            Marker pointer = new Marker(pointeropts);
+            pointeropts.title(a.getNaam());
+            //InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+            //infoWindowOptions.content(a.getNaam());
+            //InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+            //pointerInfoWindow.open(map, pointer);
+            map.addMarker( pointer );
+        }
+       
+        System.out.println(&quot;Added &quot; + this.mapHaltes.size() + &quot; items to map&quot;);
+        
+    }
+     */
+    public void reloadData(Administratie am) {
+<span class="nc" id="L334">        System.out.println(&quot;Starting data refreshing&quot;);</span>
+        try {
+<span class="nc" id="L336">            am.getRouteData();</span>
+<span class="nc" id="L337">            this.mapLijnen = am.getBussen();</span>
+<span class="nc" id="L338">        } catch (Exception ex) {</span>
+<span class="nc" id="L339">            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L340">        }</span>
+<span class="nc" id="L341">        System.out.println(&quot;Refreshing done&quot;);</span>
+<span class="nc" id="L342">        showBusses();</span>
+<span class="nc" id="L343">        showStops();</span>
+<span class="nc" id="L344">    }</span>
+
+    public void clickedHalte(LatLong pos) {
+<span class="nc" id="L347">        NumberFormat formatter = new DecimalFormat(&quot;#0.00000&quot;);</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">        for (Halte a : this.mapHaltes) {</span>
+<span class="nc" id="L349">            double cordsX = a.getCoordinaten()[0];</span>
+<span class="nc" id="L350">            double cordsY = a.getCoordinaten()[1];</span>
+<span class="nc bnc" id="L351" title="All 4 branches missed.">            if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) &amp;&amp; formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {</span>
+<span class="nc" id="L352">                lblSelectedStop.setText(a.getNaam());</span>
+            }
+<span class="nc" id="L354">        }</span>
+<span class="nc" id="L355">    }</span>
+
+    public void clickedBus(LatLong pos) {
+<span class="nc" id="L358">        NumberFormat formatter = new DecimalFormat(&quot;#0.00000&quot;);</span>
+<span class="nc bnc" id="L359" title="All 2 branches missed.">        for (Lijn l : this.mapLijnen) {</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">            for (Rit r : l.ritten) {</span>
+<span class="nc" id="L361">                Bus b = r.getBus();</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">                if (b != null) {</span>
+<span class="nc" id="L363">                    double cordsX = b.getCoordinaten()[0];</span>
+<span class="nc" id="L364">                    double cordsY = b.getCoordinaten()[1];</span>
+<span class="nc bnc" id="L365" title="All 4 branches missed.">                    if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) &amp;&amp; formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {</span>
+<span class="nc" id="L366">                        lblBusId.setText(&quot;&quot; + b.getNummer());</span>
+<span class="nc" id="L367">                        lblBusNumber.setText(&quot;&quot; + b.getHuidigeRit().getLijn().getNummer());</span>
+                    }
+                }
+<span class="nc" id="L370">            }</span>
+<span class="nc" id="L371">        }</span>
+<span class="nc" id="L372">    }</span>
+
+    @Override
+    public void handle(JSObject obj) {
+<span class="nc" id="L376">        NumberFormat formatter = new DecimalFormat(&quot;#0.00000&quot;);</span>
+<span class="nc" id="L377">        LatLong pos = new LatLong((JSObject) obj.getMember(&quot;latLng&quot;));</span>
+<span class="nc bnc" id="L378" title="All 4 branches missed.">        if (cbBusses.isSelected() &amp;&amp; !cbStops.isSelected()) {</span>
+<span class="nc" id="L379">            clickedBus(pos);</span>
+<span class="nc bnc" id="L380" title="All 4 branches missed.">        } else if (cbStops.isSelected() &amp;&amp; !cbBusses.isSelected()) {</span>
+<span class="nc" id="L381">            clickedHalte(pos);</span>
+        }
+<span class="nc" id="L383">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

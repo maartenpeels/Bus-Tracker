@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Melding.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bus-Enzo&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">com.busenzo.domein</a> &gt; <span class="el_source">Melding.java</span></div><h1>Melding.java</h1><pre class="source lang-java linenums">package com.busenzo.domein;
+
+import java.util.Date;
+
+public class Melding {
+    
+    private Date tijdstip;
+    private String beschrijving;
+    private Boolean actief;
+    private Integer zender;
+    private Integer ontvanger;
+    private Categorie categorie;
+
+    /**
+     * Maak een nieuwe melding aan. Ontvanger of zender is altijd -1.
+     * @param beschrijving: Beschrijving van de melding, mag geen lege string zijn
+     * @param zender: De zender van de melding, -1 als de melding van het beheer naar een bus is
+     * @param ontvanger: De ontvanger van de melding, -1 als de melding van een bus naar het beheer is 
+     */
+<span class="fc" id="L20">    public Melding(String beschrijving, int zender, int ontvanger) {</span>
+<span class="pc bpc" id="L21" title="2 of 8 branches missed.">        if((zender == -1 &amp;&amp; ontvanger == -1) || (zender &gt;=0 &amp;&amp; ontvanger &gt;=0)){</span>
+<span class="fc" id="L22">            throw new IllegalArgumentException();</span>
+        }  
+        else{
+<span class="fc" id="L25">            this.beschrijving = beschrijving;</span>
+<span class="fc" id="L26">            this.zender = zender;</span>
+<span class="fc" id="L27">            this.ontvanger = ontvanger;</span>
+<span class="fc" id="L28">            this.actief = true;</span>
+        }
+        
+<span class="fc" id="L31">    }</span>
+
+    /**
+     * Kijk of deze melding nog actief is
+     * @return True als de melding actief is, anders false
+     */
+    public Boolean getActief() {
+<span class="fc" id="L38">            return this.actief;</span>
+    }
+
+    /**
+     * Verander de status van de melding
+     * @param actief True als de melding nog actief is, false als dit niet meer zo is
+     */
+    public void setActief(Boolean actief) {
+<span class="nc" id="L46">            this.actief = actief;</span>
+<span class="nc" id="L47">    }</span>
+
+    /**
+     * Vraag het tijdstip van de melding op
+     * @return Het tijdstip waarop de melding is gedaan
+     */
+    public Date getTijdstip() {
+<span class="nc" id="L54">        return tijdstip;</span>
+    }
+    
+    /**
+     * Vraag de beschrijving op van de melding
+     * @return De beschrijving van de melding (het daadwerkelijke bericht)
+     */
+    public String getBeschrijving() {
+<span class="fc" id="L62">        return beschrijving;</span>
+    }
+    
+    /**
+     * Vraag de verzender van de melding op
+     * @return Het chassisnummer (id) van de bus welke de melding verzonden heeft, of -1 als de melding
+     * door de beheerder is gedaan
+     */
+    public Integer getZender() {
+<span class="fc" id="L71">        return zender;</span>
+    }
+    
+    /**
+     * Vraag de ontvanger van de melding op
+     * @return Het chassisnummer (id) van de bus welke de melding ontvangen heeft, of -1 als de ontvanger
+     * de beheerder is
+     */
+    public Integer getOntvanger() {
+<span class="fc" id="L80">        return ontvanger;</span>
+    }
+    
+    /**
+     * Vraag de categorie op waar deze melding onder valt
+     * @return De categorie van deze melding
+     */
+    public Categorie getCategorie() {
+<span class="nc" id="L88">        return categorie;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
