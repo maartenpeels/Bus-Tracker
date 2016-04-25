@@ -10,6 +10,8 @@ import com.busenzo.chauffeur.persistence.IDataKoppeling;
 import com.busenzo.domein.Halte;
 import com.busenzo.domein.Melding;
 import com.busenzo.domein.Rit;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -108,7 +110,9 @@ public class ChauffeurAdmin {
      */
     public ArrayList<String> getVolgendeHaltes(){
         ArrayList<String> output = new ArrayList<>();
-        
+        for(String s : this.huidigeRit.getLijn().getHalteNamen().subList(this.huidigeRit.getLijn().getHalteNamen().indexOf(this.huidigeHalte.getNaam()), this.huidigeRit.getLijn().getHalteNamen().size()-1)){
+            output.add(s);
+        }
         return output;
     }
     
@@ -118,7 +122,11 @@ public class ChauffeurAdmin {
      * de eventuele vertraging is in minuten
      */
     public String getVerwachtteEindAankomsttijd(){
-        return null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime dateTime = this.huidigeRit.getVerwachteAankomstTijd();
+        String output = dateTime.format(formatter);
+        //TODO: kijken naar vertraging
+        return output;
     }
     
     /**
