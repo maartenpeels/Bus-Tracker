@@ -52,8 +52,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 
 /**
  *
@@ -118,6 +120,17 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 public void changed(ObservableValue<? extends String> ov, 
                     String old_val, String selectedHalte) {
                     geselecteerdeHalte = selectedHalte;
+            }
+        });
+        lvStops.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            try {
+                searchHalte(lvStops.getSelectionModel().getSelectedItem().toString());
+            } catch (InterruptedException ex) {
+                System.out.println(ex.getMessage());
+                //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             }
         });
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -268,6 +281,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     public boolean searchHalte(String naam) throws InterruptedException {
         boolean stopfound = false;
+        ObservableList<String> items = FXCollections.observableArrayList();
         this.clearMapHaltes();
         ArrayList<Halte> result = new ArrayList<>();
         result.addAll(admin.zoekHalte(naam));
@@ -275,15 +289,23 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             for (Marker m : this.mapMarkers) {
                 if (m instanceof HalteMarker) {
                     HalteMarker hm = (HalteMarker) m;
+                    int haltesCount = 0;
                     for (Halte h : result) {
-                        if (hm.getHalteID().equals(h.getId())) {
-                            m.setVisible(true);
-                            stopfound = true;
-                            InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
-                            infoWindowOptions.content(h.getNaam());
-                            InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
-                            pointerInfoWindow.open(map, m);
+                        haltesCount++;
+                        if (haltesCount < 11){
+                            if (hm.getHalteID().equals(h.getId())) {
+                                items.add(h.getNaam());
+                                
+                               
+                                m.setVisible(true);
+                                stopfound = true;
+                                InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+                                infoWindowOptions.content(h.getNaam());
+                                InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
+                                pointerInfoWindow.open(map, m);
+                            }
                         }
+                        lvStops.setItems(items);
                     }
                 }
             }
@@ -356,12 +378,16 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     public void clickedHalte(LatLong pos) {
+        ObservableList<String> items = FXCollections.observableArrayList();
         NumberFormat formatter = new DecimalFormat("#0.00000");
         for (Halte a : this.admin.getHaltes()) {
             double cordsX = a.getCoordinaten()[0];
             double cordsY = a.getCoordinaten()[1];
             if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
-                lblSelectedStop.setText(a.getNaam());
+                //lblSelectedStop.setText(a.getNaam());
+                items.add(a.getNaam());
+                lvStops.setItems(items);
+                
             }
         }
     }
@@ -398,5 +424,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     public void directionsReceived(DirectionsResult dr, DirectionStatus ds) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
+   
 
 }
