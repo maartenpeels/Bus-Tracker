@@ -49,7 +49,7 @@ public class ChauffeurAdmin {
      * @return De melding als deze succesvol aangemaakt en verzonden is, anders null
      */
     public Melding verstuurMelding(String beschrijving){
-        Melding m = new Melding(beschrijving, this.huidigeRit.getBus().getNummer(), -1);
+        Melding m = new Melding(beschrijving, this.huidigeRit.getBus().getNummer(), -1, LocalDateTime.now());
         //TODO: zorgen dat melding verstuurd wordt
         return m;
     }
@@ -59,7 +59,7 @@ public class ChauffeurAdmin {
      * @param m de ontvangen melding
      */
     public void ontvangMelding(Melding m){
-        //TODO: melding ontvangen van beheer via netwerk
+        //TODO: melding ontvangen van beheer via netwerk(Gebruik functie in Administratie)
         this.ontvangenMeldingen.add(m);
     }
     
@@ -82,7 +82,7 @@ public class ChauffeurAdmin {
                 output = m;
             }
             else{
-                if(m.getTijdstip().after(output.getTijdstip())){
+                if(m.getTijdstip().isAfter(output.getTijdstip())){
                     output = m;
                 }
             }

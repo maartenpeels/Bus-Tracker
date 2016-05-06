@@ -4,10 +4,16 @@ import java.util.ArrayList;
 import com.busenzo.domein.Bus;
 import com.busenzo.domein.Lijn;
 import com.busenzo.domein.Halte;
+import com.busenzo.domein.Melding;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Administratie {
     private String restServer = "http://37.97.149.53/busenzo/api/";
@@ -206,6 +212,54 @@ public class Administratie {
                 output.add(h);
             }
         }
+        return output;
+    }
+    
+    /**
+     * haal de lijst van meldingen op na een bepaald id
+     * @return een onwijzigbare lijst van meldingen
+     */
+    public List<Melding> getMeldingen(int laatsteId, int van, int naar) throws Exception
+    {
+        ArrayList<Melding> output = new ArrayList<>();
+        String query = "";
+        
+        if(van == -1)
+        {
+            query = "meldingen&to=" + naar + "&last=" + laatsteId;
+        }else if(naar == -1)
+        {
+            query = "meldingen&from=" + van + "&last=" + laatsteId;
+        }else{
+            return null;
+        }
+        
+        JSONObject meldingData = dbKoppeling.getJSONfromWeb(query);
+        JSONArray meldingArray = (JSONArray) meldingData.get("data");
+        for (Object meldingArray1 : meldingArray) {
+            JSONObject objects = (JSONObject) meldingArray1;
+            
+            String beschrijving = objects.get("message").toString();
+            
+            String tijd = objects.get("time").toString();
+            DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime vat = LocalDateTime.parse(tijd, frm);
+            
+            int van1 = Integer.parseInt(objects.get("from").toString());
+            
+            int naar1 = Integer.parseInt(objects.get("to").toString());
+            
+            if(van == -1)
+            {
+                Melding m = new Melding(beschrijving, -1 , naar1, vat);
+                output.add(m);
+            }else if(naar == -1)
+            {
+                Melding m = new Melding(beschrijving, van1, -1, vat);
+                output.add(m);
+            }
+        }
+        
         return output;
     }
 }

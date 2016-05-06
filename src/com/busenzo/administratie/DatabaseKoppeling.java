@@ -45,6 +45,7 @@ public class DatabaseKoppeling {
     {
         //String getUrl = this.restServer + "/" + this.restKey + "/" + query;
         String getUrl = "http://37.97.149.53/busenzo/api/api.php?key=" + restKey+ "&action=" + query;
+         
         JSONParser parser = new JSONParser();
         String json = readUrl(getUrl);
         // Page page = gson.fromJson(json, Page.class);
@@ -82,6 +83,7 @@ public class DatabaseKoppeling {
         }
 
     }
+    
    private String httpsGet(final String https_url) {
         String ret = "";
 
@@ -101,6 +103,7 @@ public class DatabaseKoppeling {
 
         return ret;
     }
+   
     private String getContent(HttpsURLConnection con){
             if(con!=null){
 
@@ -125,6 +128,7 @@ public class DatabaseKoppeling {
            }
             return "";
    }
+    
    public ArrayList<Halte> getHalteData() throws Exception
     {
         ArrayList<Halte> output = new ArrayList<>();
