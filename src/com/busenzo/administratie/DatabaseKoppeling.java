@@ -225,6 +225,7 @@ public class DatabaseKoppeling {
         System.out.println("Added " + blconnection + " busline -> busstop connections");
         return output;
     }
+
     public ArrayList<Melding> getMeldingen() throws Exception
     {
         ArrayList<Melding> output = new ArrayList<>();
@@ -234,6 +235,7 @@ public class DatabaseKoppeling {
         for (Object meldingData : meldingenArray) {
             JSONObject objects = (JSONObject) meldingData;
             //System.out.println(meldingData.toString());
+            Integer meldingID = Integer.parseInt(objects.get("id").toString());
             String meldingTo = objects.get("to").toString();
             String meldingFrom;
             try
@@ -249,7 +251,7 @@ public class DatabaseKoppeling {
             String meldingDateTime = objects.get("time").toString();
             DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime meldingTime = LocalDateTime.parse(meldingDateTime, frm);
-            Melding addMelding = new Melding(meldingTekst, meldingFrom, meldingTo, meldingTime);
+            Melding addMelding = new Melding(meldingID, meldingTekst, meldingFrom, meldingTo, meldingTime);
             output.add(addMelding);
         }
         System.out.println("Added " + output.size() + " messages to application");

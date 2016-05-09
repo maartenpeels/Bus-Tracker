@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Melding {
-    
+    private Integer meldingID;
     private LocalDateTime tijdstip;
     private String beschrijving;
     private Boolean actief;
@@ -18,7 +18,8 @@ public class Melding {
      * @param zender: De zender van de melding, -1 als de melding van het beheer naar een bus is
      * @param ontvanger: De ontvanger van de melding, -1 als de melding van een bus naar het beheer is 
      */
-    public Melding(String beschrijving, String zender, String ontvanger, LocalDateTime tijd) {
+    public Melding(Integer meldingID, String beschrijving, String zender, String ontvanger, LocalDateTime tijd) {
+            this.meldingID = meldingID;
             this.beschrijving = beschrijving;
             this.zender = zender;
             this.ontvanger = ontvanger;
@@ -65,6 +66,10 @@ public class Melding {
      */
     public String getZender() {
         return zender;
+    }
+    
+    public Integer getID() {
+        return meldingID;
     }
     
     /**

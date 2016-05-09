@@ -61,7 +61,7 @@ public class ChauffeurAdmin {
      */
     public Melding verstuurMelding(String beschrijving){
         String busNummer = new Integer(this.huidigeRit.getBus().getNummer()).toString();
-        Melding m = new Melding(beschrijving, busNummer, "", LocalDateTime.now());
+        Melding m = new Melding(0, beschrijving, busNummer, "", LocalDateTime.now());
         //TODO: zorgen dat melding verstuurd wordt
         return m;
     }

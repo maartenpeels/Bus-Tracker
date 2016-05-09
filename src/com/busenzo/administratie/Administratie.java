@@ -226,12 +226,15 @@ public class Administratie {
 
         return output;
     }
-
+    public List<Melding> getAllMeldingen() {
+        return this.meldingen;
+    }
     /**
      * haal de lijst van meldingen op na een bepaald id
      *
      * @return een onwijzigbare lijst van meldingen
      */
+    /*
     public List<Melding> getMeldingen(int laatsteId, int van, int naar) throws Exception {
         ArrayList<Melding> output = new ArrayList<>();
         String query = "";
@@ -270,4 +273,5 @@ public class Administratie {
 
         return output;
     }
+*/
 }

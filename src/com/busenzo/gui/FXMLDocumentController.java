@@ -95,7 +95,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private CheckBox cbBusses;
     
     @FXML
-    private ComboBox cbMeldingen;
+    private ListView lbNotifications;
 
     @FXML
     private GoogleMapView mapView;
@@ -149,6 +149,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         });
         executor.scheduleAtFixedRate(this.refreshData, 2, 2, TimeUnit.MINUTES);
         mapView.addMapInializedListener(this);
+        showMeldingen();
     }
 
     @Override
@@ -180,6 +181,14 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } else {
             this.clearMapBussen();
             System.out.println("deselected markers");
+        }
+    }
+    public void showMeldingen() {
+        ObservableList<String> items = FXCollections.observableArrayList();
+
+        for(Melding m : admin.getAllMeldingen()) {
+            items.add((m.getZender() == "" ? "Beheerder" : m.getZender()) + " > " +(m.getOntvanger() == "" ? "Beheerder" : m.getOntvanger()) + " (" + m.getID() + ")");
+            this.lbNotifications.setItems(items);
         }
     }
 
