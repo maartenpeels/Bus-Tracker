@@ -8,8 +8,8 @@ public class Melding {
     private LocalDateTime tijdstip;
     private String beschrijving;
     private Boolean actief;
-    private Integer zender;
-    private Integer ontvanger;
+    private String zender;
+    private String ontvanger;
     private Categorie categorie;
 
     /**
@@ -18,18 +18,12 @@ public class Melding {
      * @param zender: De zender van de melding, -1 als de melding van het beheer naar een bus is
      * @param ontvanger: De ontvanger van de melding, -1 als de melding van een bus naar het beheer is 
      */
-    public Melding(String beschrijving, int zender, int ontvanger, LocalDateTime tijd) {
-        if((zender == -1 && ontvanger == -1) || (zender >=0 && ontvanger >=0)){
-            throw new IllegalArgumentException();
-        }  
-        else{
+    public Melding(String beschrijving, String zender, String ontvanger, LocalDateTime tijd) {
             this.beschrijving = beschrijving;
             this.zender = zender;
             this.ontvanger = ontvanger;
             this.actief = true;
             this.tijdstip = tijd;
-        }
-        
     }
 
     /**
@@ -69,7 +63,7 @@ public class Melding {
      * @return Het chassisnummer (id) van de bus welke de melding verzonden heeft, of -1 als de melding
      * door de beheerder is gedaan
      */
-    public Integer getZender() {
+    public String getZender() {
         return zender;
     }
     
@@ -78,7 +72,7 @@ public class Melding {
      * @return Het chassisnummer (id) van de bus welke de melding ontvangen heeft, of -1 als de ontvanger
      * de beheerder is
      */
-    public Integer getOntvanger() {
+    public String getOntvanger() {
         return ontvanger;
     }
     

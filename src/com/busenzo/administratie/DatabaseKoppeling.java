@@ -9,6 +9,7 @@ package com.busenzo.administratie;
 import com.busenzo.domein.Bus;
 import com.busenzo.domein.Halte;
 import com.busenzo.domein.Lijn;
+import com.busenzo.domein.Melding;
 import com.busenzo.domein.Richting;
 import com.busenzo.domein.Rit;
 import java.io.BufferedReader;
@@ -162,7 +163,15 @@ public class DatabaseKoppeling {
             String ritID = objects.get("linekey").toString();
             String verwachteAankomstTijd = objects.get("exp_arrivaltime").toString();
             DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime vat = LocalDateTime.parse(verwachteAankomstTijd, frm);
+            LocalDateTime vat;
+            try
+            {
+                vat = LocalDateTime.parse(verwachteAankomstTijd, frm);
+            }
+            catch(Exception ex)
+            {
+                vat = LocalDateTime.now();
+            }
             String busLat = objects.get("lat").toString();
             String busLon = objects.get("lon").toString();
             for(Lijn l : lijnen){
@@ -214,6 +223,36 @@ public class DatabaseKoppeling {
         }
         System.out.println("Added " + output.size() + " buslines to application");
         System.out.println("Added " + blconnection + " busline -> busstop connections");
+        return output;
+    }
+    public ArrayList<Melding> getMeldingen() throws Exception
+    {
+        ArrayList<Melding> output = new ArrayList<>();
+        String query = "meldingen";
+        JSONObject meldingenData = this.getJSONfromWeb(query);
+        JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
+        for (Object meldingData : meldingenArray) {
+            JSONObject objects = (JSONObject) meldingData;
+            //System.out.println(meldingData.toString());
+            String meldingTo = objects.get("to").toString();
+            String meldingFrom;
+            try
+            {
+                meldingFrom = objects.get("from").toString();
+            }
+            catch(Exception ex)
+            {
+                meldingFrom = "";
+            }
+            String meldingTekst = objects.get("message").toString();
+           
+            String meldingDateTime = objects.get("time").toString();
+            DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime meldingTime = LocalDateTime.parse(meldingDateTime, frm);
+            Melding addMelding = new Melding(meldingTekst, meldingFrom, meldingTo, meldingTime);
+            output.add(addMelding);
+        }
+        System.out.println("Added " + output.size() + " messages to application");
         return output;
     }
 }

@@ -60,7 +60,8 @@ public class ChauffeurAdmin {
      * @return De melding als deze succesvol aangemaakt en verzonden is, anders null
      */
     public Melding verstuurMelding(String beschrijving){
-        Melding m = new Melding(beschrijving, this.huidigeRit.getBus().getNummer(), -1, LocalDateTime.now());
+        String busNummer = new Integer(this.huidigeRit.getBus().getNummer()).toString();
+        Melding m = new Melding(beschrijving, busNummer, "", LocalDateTime.now());
         //TODO: zorgen dat melding verstuurd wordt
         return m;
     }

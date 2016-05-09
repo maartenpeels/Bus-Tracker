@@ -53,6 +53,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
@@ -92,6 +93,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     @FXML
     private CheckBox cbBusses;
+    
+    @FXML
+    private ComboBox cbMeldingen;
 
     @FXML
     private GoogleMapView mapView;
@@ -398,7 +402,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             this.clearBusMarkers();
             this.loadMapBussen();
         } catch (Exception ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Refreshing done");
     }

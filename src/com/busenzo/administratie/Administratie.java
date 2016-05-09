@@ -23,6 +23,7 @@ public class Administratie {
     private ArrayList<Bus> bussen;
     private ArrayList<Lijn> lijnen;
     private ArrayList<Halte> haltes;
+    private ArrayList<Melding> meldingen;
     private DatabaseKoppeling dbKoppeling;
 
     /**
@@ -32,6 +33,7 @@ public class Administratie {
         this.bussen = new ArrayList<>();
         this.lijnen = new ArrayList<>();
         this.haltes = new ArrayList<>();
+        this.meldingen = new ArrayList<>();
         this.dbKoppeling = new DatabaseKoppeling(restServer, restKey);
     }
 
@@ -40,6 +42,7 @@ public class Administratie {
             this.haltes.addAll(dbKoppeling.getHalteData());
             this.lijnen.addAll(dbKoppeling.getLineData(haltes));
             this.dbKoppeling.getRouteData(lijnen);
+            this.meldingen.addAll(this.dbKoppeling.getMeldingen());
         } catch (Exception ex) {
             Logger.getLogger(Administratie.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -252,15 +255,15 @@ public class Administratie {
             DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime vat = LocalDateTime.parse(tijd, frm);
 
-            int van1 = Integer.parseInt(objects.get("from").toString());
+            String van1 = objects.get("from").toString();
 
-            int naar1 = Integer.parseInt(objects.get("to").toString());
-
+            String naar1 = objects.get("to").toString();
+            
             if (van == -1) {
-                Melding m = new Melding(beschrijving, -1, naar1, vat);
+                Melding m = new Melding(beschrijving, "", naar1, vat);
                 output.add(m);
             } else if (naar == -1) {
-                Melding m = new Melding(beschrijving, van1, -1, vat);
+                Melding m = new Melding(beschrijving, van1, "", vat);
                 output.add(m);
             }
         }
