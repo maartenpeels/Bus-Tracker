@@ -364,16 +364,18 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         return busFound;
     }
 
-    public void drawRoute(Lijn l){
+   public void drawRoute(Lijn l){
+        try {
        ArrayList<String> haltes = l.getHalteNamen();
        DirectionsService ds = new DirectionsService();
-       DirectionsRenderer renderer = new DirectionsRenderer(true, map, null);
-        
+       DirectionsRenderer renderer = new DirectionsRenderer(true, map, directions);
+        System.out.println(l.getNummer());
         
         DirectionsWaypoint[] dw = new DirectionsWaypoint[haltes.size()];
         
         for(int i = 0; i < haltes.size(); i++){
         dw[i] = new DirectionsWaypoint(haltes.get(i));
+        System.out.println(haltes.get(i));
         }
         
         DirectionsRequest dr = new DirectionsRequest(
@@ -382,6 +384,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 TravelModes.DRIVING,
                 dw);
         ds.getRoute(dr, this, renderer);
+        
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null, "Error: niet gelukt om route te tekenen op kaart! /n" + e);
+        }
     }
     
     
@@ -399,7 +405,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     public void clickedHalte(LatLong pos) {
         ObservableList<String> items = FXCollections.observableArrayList();
-        NumberFormat formatter = new DecimalFormat("#0.00000");
+        NumberFormat formatter = new DecimalFormat("#0.000000");
         for (Halte a : this.admin.getHaltes()) {
             double cordsX = a.getCoordinaten()[0];
             double cordsY = a.getCoordinaten()[1];
