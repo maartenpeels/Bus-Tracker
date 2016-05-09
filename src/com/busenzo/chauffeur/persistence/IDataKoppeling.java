@@ -7,6 +7,8 @@ package com.busenzo.chauffeur.persistence;
 
 import com.busenzo.domein.Melding;
 import com.busenzo.domein.Rit;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -30,4 +32,10 @@ public interface IDataKoppeling {
      * @return De te rijden rit
      */
     public Rit setRit();
+    
+    /**
+     * recieve the types of notifications a busdriver can send
+     * @return an arraylist of notification types
+     */
+    public List<String> getNotificationTypes();
 }

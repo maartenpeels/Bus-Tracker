@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -25,12 +27,21 @@ public class ChauffeurAdmin {
 //*******************************Datavelden*********************************
     private IDataKoppeling dk;
     private Rit huidigeRit;
-    private ArrayList<Melding> ontvangenMeldingen;
+    private ObservableList<Melding> ontvangenMeldingen;
     private Halte huidigeHalte;
+    private ObservableList<String> notificationTypes;
     
 //*******************************Constructor********************************
     public ChauffeurAdmin(){
-        this.ontvangenMeldingen = new ArrayList<>();
+        this.ontvangenMeldingen = FXCollections.observableArrayList();
+        this.huidigeRit = null;
+        this.huidigeHalte = null;
+    }
+    
+    public ChauffeurAdmin(IDataKoppeling dkop){
+        this.dk = dkop;
+        this.ontvangenMeldingen = FXCollections.observableArrayList();
+        this.notificationTypes = FXCollections.observableArrayList(dk.getNotificationTypes());
         this.huidigeRit = null;
         this.huidigeHalte = null;
     }
@@ -108,11 +119,12 @@ public class ChauffeurAdmin {
      * Vraag de namen van de haltes op waar deze bus nog moet stoppen
      * @return een lijst met haltenamen waar deze bus nog moet stoppen, kan leeg zijn.
      */
-    public ArrayList<String> getVolgendeHaltes(){
-        ArrayList<String> output = new ArrayList<>();
-        for(String s : this.huidigeRit.getLijn().getHalteNamen().subList(this.huidigeRit.getLijn().getHalteNamen().indexOf(this.huidigeHalte.getNaam()), this.huidigeRit.getLijn().getHalteNamen().size()-1)){
-            output.add(s);
-        }
+    public ObservableList<String> getVolgendeHaltes(){
+        ObservableList<String> output = FXCollections.observableArrayList();
+//        for(String s : this.huidigeRit.getLijn().getHalteNamen().subList(this.huidigeRit.getLijn().getHalteNamen().indexOf(this.huidigeHalte.getNaam()), this.huidigeRit.getLijn().getHalteNamen().size()-1)){
+//            output.add(s);
+//        }
+        output.addAll(this.huidigeRit.getLijn().getHalteNamen());
         return output;
     }
     
@@ -127,6 +139,18 @@ public class ChauffeurAdmin {
         String output = dateTime.format(formatter);
         //TODO: kijken naar vertraging
         return output;
+    }
+    
+    public String getLijnNummer(){
+        return this.huidigeRit.getLijn().getId();
+    }
+    
+    public ObservableList<String> getNotificationTypes(){
+        return this.notificationTypes;
+    }
+    
+    public boolean isLineSet(){
+        return this.huidigeRit != null;
     }
     
     /**
