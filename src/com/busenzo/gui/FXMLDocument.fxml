@@ -27,7 +27,7 @@
                 <Label layoutX="5.0" layoutY="238.0" text="Geselecteerde bus:" />
                 <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="255.0" text="&lt;nummer&gt;" />
                 <Label fx:id="lblBusId" layoutX="78.0" layoutY="255.0" text="&lt;id&gt;" />
-                <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of busnummer:" />
+                <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of lijnnummer:" />
                 <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
                 <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
                 <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
