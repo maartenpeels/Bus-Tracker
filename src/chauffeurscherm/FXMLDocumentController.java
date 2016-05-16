@@ -5,6 +5,7 @@
  */
 package chauffeurscherm;
 
+import administratie.Administratie;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -18,6 +19,8 @@ import javafx.scene.control.Label;
  */
 public class FXMLDocumentController implements Initializable {
     
+    Administratie admin;
+    
     @FXML
     private Label label;
     
@@ -29,7 +32,8 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        admin = new Administratie();
+        admin.laadDataIn();
     }    
     
 }
