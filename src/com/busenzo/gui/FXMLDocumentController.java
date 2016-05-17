@@ -47,6 +47,7 @@ import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,11 +59,13 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -102,6 +105,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private CheckBox cbBusses;
     
     @FXML
+    private ComboBox cbSelectBus;
+    
+    @FXML
     private ListView lbNotifications;
 
     @FXML
@@ -111,7 +117,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     
     private String geselecteerdeHalte;
     protected DirectionsPane directions;
-    
+    @FXML
+    private Button btnSendNotification;
+
+    @FXML 
+    private TextArea taNotificationText;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -510,7 +520,28 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 //            //infoWindow.zIndex(0)
 //        }
 //    }
-    
+    @FXML
+    public void sendMessage() throws Exception
+    {
+       // Geselecteerde item ophalen 
+        if (cbSelectBus.getSelectionModel().getSelectedIndex() > -1) {
+            String tempSelectie = cbSelectBus.getSelectionModel().getSelectedItem().toString();
+        
+       
+       // String splitten om eerste gedeelte van string te benaderen
+       String selectie[] = tempSelectie.split(" - ");
+       // Text van de TextArea ophalen
+       String meldingBechrijving = taNotificationText.getText();
+       
+       // Aanmaken van nieuwe melding
+       Melding m = new Melding(0, meldingBechrijving,"-1",selectie[0],LocalDateTime.now());
+       admin.addMelding(m);
+       
+       
+       System.out.println("Melding verzonden van: Beheerder naar: " +  m.getOntvanger() + ". Met als melding: " + m.getBeschrijving());
+        }
+    }
+
     
    
 

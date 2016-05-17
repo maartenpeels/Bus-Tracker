@@ -225,11 +225,31 @@ public class DatabaseKoppeling {
         System.out.println("Added " + blconnection + " busline -> busstop connections");
         return output;
     }
+    /**
+     * 
+     * @param m = melding 
+     * @return result 
+     * @throws Exception 
+     */
+    public boolean addMelding(Melding m) throws Exception
+    {
+         
+        String query = "addmelding"+(m.getZender() == "-1" ? "" : "&from="+m.getZender())+"&to="+m.getOntvanger()+"&mtekst="+m.getBeschrijving()+"&mtype=Beheerder";
+        JSONObject halteData = this.getJSONfromWeb(query);
+        JSONObject objects = (JSONObject) halteData;
+        String status = objects.get("status").toString();
+        
+        if (status == "succes") {
+            return true;
+        }
+        return false;  
+    }
+    
 
     public ArrayList<Melding> getMeldingen() throws Exception
     {
         ArrayList<Melding> output = new ArrayList<>();
-        String query = "meldingen";
+        String query = "meldingen"; 
         JSONObject meldingenData = this.getJSONfromWeb(query);
         JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
         for (Object meldingData : meldingenArray) {

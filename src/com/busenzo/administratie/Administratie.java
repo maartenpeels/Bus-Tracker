@@ -229,6 +229,11 @@ public class Administratie {
     public List<Melding> getAllMeldingen() {
         return this.meldingen;
     }
+    public boolean addMelding (Melding m) throws Exception
+    {
+        return dbKoppeling.addMelding(m);
+    }
+
     /**
      * haal de lijst van meldingen op na een bepaald id
      *
