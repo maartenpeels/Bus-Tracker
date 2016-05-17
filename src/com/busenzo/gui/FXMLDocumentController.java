@@ -47,12 +47,19 @@ import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -65,7 +72,7 @@ import javafx.scene.input.MouseEvent;
 public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler, DirectionsServiceCallback {
 
     private Administratie admin;
-    
+    private String lastSearchedListObject = "";
     private FXMLDocumentController fdc;
     
     @FXML
@@ -189,9 +196,38 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         for(Melding m : admin.getAllMeldingen()) {
             items.add((m.getZender() == "" ? "Beheerder" : m.getZender()) + " > " +(m.getOntvanger() == "" ? "Beheerder" : m.getOntvanger()) + " (" + m.getID() + ")");
             this.lbNotifications.setItems(items);
+            this.lbNotifications.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+                
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                  Pattern r = Pattern.compile("\\((\\d+)\\)$");
+                  Matcher m = r.matcher(newValue);
+
+                    if (m.find() && !m.group(1).equals(lastSearchedListObject)) {
+                        lastSearchedListObject = m.group(1);
+                        System.out.println("Found message id: " + m.group(1));
+                        for(Melding melding : admin.getAllMeldingen()){
+                            if(melding.getID().equals(Integer.parseInt(m.group(1))))
+                            {
+                                System.out.println(melding.getBeschrijving());
+                                Alert alert = new Alert(AlertType.INFORMATION);
+                                alert.setTitle("Melding informatie");
+                                alert.setHeaderText("Bericht van: " + (melding.getZender() == "" ? "Beheerder" : melding.getZender()) + "\nNaar: " + (melding.getOntvanger() == "" ? "Beheerder" : melding.getOntvanger()) + "\nOp: " + melding.getTijdstip().toString().replace("T", " ") );
+                                alert.setContentText(melding.getBeschrijving());
+                                //ButtonType buttonTyperemovemelding = new ButtonType("Verwijder");
+                                ButtonType buttonTypeCancel = new ButtonType("Sluiten", ButtonData.CANCEL_CLOSE);
+                                alert.getButtonTypes().setAll(buttonTypeCancel);
+                                alert.showAndWait();
+                            }
+                        }
+                        
+                    }
+                   
+                }
+              });
+            
         }
     }
-
     @FXML
     public void showStops() {
         if (cbStops.isSelected()) {
