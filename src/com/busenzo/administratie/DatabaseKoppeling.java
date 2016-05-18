@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -230,11 +231,13 @@ public class DatabaseKoppeling {
      * @param m = melding 
      * @return result 
      * @throws Exception 
+     * URLEncoder toegevoegd om speciale characters in het tekstveld te converteren
      */
     public boolean addMelding(Melding m) throws Exception
     {
          
-        String query = "addmelding"+(m.getZender() == "-1" ? "" : "&from="+m.getZender())+"&to="+m.getOntvanger()+"&mtekst="+m.getBeschrijving()+"&mtype=Beheerder";
+        String query = "addmelding"+(m.getZender() == "-1" ? "" : "&from="+m.getZender())+"&to="+m.getOntvanger()+"&mtekst="+URLEncoder.encode(m.getBeschrijving())+"&mtype=Beheerder";
+        System.out.println(query);
         JSONObject halteData = this.getJSONfromWeb(query);
         JSONObject objects = (JSONObject) halteData;
         String status = objects.get("status").toString();

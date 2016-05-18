@@ -167,6 +167,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         executor.scheduleAtFixedRate(this.refreshData, 2, 2, TimeUnit.MINUTES);
         mapView.addMapInializedListener(this);
         showMeldingen();
+        for (Lijn bus : admin.getBussen()) {
+	   cbSelectBus.getItems().add(bus.getId() + " - " + bus.getNummer());
+	}
+
     }
 
     @Override
