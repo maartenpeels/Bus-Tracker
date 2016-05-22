@@ -1,6 +1,7 @@
 package administratie;
 
 import domein.Halte;
+import domein.Rit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -137,4 +138,16 @@ public class DatabaseKoppeling {
         System.out.println("Added " + output.size() + " to application");
         return output;
     }
+   
+   public ArrayList<Rit> getRit(int busNum) throws Exception
+   {
+       String bus = String.format("%03d", busNum);
+       ArrayList<Rit> rit = new ArrayList<>();
+       String query = "apiname";
+       
+       //Get rit
+       //Change api to get laststop and 5 next stops, with busnum, direction, and laststop from rit
+       
+       return rit;
+   }
 }

@@ -20,6 +20,8 @@ public class Administratie {
     private String restKey = "9709d02bfb3b1460fd0dd45f6706a81a8c33afaf";
     private ArrayList<Halte> haltes;
     private DatabaseKoppeling dbKoppeling;
+    
+    private static final String BUS_ID = "CXX_L018_1";
 
     /**
      * Maak een nieuwe administratie aan
