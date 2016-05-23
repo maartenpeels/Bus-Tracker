@@ -6,15 +6,24 @@
 package chauffeurscherm;
 
 import administratie.BusDriverAdmin;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  *
@@ -23,7 +32,9 @@ import javafx.scene.control.ListView;
 public class FXMLDocumentController implements Initializable {
     
     private BusDriverAdmin admin;
+    private ObservableList<NotificationLabel> lvItems;
     
+    //For main busdriver screen 
     @FXML
     private Label lineLabel;
     @FXML
@@ -36,8 +47,16 @@ public class FXMLDocumentController implements Initializable {
     private Label expectedArrivalTime;
     @FXML
     private ListView lvIncomingNotifications;
-    private ObservableList<NotificationLabel> lvItems;
-    
+    //For login screen
+    @FXML
+    private Button chooseLine;
+    @FXML
+    private TextField tfChooseLine;
+    @FXML
+    private Button login;
+    @FXML
+    private ListView lvLines;
+       
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.lvItems = FXCollections.observableArrayList();
@@ -59,6 +78,37 @@ public class FXMLDocumentController implements Initializable {
         else{
             //TODO error afhandelen
             System.out.println("geen item geselecteerd");
+        }
+    }
+    
+    @FXML
+    public void handleChooseLine(){
+        String searchTerm = tfChooseLine.getText().trim();
+        if(searchTerm.isEmpty() /**|| admin.searchLine(searchTerm) == null**/){
+            
+        }
+        else{
+            this.lvLines.setVisible(true);
+            this.login.setVisible(true);
+            //this.lvLines.setItems();
+        }
+    }
+    
+    @FXML
+    public void handleLogin(){
+        if(lvLines.getSelectionModel().getSelectedItem() == null){//change to !=
+            try {
+                Stage stage = (Stage)this.login.getScene().getWindow();
+                Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+        else{
+            
         }
     }
     
