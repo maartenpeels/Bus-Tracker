@@ -5,48 +5,37 @@ import java.util.ArrayList;
 
 public class Rit {
     
-    private LocalDateTime ExpectedArrivalTime;
-    private LocalDateTime TargetArrivalTime;
-    private Stop lastStop;
-    private Stop[] nextStops;
+    private LocalDateTime expectedArrivalTime;
+    private ArrayList<Stop> nextStops;
 
-    /**
-     * Maak een rit aan op een bepaalde lijn
-     * @param verwachtteAankomstTijd De verwachtte aankomsttijd bij de eindhalte
-     * @param lijn: De lijn waarbij deze rit hoort, nooit null
-     */
-    public Rit(LocalDateTime ExpectedArrivalTime, LocalDateTime TargetArrivalTime) {
-        this.ExpectedArrivalTime = ExpectedArrivalTime;
-        this.TargetArrivalTime = TargetArrivalTime;
-    }
-
-    public void setArrivalTime(LocalDateTime time)
-    {
-        this.TargetArrivalTime = time;
+    public Rit(LocalDateTime expectedArrivalTime) {
+        this.expectedArrivalTime = expectedArrivalTime;
     }
     
     public void setExpectedArrivalTime(LocalDateTime time)
     {
-        this.TargetArrivalTime = time;
-    }
-    
-    public void setLastStop(Stop s)
-    {
-        this.lastStop = s;
+        this.expectedArrivalTime = time;
     }
     
     public void setNextStops(ArrayList<Stop> s)
     {
-        nextStops = (Stop[]) s.toArray();
+        nextStops = s;
     }
-
-    /**
-     * Haal de verwachtte aankomsttijd bij de eindhalte op
-     * @return de verwachtte aankomsttijd bij de eindhalte
-     */
-    public LocalDateTime getExpectedArrivalTime() {
-        return ExpectedArrivalTime;
-    }
-
     
+    public ArrayList<String> getNextStops()
+    {
+        ArrayList<String> resp = new ArrayList<>();
+        
+        for(Stop st : nextStops)
+        {
+            resp.add(st.toString());
+        }
+        
+        return resp;
+    }
+    
+    public LocalDateTime getArrivalTime()
+    {
+        return expectedArrivalTime;
+    }
 }

@@ -1,8 +1,8 @@
 package administratie;
 
-import domein.Halte;
 import domein.Melding;
 import domein.Rit;
+import domein.Stop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -120,36 +120,51 @@ public class DataLink {
            }
             return "";
    }
-    
-   public ArrayList<Halte> getStopData() throws Exception
-    {
-        ArrayList<Halte> output = new ArrayList<>();
-        String query = "stops";
-        JSONObject halteData = this.getJSONfromWeb(query);
-        JSONArray halteArray = (JSONArray) halteData.get("data");
-        for (Object halteArray1 : halteArray) {
-            JSONObject objects = (JSONObject) halteArray1;
-            String halteID = objects.get("id").toString();
-            String halteNaam = objects.get("name").toString();
-            String halteLat = objects.get("lat").toString();
-            String halteLon = objects.get("lon").toString();
-            Halte addHalte = new Halte(halteID, halteNaam, halteLon, halteLat);
-            output.add(addHalte);
-        }
-        System.out.println("Added " + output.size() + " to application");
-        return output;
-    }
    
-   public ArrayList<Rit> getRoute(int busNum) throws Exception
-   {
-       String bus = String.format("%03d", busNum);
-       ArrayList<Rit> rit = new ArrayList<>();
-       String query = "apiname";
+   public Rit getNextStops(String busId) throws Exception
+   { 
+       Rit rit = null;
+       ArrayList<Stop> stops = new ArrayList<>();
+       String query = "getfuturestops&limit=8&id="+busId;
        
-       //Get rit
-       //Change api to get laststop and 5 next stops, with busnum, direction, and laststop from rit
+       JSONObject respObj = this.getJSONfromWeb(query);
+       int count = Integer.parseInt(respObj.get("count").toString());
+       
+       if(count > 0)
+       {
+            String arv = respObj.get("arrivaltime").toString();
+       
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime arrivalTime = LocalDateTime.parse(arv, formatter);
+
+            rit = new Rit(arrivalTime);
+       
+            JSONArray respArr = (JSONArray) respObj.get("data");
+            for (Object respData : respArr)
+            {
+                JSONObject respRow = (JSONObject) respData;
+                int halteCode = Integer.parseInt(respRow.get("halteCode").toString());
+                String halteName = respRow.get("name").toString();
+
+                Stop s = new Stop(halteCode, halteName);
+                stops.add(s);
+            }
+           rit.setNextStops(stops);
+       }else{
+           rit = new Rit(LocalDateTime.now());
+           ArrayList<Stop> stps = new ArrayList<>();
+           
+           String msg = respObj.get("message").toString();
+           stps.add(new Stop(123456, msg));
+           rit.setNextStops(stps);
+       }
        
        return rit;
+   }
+   
+   public ArrayList<Rit> getActuals()
+   {
+       return new ArrayList<Rit>();
    }
    
    public List<Melding> getNotifications() throws Exception {

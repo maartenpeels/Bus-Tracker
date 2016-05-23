@@ -6,10 +6,23 @@
 package chauffeurscherm;
 
 import administratie.BusDriverAdmin;
+import domein.Stop;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,8 +60,31 @@ public class FXMLDocumentController implements Initializable {
         this.lvItems = FXCollections.observableArrayList();
         this.lvIncomingNotifications.setItems(lvItems);
         admin = new BusDriverAdmin();
-        admin.laadDataIn();
-        updateLabels();
+        
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                admin.laadDataIn();
+                
+                updateLabels();
+                updateListBox();
+                
+                System.out.println("Update next stops done!");
+                
+                return true;
+            }
+        };
+        
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
+        
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                System.out.println("Application shutdown detected.. Quitting current jobs");
+                service.shutdown();
+            }
+        });
     }
     
     @FXML
@@ -67,17 +103,13 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void updateLabels(){
-//        if(this.ca.isLineSet()){
-//            this.lineLabel.setText("Buslijn: " + this.ca.getLijnNummer());
-//            this.busstopLabel.setText("Volgende halte: " + this.ca.getVolgendeHaltes().get(0));
-//            this.cbNotifications.setItems(this.ca.getNotificationTypes());
-//            this.lv_nextStops.setItems(this.ca.getVolgendeHaltes());
-//            this.expectedArrivalTime.setText("Verwachtte aankomsttijd: " + this.ca.getVerwachtteEindAankomsttijd());
-//        }else{
-            this.lineLabel.setText("Buslijn:");
-            this.busstopLabel.setText("Volgende halte:");
-            this.expectedArrivalTime.setText("Verwachtte aankomsttijd:");
-//        }
+        Platform.runLater( () -> this.lineLabel.setText("Buslijn:"));
+        Platform.runLater( () -> this.busstopLabel.setText("Volgende haltes:"));
+        Platform.runLater( () -> this.expectedArrivalTime.setText("Verwachtte aankomsttijd volgende halte:\n" + DateTimeFormatter.ofPattern("HH:mm:ss").format(admin.getRit().getArrivalTime())));
     } 
     
+    private void updateListBox(){
+        ObservableList<String> stops = FXCollections.observableArrayList(admin.getRit().getNextStops());
+        this.lv_nextStops.setItems(stops);
+    }
 }

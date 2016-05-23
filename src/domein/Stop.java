@@ -13,4 +13,10 @@ public class Stop {
         timingPointCode = code;
         timingPointName = name;
     }
+    
+    @Override
+    public String toString()
+    {
+        return timingPointName;
+    }
 }
