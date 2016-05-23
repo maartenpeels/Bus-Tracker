@@ -78,7 +78,7 @@ public class Administratie {
      * Update de locaties van alle bussen (deze worden opgehaald uit de
      * database)
      */
-    public void HaalBusLocaties() {
+    public void haalBusLocaties() {
         this.lijnen.clear();
         try {
             this.lijnen.addAll(dbKoppeling.getLineData(haltes));
@@ -96,7 +96,7 @@ public class Administratie {
      * @return Een lijst van alle lijnen die bij deze halte stoppen, kan een
      * lege lijst zijn als de halte niet gevonden wordt
      */
-    public List<Lijn> GeefHalteInformatie(String halteNaam) {
+    public List<Lijn> geefHalteInformatie(String halteNaam) {
         if (halteNaam.isEmpty()) {
             throw new IllegalArgumentException();
         } else {
@@ -116,7 +116,7 @@ public class Administratie {
      * @return Een lijst van haltes waar deze lijn stopt, kan leeg zijn als het
      * lijnnummer niet gevonden wordt
      */
-    public List<Halte> GeefLijnInformatie(int nummer) 
+    public List<Halte> geefLijnInformatie(int nummer) 
     {
         Lijn lijn = null;
         List<Halte> lijnHaltes = new ArrayList();
