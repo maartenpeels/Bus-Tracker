@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -26,9 +25,6 @@ public class FXMLDocumentController implements Initializable {
     private BusDriverAdmin admin;
     
     @FXML
-    private Label label;
-    
-    @FXML
     private Label lineLabel;
     @FXML
     private Label busstopLabel;
@@ -40,12 +36,12 @@ public class FXMLDocumentController implements Initializable {
     private Label expectedArrivalTime;
     @FXML
     private ListView lvIncomingNotifications;
-    private ObservableList<com.busenzo.busdriver.gui.NotificationLabel> lvItems;
+    private ObservableList<NotificationLabel> lvItems;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.lvItems = FXCollections.observableArrayList();
-        this.lvIncomingNotifications.setItems(lvItems);
+        //this.lvIncomingNotifications.setItems(lvItems);
         admin = new BusDriverAdmin();
         admin.laadDataIn();
         updateLabels();
@@ -55,7 +51,7 @@ public class FXMLDocumentController implements Initializable {
     public void handleSendNotification(){
         if(!this.cbNotifications.getSelectionModel().isEmpty()){
             //this.ca.verstuurMelding(cbNotifications.getSelectionModel().getSelectedItem());
-            com.busenzo.busdriver.gui.NotificationLabel notlab = new com.busenzo.busdriver.gui.NotificationLabel();
+            NotificationLabel notlab = new NotificationLabel();
             notlab.setCategorie(this.cbNotifications.getSelectionModel().getSelectedItem());
             notlab.setParent(lvIncomingNotifications);
             this.lvItems.add(notlab);
@@ -74,9 +70,9 @@ public class FXMLDocumentController implements Initializable {
 //            this.lv_nextStops.setItems(this.ca.getVolgendeHaltes());
 //            this.expectedArrivalTime.setText("Verwachtte aankomsttijd: " + this.ca.getVerwachtteEindAankomsttijd());
 //        }else{
-            this.lineLabel.setText("Buslijn:");
-            this.busstopLabel.setText("Volgende halte:");
-            this.expectedArrivalTime.setText("Verwachtte aankomsttijd:");
+//            this.lineLabel.setText("Buslijn:");
+//            this.busstopLabel.setText("Volgende halte:");
+//            this.expectedArrivalTime.setText("Verwachtte aankomsttijd:");
 //        }
     } 
     

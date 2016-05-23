@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="chauffeurscherm.FXMLDocumentController">
+   <children>
+      <Label layoutX="32.0" layoutY="26.0" text="Kies het lijnnummer:" />
+      <TextField id="tfChooseLinenumber" layoutX="151.0" layoutY="22.0" promptText="lijnnummer" />
+      <Button layoutX="389.0" layoutY="22.0" mnemonicParsing="false" text="Haal ritten op" />
+      <ListView layoutX="79.0" layoutY="100.0" prefHeight="282.0" prefWidth="249.0" />
+      <Button layoutX="426.0" layoutY="342.0" mnemonicParsing="false" text="Log in" />
+   </children>
+</AnchorPane>
