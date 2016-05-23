@@ -65,7 +65,7 @@ public class AdministratieTest {
     //* param halteNaam: De haltenaam waarvan je de lijnen wil weten, mag geen lege string zijn.
     @Test(expected=IllegalArgumentException.class)
     public void testGeefHalteInformatieLegeZoekstring(){
-        admin.GeefHalteInformatie("");
+        admin.geefHalteInformatie("");
         Assert.fail("Lege zoekstring moet IllegalArgumentException geven!");
     }
     
@@ -76,7 +76,7 @@ public class AdministratieTest {
     @Test@Ignore
     public void testGeefHalteInformatieNietBestaandeHalte(){
         admin.addHaltes(inputHalte);
-        List<Lijn> actual = admin.GeefHalteInformatie("nietbestaand");
+        List<Lijn> actual = admin.geefHalteInformatie("nietbestaand");
     }
     
     /**
