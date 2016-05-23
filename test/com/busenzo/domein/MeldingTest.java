@@ -5,6 +5,7 @@
  */
 package com.busenzo.domein;
 
+import java.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,25 +14,27 @@ import org.junit.Test;
  * @author Alex
  */
 public class MeldingTest {
+    private LocalDateTime ldt;
        
     @Test(expected=IllegalArgumentException.class)
     public void testMeldingConstructorZonderOntEnV(){
-        Melding melding = new Melding("test", -1, -1);
+        ldt = LocalDateTime.now();
+        Melding melding = new Melding(1, "beschrijving", "", "", ldt);
         Assert.fail("er mag geen melding zonder ontvanger en verzender aangemaakt worden");
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testMeldingConstructorOntvangerEnVerzender(){
-        Melding melding = new Melding("test", 1, 1);
+        Melding melding = new Melding(1, "beschrijving", "zender", "ontvanger", ldt);
         Assert.fail("Er mag geen melding met ontvanger en verzender aangemaakt worden");
     }
     
     @Test
     public void testMeldingConstructor(){
-        Melding melding = new Melding("test", 1, -1);
-        Assert.assertEquals("test", melding.getBeschrijving());
-        Assert.assertSame(1, melding.getZender());
-        Assert.assertSame(-1, melding.getOntvanger());
+        Melding melding = new Melding(1, "beschrijving", "zender", "ontvanger", ldt);
+        Assert.assertEquals("beschrijving", melding.getBeschrijving());
+        Assert.assertSame("zender", melding.getZender());
+        Assert.assertSame("ontvanger", melding.getOntvanger());
         Assert.assertTrue(melding.getActief());
     }
 }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.busenzo.administratie;
 
 import com.busenzo.domein.Bus;
@@ -13,7 +12,9 @@ import com.busenzo.domein.Melding;
 import com.busenzo.domein.Richting;
 import com.busenzo.domein.Rit;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,7 +23,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,66 +37,59 @@ public class DatabaseKoppeling {
     private String restServer;
     private String restKey;
     
-    public DatabaseKoppeling(String restServer, String restKey){
+    private InputStream inputStream;
+
+    public DatabaseKoppeling(String restServer, String restKey) {
         this.restServer = restServer;
         this.restKey = restKey;
     }
-    
+
     /**
-     * JSON webrequest
-     * URL opgebouwd via Restserver/restkey/query
-     * Geeft JSON object terug
+     * JSON webrequest URL opgebouwd via Restserver/restkey/query Geeft JSON
+     * object terug
      */
-    public JSONObject getJSONfromWeb(String query) throws Exception
-    {
+    public JSONObject getJSONfromWeb(String query) throws Exception {
         //String getUrl = this.restServer + "/" + this.restKey + "/" + query;
-        String getUrl = restServer + "api.php?key=" + restKey+ "&action=" + query;
-         
+        String getUrl = restServer + "api.php?key=" + restKey + "&action=" + query;
+
         JSONParser parser = new JSONParser();
         String json = readUrl(getUrl);
         // Page page = gson.fromJson(json, Page.class);
         Object obj = parser.parse(json);
-        JSONObject jdata = (JSONObject)obj;
+        JSONObject jdata = (JSONObject) obj;
         return jdata;
     }
-    
-     /**
-     * URL datareader functie
-     * Geeft databuffer terug
+
+    /**
+     * URL datareader functie Geeft databuffer terug
      */
-    private static String readUrl(String urlString) throws Exception 
-    {
+    private static String readUrl(String urlString) throws Exception {
         BufferedReader reader = null;
-        try 
-        {
+        try {
             URL url = new URL(urlString);
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
             StringBuilder buffer = new StringBuilder();
             int read;
             char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-            {
-                buffer.append(chars, 0, read); 
+            while ((read = reader.read(chars)) != -1) {
+                buffer.append(chars, 0, read);
             }
 
             return buffer.toString();
-        } finally 
-        {
-            if (reader != null)
-            {
+        } finally {
+            if (reader != null) {
                 reader.close();
             }
         }
 
     }
-    
-   private String httpsGet(final String https_url) {
+
+    private String httpsGet(final String https_url) {
         String ret = "";
 
         URL url;
         try {
 
-            
             url = new URL(https_url);
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
             ret = getContent(con);
@@ -105,34 +102,33 @@ public class DatabaseKoppeling {
 
         return ret;
     }
-   
-    private String getContent(HttpsURLConnection con){
-            if(con!=null){
+
+    private String getContent(HttpsURLConnection con) {
+        if (con != null) {
 
             try {
 
-               BufferedReader br = 
-                    new BufferedReader(
-                            new InputStreamReader(con.getInputStream()));
+                BufferedReader br
+                        = new BufferedReader(
+                                new InputStreamReader(con.getInputStream()));
 
-               String input;
-               StringBuilder rtndata = new StringBuilder();		
-               while ((input = br.readLine()) != null){
-                  rtndata.append(input);
-               }
-               br.close();
-               return rtndata.toString();
+                String input;
+                StringBuilder rtndata = new StringBuilder();
+                while ((input = br.readLine()) != null) {
+                    rtndata.append(input);
+                }
+                br.close();
+                return rtndata.toString();
 
             } catch (IOException e) {
-               e.printStackTrace();
-               return "";
-            }	
-           }
-            return "";
-   }
-    
-   public ArrayList<Halte> getHalteData() throws Exception
-    {
+                e.printStackTrace();
+                return "";
+            }
+        }
+        return "";
+    }
+
+    public ArrayList<Halte> getHalteData() throws Exception {
         ArrayList<Halte> output = new ArrayList<>();
         String query = "stops";
         JSONObject halteData = this.getJSONfromWeb(query);
@@ -149,12 +145,13 @@ public class DatabaseKoppeling {
         System.out.println("Added " + output.size() + " to application");
         return output;
     }
-   
-    public void getRouteData(List<Lijn> lijnen) throws Exception
-    {
+
+    public void getRouteData(List<Lijn> lijnen) throws Exception {
         Random ran = new Random();
         //TODO: aanpassen in lijn
-        for(Lijn l : lijnen) l.clearRitten();
+        for (Lijn l : lijnen) {
+            l.clearRitten();
+        }
         String query = "ritten";
         JSONObject rittenData = this.getJSONfromWeb(query);
         JSONArray rittenArray = (JSONArray) rittenData.get("data");
@@ -165,18 +162,15 @@ public class DatabaseKoppeling {
             String verwachteAankomstTijd = objects.get("exp_arrivaltime").toString();
             DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime vat;
-            try
-            {
+            try {
                 vat = LocalDateTime.parse(verwachteAankomstTijd, frm);
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 vat = LocalDateTime.now();
             }
             String busLat = objects.get("lat").toString();
             String busLon = objects.get("lon").toString();
-            for(Lijn l : lijnen){
-                if(ritID.equals(l.getId())){
+            for (Lijn l : lijnen) {
+                if (ritID.equals(l.getId())) {
                     ride++;
                     //System.out.println("Added rit to line " + l.getId());
                     Rit r = new Rit(vat, l);
@@ -191,9 +185,8 @@ public class DatabaseKoppeling {
         }
         System.out.println("Added " + ride + " current rides to application");
     }
-    
-    public ArrayList<Lijn> getLineData(List<Halte> haltes) throws Exception
-    {
+
+    public ArrayList<Lijn> getLineData(List<Halte> haltes) throws Exception {
         ArrayList<Lijn> output = new ArrayList<>();
         String query = "lijnen";
         JSONObject lijnenData = this.getJSONfromWeb(query);
@@ -212,9 +205,8 @@ public class DatabaseKoppeling {
             for (Object haltesArray1 : haltesArray) {
                 JSONObject objectsHalte = (JSONObject) haltesArray1;
                 String stopName = objectsHalte.get("id").toString();
-                for(Halte h : haltes){
-                    if(h.getId().equals(stopName))
-                    {
+                for (Halte h : haltes) {
+                    if (h.getId().equals(stopName)) {
                         blconnection++;
                         addLijn.addHalte(h);
                     }
@@ -226,33 +218,31 @@ public class DatabaseKoppeling {
         System.out.println("Added " + blconnection + " busline -> busstop connections");
         return output;
     }
+
     /**
-     * 
-     * @param m = melding 
-     * @return result 
-     * @throws Exception 
-     * URLEncoder toegevoegd om speciale characters in het tekstveld te converteren
+     *
+     * @param m = melding
+     * @return result
+     * @throws Exception URLEncoder toegevoegd om speciale characters in het
+     * tekstveld te converteren
      */
-    public boolean addMelding(Melding m) throws Exception
-    {
-         
-        String query = "addmelding"+(m.getZender() == "-1" ? "" : "&from="+m.getZender())+"&to="+m.getOntvanger()+"&mtekst="+URLEncoder.encode(m.getBeschrijving())+"&mtype=Beheerder";
+    public boolean addMelding(Melding m) throws Exception {
+
+        String query = "addmelding" + (m.getZender() == "-1" ? "" : "&from=" + m.getZender()) + "&to=" + m.getOntvanger() + "&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Beheerder";
         System.out.println(query);
         JSONObject halteData = this.getJSONfromWeb(query);
         JSONObject objects = (JSONObject) halteData;
         String status = objects.get("status").toString();
-        
+
         if (status == "succes") {
             return true;
         }
-        return false;  
+        return false;
     }
-    
 
-    public ArrayList<Melding> getMeldingen() throws Exception
-    {
+    public ArrayList<Melding> getMeldingen() throws Exception {
         ArrayList<Melding> output = new ArrayList<>();
-        String query = "meldingen"; 
+        String query = "meldingen";
         JSONObject meldingenData = this.getJSONfromWeb(query);
         JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
         for (Object meldingData : meldingenArray) {
@@ -261,16 +251,13 @@ public class DatabaseKoppeling {
             Integer meldingID = Integer.parseInt(objects.get("id").toString());
             String meldingTo = objects.get("to").toString();
             String meldingFrom;
-            try
-            {
+            try {
                 meldingFrom = objects.get("from").toString();
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 meldingFrom = "";
             }
             String meldingTekst = objects.get("message").toString();
-           
+
             String meldingDateTime = objects.get("time").toString();
             DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime meldingTime = LocalDateTime.parse(meldingDateTime, frm);
