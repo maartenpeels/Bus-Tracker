@@ -403,7 +403,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         ArrayList<Lijn> result = new ArrayList<>();
         result.addAll(admin.zoekLijn(naam));
         if (!result.isEmpty()) {
-            //drawRoute(result.get(0));
+            drawRoute(result.get(0));
             for (Marker m : this.mapMarkers) {
                 if (m instanceof BusMarker) {
                     BusMarker bm = (BusMarker) m;
