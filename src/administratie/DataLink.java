@@ -1,6 +1,7 @@
 package administratie;
 
 import domein.Halte;
+import domein.Melding;
 import domein.Rit;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,12 +18,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-public class DatabaseKoppeling {
+public class DataLink {
 
     private String restServer;
     private String restKey;
     
-    public DatabaseKoppeling(String restServer, String restKey){
+    public DataLink(String restServer, String restKey){
         this.restServer = restServer;
         this.restKey = restKey;
     }
@@ -120,7 +121,7 @@ public class DatabaseKoppeling {
             return "";
    }
     
-   public ArrayList<Halte> getHalteData() throws Exception
+   public ArrayList<Halte> getStopData() throws Exception
     {
         ArrayList<Halte> output = new ArrayList<>();
         String query = "stops";
@@ -139,7 +140,7 @@ public class DatabaseKoppeling {
         return output;
     }
    
-   public ArrayList<Rit> getRit(int busNum) throws Exception
+   public ArrayList<Rit> getRoute(int busNum) throws Exception
    {
        String bus = String.format("%03d", busNum);
        ArrayList<Rit> rit = new ArrayList<>();
@@ -150,4 +151,45 @@ public class DatabaseKoppeling {
        
        return rit;
    }
+   
+   public List<Melding> getNotifications() throws Exception {
+        ArrayList<Melding> output = new ArrayList<>();
+        String query = "meldingen"; 
+        JSONObject meldingenData = this.getJSONfromWeb(query);
+        JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
+        for (Object meldingData : meldingenArray) {
+            JSONObject objects = (JSONObject) meldingData;
+            Integer meldingID = Integer.parseInt(objects.get("id").toString());
+            String meldingTo = objects.get("to").toString();
+            String meldingFrom;
+            try
+            {
+                meldingFrom = objects.get("from").toString();
+            }
+            catch(Exception ex)
+            {
+                meldingFrom = "";
+            }
+            String meldingTekst = objects.get("message").toString();
+           
+            String meldingDateTime = objects.get("time").toString();
+            DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime meldingTime = LocalDateTime.parse(meldingDateTime, frm);
+            Melding addMelding = new Melding(meldingID, meldingTekst, meldingFrom, meldingTo, meldingTime);
+            System.out.println(addMelding.getBeschrijving());
+            output.add(addMelding);
+        }
+        System.out.println("Added " + output.size() + " messages to application");
+        return output;
+    }
+   
+    public boolean sendMessage(Melding melding) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
+//        String query = "addmelding"+(melding.getZender().equals("-1") ? "" : "&from="+melding.getZender())+"&to="+melding.getOntvanger()+"&mtekst="+melding.getBeschrijving()+"&mtype=Beheerder";
+//        JSONObject halteData = this.getJSONfromWeb(query);
+//        JSONObject objects = (JSONObject) halteData;
+//        String status = objects.get("status").toString();
+//        
+//        return status.equals("succes"); 
+    }
 }
