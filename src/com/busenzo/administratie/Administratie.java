@@ -5,6 +5,7 @@ import com.busenzo.domein.Bus;
 import com.busenzo.domein.Lijn;
 import com.busenzo.domein.Halte;
 import com.busenzo.domein.Melding;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -29,12 +30,22 @@ public class Administratie {
     /**
      * Maak een nieuwe administratie aan
      */
-    public Administratie() {
+    public Administratie(){
         this.bussen = new ArrayList<>();
         this.lijnen = new ArrayList<>();
         this.haltes = new ArrayList<>();
         this.meldingen = new ArrayList<>();
-        this.dbKoppeling = new DatabaseKoppeling(restServer, restKey);
+        
+        GetPropertyValues properties = new GetPropertyValues();
+        
+        String[] props = new String[2];
+        try {
+            props = properties.getPropValues();
+        } catch (IOException ex) {
+            Logger.getLogger(Administratie.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.dbKoppeling = new DatabaseKoppeling(props[0], props[1]);
     }
 
     public void laadDataIn() {
