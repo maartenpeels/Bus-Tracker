@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package com.busenzo.chauffeur;
+package com.busenzo.busdriver;
 
-import com.busenzo.chauffeur.persistence.IDataKoppeling;
+import com.busenzo.busdriver.persistence.IDataLink;
+import com.busenzo.busdriver.persistence.PollingDataLink;
 import com.busenzo.domein.Halte;
 import com.busenzo.domein.Melding;
 import com.busenzo.domein.Rit;
@@ -15,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,34 +25,39 @@ import javafx.collections.ObservableList;
  *
  * @author Alex
  */
-public class ChauffeurAdmin {
+public class BusdriverAdmin implements Observer {
 
 //*******************************Datavelden*********************************
-    private IDataKoppeling dk;
-    private Rit huidigeRit;
-    private ObservableList<Melding> ontvangenMeldingen;
-    private Halte huidigeHalte;
+    private IDataLink dk;
+    private Rit currentRoute;
+    private ObservableList<Melding> recievedNotifications;
+    private Halte currentStop;
     private ObservableList<String> notificationTypes;
     
 //*******************************Constructor********************************
-    public ChauffeurAdmin(){
-        this.ontvangenMeldingen = FXCollections.observableArrayList();
-        this.huidigeRit = null;
-        this.huidigeHalte = null;
+    public BusdriverAdmin(){
+        this.recievedNotifications = FXCollections.observableArrayList();
+        this.currentRoute = null;
+        this.currentStop = null;
     }
     
-    public ChauffeurAdmin(IDataKoppeling dkop){
+    public BusdriverAdmin(IDataLink dkop){
         this.dk = dkop;
-        this.ontvangenMeldingen = FXCollections.observableArrayList();
-        this.notificationTypes = FXCollections.observableArrayList(dk.getNotificationTypes());
-        this.huidigeRit = null;
-        this.huidigeHalte = null;
+        this.recievedNotifications = FXCollections.observableArrayList();
+        this.notificationTypes = FXCollections.observableArrayList(/**dk.getNotificationTypes()**/);
+        this.currentRoute = null;
+        this.currentStop = null;
+        if(dkop instanceof PollingDataLink){
+            System.out.println("hallo!");
+            PollingDataLink pdl = (PollingDataLink)dkop;
+            pdl.addObserver(this);
+        }
     }
 
 //*******************************Propperties********************************
-    public void setHuidigeRit(Rit huidigeRit) {
+    public void setCurrentRoute(Rit newRoute) {
         //TODO: rit ontvangen over netwerk van beheer
-        this.huidigeRit = huidigeRit;
+        this.currentRoute = newRoute;
         this.updateRit();
     }
 
@@ -60,7 +68,7 @@ public class ChauffeurAdmin {
      * @return De melding als deze succesvol aangemaakt en verzonden is, anders null
      */
     public Melding verstuurMelding(String beschrijving){
-        String busNummer = new Integer(this.huidigeRit.getBus().getNummer()).toString();
+        String busNummer = Integer.toString(this.currentRoute.getBus().getNummer());
         Melding m = new Melding(0, beschrijving, busNummer, "", LocalDateTime.now());
         //TODO: zorgen dat melding verstuurd wordt
         return m;
@@ -72,7 +80,7 @@ public class ChauffeurAdmin {
      */
     public void ontvangMelding(Melding m){
         //TODO: melding ontvangen van beheer via netwerk(Gebruik functie in Administratie)
-        this.ontvangenMeldingen.add(m);
+        this.recievedNotifications.add(m);
     }
     
     /**
@@ -80,7 +88,7 @@ public class ChauffeurAdmin {
      * @return 
      */
     public List<Melding> getAllMeldingen(){
-        return Collections.unmodifiableList(ontvangenMeldingen);
+        return Collections.unmodifiableList(recievedNotifications);
     }
     
     /**
@@ -89,7 +97,7 @@ public class ChauffeurAdmin {
      */
     public Melding getLatestMelding(){
         Melding output = null;
-        for(Melding m : this.ontvangenMeldingen){
+        for(Melding m : this.recievedNotifications){
             if(output == null){
                 output = m;
             }
@@ -108,7 +116,7 @@ public class ChauffeurAdmin {
      */
     public ArrayList<Melding> getActieveMeldingen(){
         ArrayList<Melding> output = new ArrayList<>();
-        for(Melding m : this.ontvangenMeldingen){
+        for(Melding m : this.recievedNotifications){
             if(m.getActief()){
                 output.add(m);
             }
@@ -122,10 +130,10 @@ public class ChauffeurAdmin {
      */
     public ObservableList<String> getVolgendeHaltes(){
         ObservableList<String> output = FXCollections.observableArrayList();
-//        for(String s : this.huidigeRit.getLijn().getHalteNamen().subList(this.huidigeRit.getLijn().getHalteNamen().indexOf(this.huidigeHalte.getNaam()), this.huidigeRit.getLijn().getHalteNamen().size()-1)){
+//        for(String s : this.currentRoute.getLijn().getHalteNamen().subList(this.currentRoute.getLijn().getHalteNamen().indexOf(this.currentStop.getNaam()), this.currentRoute.getLijn().getHalteNamen().size()-1)){
 //            output.add(s);
 //        }
-        output.addAll(this.huidigeRit.getLijn().getHalteNamen());
+        output.addAll(this.currentRoute.getLijn().getHalteNamen());
         return output;
     }
     
@@ -136,14 +144,14 @@ public class ChauffeurAdmin {
      */
     public String getVerwachtteEindAankomsttijd(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalDateTime dateTime = this.huidigeRit.getVerwachteAankomstTijd();
+        LocalDateTime dateTime = this.currentRoute.getVerwachteAankomstTijd();
         String output = dateTime.format(formatter);
         //TODO: kijken naar vertraging
         return output;
     }
     
     public String getLijnNummer(){
-        return this.huidigeRit.getLijn().getId();
+        return this.currentRoute.getLijn().getId();
     }
     
     public ObservableList<String> getNotificationTypes(){
@@ -151,7 +159,7 @@ public class ChauffeurAdmin {
     }
     
     public boolean isLineSet(){
-        return this.huidigeRit != null;
+        return this.currentRoute != null;
     }
     
     /**
@@ -159,5 +167,11 @@ public class ChauffeurAdmin {
      */
     public void updateRit(){
         
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        this.recievedNotifications.addAll((List<Melding>)arg);
+        System.out.println(this.recievedNotifications.size());
     }
 }

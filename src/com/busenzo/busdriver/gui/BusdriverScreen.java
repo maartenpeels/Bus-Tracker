@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.busenzo.chauffeur.gui;
+package com.busenzo.busdriver.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,7 @@ import javafx.stage.Stage;
  *
  * @author Jules
  */
-public class ChauffeurScherm extends Application {
+public class BusdriverScreen extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -32,6 +32,5 @@ public class ChauffeurScherm extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-    }
-    
+    } 
 }

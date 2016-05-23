@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.busenzo.chauffeur.persistence;
+package com.busenzo.busdriver.persistence;
 
 import com.busenzo.domein.Bus;
 import com.busenzo.domein.Halte;
@@ -22,13 +22,13 @@ import java.util.List;
  *
  * @author Alex
  */
-public class MockDataKoppeling implements IDataKoppeling {
+public class MockDataLink implements IDataLink {
 
     private ArrayList<String> notificationTypes;
     private ArrayList<Melding> notifications;
     private Rit rit;
     
-    public MockDataKoppeling(){
+    public MockDataLink(){
         this.notificationTypes = new ArrayList<>();
         this.notifications = new ArrayList<>();
         initTypes();
@@ -55,8 +55,9 @@ public class MockDataKoppeling implements IDataKoppeling {
     }
     
     @Override
-    public void sendMessage(Melding melding) {
+    public boolean sendMessage(Melding melding) {
         this.notifications.add(melding);
+        return true;
     }
 
     @Override
@@ -65,13 +66,18 @@ public class MockDataKoppeling implements IDataKoppeling {
     }
 
     @Override
-    public Rit setRit() {
+    public Rit setRoute() {
         return rit;
     }
 
     @Override
     public List<String> getNotificationTypes() {
         return Collections.unmodifiableList(notificationTypes);
+    }
+
+    @Override
+    public List<Melding> getNewNotifications() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
