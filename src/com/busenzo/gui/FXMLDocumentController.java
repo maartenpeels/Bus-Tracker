@@ -159,6 +159,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             } catch (InterruptedException ex) {
                System.out.println(ex.getMessage() + " setonmouseclick Handle");
                 //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Thread.currentThread().interrupt();
             }
             }
         });
@@ -440,7 +441,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
        ArrayList<String> haltes = l.getHalteNamen();
        ArrayList<LatLong> positions = new ArrayList();
        System.out.println(haltes.size());
-        for (Halte a : this.admin.GeefLijnInformatie(l.getNummer())) {
+        for (Halte a : this.admin.geefLijnInformatie(l.getNummer())) {
                     positions.add(new LatLong(a.getCoordinaten()[0], a.getCoordinaten()[1]));
         }
        System.out.println(positions.size());
@@ -458,7 +459,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     public void reloadData() {
         System.out.println("Starting data refreshing");
         try {
-            this.admin.HaalBusLocaties();
+            this.admin.haalBusLocaties();
             this.clearBusMarkers();
             this.loadMapBussen();
         } catch (Exception ex) {
@@ -510,6 +511,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 clickedBus(pos);
             } catch (InterruptedException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Thread.currentThread().interrupt();
             }
         } else if (cbStops.isSelected() && !cbBusses.isSelected()) {
             clickedHalte(pos);

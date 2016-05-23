@@ -18,9 +18,6 @@ import org.json.simple.JSONObject;
 
 public class Administratie {
 
-    private String restServer = "http://37.97.149.53/busenzo/api/";
-    //private String restServer = "https://busenzo.stefanvlems.nl/api/";
-    private String restKey = "9709d02bfb3b1460fd0dd45f6706a81a8c33afaf";
     private ArrayList<Bus> bussen;
     private ArrayList<Lijn> lijnen;
     private ArrayList<Halte> haltes;
@@ -78,7 +75,7 @@ public class Administratie {
      * Update de locaties van alle bussen (deze worden opgehaald uit de
      * database)
      */
-    public void HaalBusLocaties() {
+    public void haalBusLocaties() {
         this.lijnen.clear();
         try {
             this.lijnen.addAll(dbKoppeling.getLineData(haltes));
@@ -96,7 +93,7 @@ public class Administratie {
      * @return Een lijst van alle lijnen die bij deze halte stoppen, kan een
      * lege lijst zijn als de halte niet gevonden wordt
      */
-    public List<Lijn> GeefHalteInformatie(String halteNaam) {
+    public List<Lijn> geefHalteInformatie(String halteNaam) {
         if (halteNaam.isEmpty()) {
             throw new IllegalArgumentException();
         } else {
@@ -116,7 +113,7 @@ public class Administratie {
      * @return Een lijst van haltes waar deze lijn stopt, kan leeg zijn als het
      * lijnnummer niet gevonden wordt
      */
-    public List<Halte> GeefLijnInformatie(int nummer) 
+    public List<Halte> geefLijnInformatie(int nummer) 
     {
         Lijn lijn = null;
         List<Halte> lijnHaltes = new ArrayList();
