@@ -212,11 +212,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     public void showMeldingen() {
         ObservableList<String> items = FXCollections.observableArrayList();
 
-        for(Melding m : admin.getAllMeldingen()) {
-            items.add((m.getZender() == "" ? "Beheerder" : m.getZender()) + " > " +(m.getOntvanger() == "" ? "Beheerder" : m.getOntvanger()) + " (" + m.getID() + ")");
+        for (Melding m : admin.getAllMeldingen()) {
+            items.add((m.getZender() == "" ? "Beheerder" : m.getZender()) + " > " + (m.getOntvanger() == "" ? "Beheerder" : m.getOntvanger()) + " (" + m.getID() + ")");
             this.lbNotifications.setItems(items);
             this.lbNotifications.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-                
+            
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                   Pattern r = Pattern.compile("\\((\\d+)\\)$");
@@ -225,13 +225,13 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     if (m.find() && !m.group(1).equals(lastSearchedListObject)) {
                         lastSearchedListObject = m.group(1);
                         System.out.println("Found message id: " + m.group(1));
-                        for(Melding melding : admin.getAllMeldingen()){
+                        for (Melding melding : admin.getAllMeldingen()){
                             if(melding.getID().equals(Integer.parseInt(m.group(1))))
                             {
                                 System.out.println(melding.getBeschrijving());
                                 Alert alert = new Alert(AlertType.INFORMATION);
                                 alert.setTitle("Melding informatie");
-                                alert.setHeaderText("Bericht van: " + (melding.getZender() == "" ? "Beheerder" : melding.getZender()) + "\nNaar: " + (melding.getOntvanger() == "" ? "Beheerder" : melding.getOntvanger()) + "\nOp: " + melding.getTijdstip().toString().replace("T", " ") );
+                                alert.setHeaderText("Bericht van: " + (melding.getZender() == "" ? "Beheerder" : melding.getZender()) + "\nNaar: " + (melding.getOntvanger() == "" ? "Beheerder" : melding.getOntvanger()) + "\nOp: " + melding.getTijdstip().toString().replace("T", " "));
                                 alert.setContentText(melding.getBeschrijving());
                                 //ButtonType buttonTyperemovemelding = new ButtonType("Verwijder");
                                 ButtonType buttonTypeCancel = new ButtonType("Sluiten", ButtonData.CANCEL_CLOSE);
@@ -266,9 +266,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     public void clearMapBussen() {
-        for (Marker m : this.mapMarkers) {
-            if (m instanceof BusMarker) {
-                m.setVisible(false);
+        if (!cbBusses.isSelected()) {
+            for (Marker m : this.mapMarkers) {
+                if (m instanceof BusMarker) {
+                    m.setVisible(false);
+                }
             }
         }
     }
@@ -322,7 +324,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     
     public void loadMapBussen() {
         for (Lijn l : this.admin.getBussen()) {
-            Platform.runLater(new Runnable(){
+            Platform.runLater(new Runnable() {
 
                 @Override
                 public void run() {
@@ -335,11 +337,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             });
         }
     }
-    
-    private void clearBusMarkers(){
+
+    private void clearBusMarkers() {
         ArrayList<Marker> tempMarkers = new ArrayList<>();
-        for(Marker m : this.mapMarkers){
-            if(m instanceof BusMarker){
+        for (Marker m : this.mapMarkers){
+            if(m instanceof BusMarker) {
                 tempMarkers.add(m);
             }
         }
@@ -472,7 +474,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             double cordsX = a.getCoordinaten()[0];
             double cordsY = a.getCoordinaten()[1];
             if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
-                //lblSelectedStop.setText(a.getNaam());
+                lblBusId.setText("-");
+                lblBusNumber.setText("-");
                 items.add(a.getNaam());
                 lvStops.setItems(items);
                 
@@ -489,8 +492,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     double cordsX = b.getCoordinaten()[0];
                     double cordsY = b.getCoordinaten()[1];
                     if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
-                        //lblBusId.setText("" + b.getNummer());
-                        //lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
+                        lblBusId.setText("" + b.getNummer());
+                        lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
                         searchBussen(b.getHuidigeRit().getLijn().getNummer() + "");
                     }
                 }

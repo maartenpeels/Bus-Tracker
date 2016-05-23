@@ -25,15 +25,15 @@
         <Button id="verstuurButton" fx:id="btnRedirect" layoutX="5.0" layoutY="510.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
         <Label layoutX="5.0" layoutY="280.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
         <Label layoutX="5.0" layoutY="238.0" text="Geselecteerde bus:" />
-        <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="255.0" text="&lt;nummer&gt;" />
-        <Label fx:id="lblBusId" layoutX="78.0" layoutY="255.0" text="&lt;id&gt;" />
+        <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="255.0" text="-" />
+        <Label fx:id="lblBusId" layoutX="78.0" layoutY="255.0" text="-" />
         <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of lijnnummer:" />
         <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
         <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
         <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
         <CheckBox fx:id="cbStops" layoutX="5.0" layoutY="49.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
         <ImageView fx:id="busEnzoLogo" fitHeight="34.0" fitWidth="40.0" layoutX="148.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
-        <Label fx:id="lblSelectedStop" layoutX="5.0" layoutY="210.0" prefHeight="16.0" prefWidth="170.0" text="&lt;geselecteerde halte&gt;" />
+<!--        <Label fx:id="lblSelectedStop" layoutX="5.0" layoutY="210.0" prefHeight="16.0" prefWidth="170.0" text="&lt;geselecteerde halte&gt;" />-->
       </children>
     </AnchorPane>
     <AnchorPane prefHeight="542.0" prefWidth="186.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
