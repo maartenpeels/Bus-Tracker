@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.busenzo.busdriver.gui;
+package chauffeurscherm;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
