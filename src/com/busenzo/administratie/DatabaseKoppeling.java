@@ -46,7 +46,7 @@ public class DatabaseKoppeling {
     public JSONObject getJSONfromWeb(String query) throws Exception
     {
         //String getUrl = this.restServer + "/" + this.restKey + "/" + query;
-        String getUrl = "http://37.97.149.53/busenzo/api/api.php?key=" + restKey+ "&action=" + query;
+        String getUrl = restServer + "api.php?key=" + restKey+ "&action=" + query;
          
         JSONParser parser = new JSONParser();
         String json = readUrl(getUrl);

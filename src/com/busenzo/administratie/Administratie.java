@@ -18,9 +18,6 @@ import org.json.simple.JSONObject;
 
 public class Administratie {
 
-    private String restServer = "http://37.97.149.53/busenzo/api/";
-    //private String restServer = "https://busenzo.stefanvlems.nl/api/";
-    private String restKey = "9709d02bfb3b1460fd0dd45f6706a81a8c33afaf";
     private ArrayList<Bus> bussen;
     private ArrayList<Lijn> lijnen;
     private ArrayList<Halte> haltes;

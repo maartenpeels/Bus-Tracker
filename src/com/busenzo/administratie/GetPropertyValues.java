@@ -25,7 +25,7 @@ public class GetPropertyValues {
             Properties prop = new Properties();
             String propFileName = "/resources/config.properties";
 
-            inputStream = getClass().getResourceAsStream(propFileName);
+             inputStream = getClass().getResourceAsStream(propFileName);
                         
             if (inputStream != null) {
                 prop.load(inputStream);
@@ -38,7 +38,9 @@ public class GetPropertyValues {
         } catch (Exception e) {
             System.out.println(e);
         } finally {
-            inputStream.close();
+            if (inputStream != null) {
+                inputStream.close();
+            }
         }
         
         return results;
