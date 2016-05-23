@@ -26,6 +26,7 @@ import com.busenzo.gui.markers.HalteMarker;
 import com.lynden.gmapsfx.javascript.event.UIEventHandler;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.DirectionsPane;
+import com.lynden.gmapsfx.javascript.object.MVCArray;
 import com.lynden.gmapsfx.service.directions.DirectionStatus;
 import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
 import com.lynden.gmapsfx.service.directions.DirectionsRequest;
@@ -34,6 +35,8 @@ import com.lynden.gmapsfx.service.directions.DirectionsService;
 import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
 import com.lynden.gmapsfx.service.directions.DirectionsWaypoint;
 import com.lynden.gmapsfx.service.directions.TravelModes;
+import com.lynden.gmapsfx.shapes.Polyline;
+import com.lynden.gmapsfx.shapes.PolylineOptions;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -122,6 +125,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     @FXML 
     private TextArea taNotificationText;
+    
+    private Polyline poly;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -428,29 +433,23 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
    public void drawRoute(Lijn l){
-        try {
+       if(poly != null)
+           map.removeMapShape(poly);
        ArrayList<String> haltes = l.getHalteNamen();
-       DirectionsService ds = new DirectionsService();
-       DirectionsRenderer renderer = new DirectionsRenderer(true, map, directions);
-        System.out.println(l.getNummer());
-        
-        DirectionsWaypoint[] dw = new DirectionsWaypoint[haltes.size()];
-        
-        for(int i = 0; i < haltes.size(); i++){
-        dw[i] = new DirectionsWaypoint(haltes.get(i));
-        System.out.println(haltes.get(i));
+       ArrayList<LatLong> positions = new ArrayList();
+       System.out.println(haltes.size());
+        for (Halte a : this.admin.GeefLijnInformatie(l.getNummer())) {
+                    positions.add(new LatLong(a.getCoordinaten()[0], a.getCoordinaten()[1]));
         }
-        
-        DirectionsRequest dr = new DirectionsRequest(
-                haltes.get(0),
-                haltes.get(haltes.size() - 1),
-                TravelModes.DRIVING,
-                dw);
-        ds.getRoute(dr, this, renderer);
-        
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Error: niet gelukt om route te tekenen op kaart! /n" + e);
-        }
+       System.out.println(positions.size());
+        MVCArray pmvc = new MVCArray(positions.toArray());
+        PolylineOptions polyOpts = new PolylineOptions()
+                .path(pmvc)
+                .strokeColor("red")
+                .strokeWeight(2);
+
+        poly = new Polyline(polyOpts);
+        map.addMapShape(poly);
     }
     
     

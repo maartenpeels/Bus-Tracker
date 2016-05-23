@@ -105,8 +105,29 @@ public class Administratie {
      * @return Een lijst van haltes waar deze lijn stopt, kan leeg zijn als het
      * lijnnummer niet gevonden wordt
      */
-    public List<Halte> GeefLijnInformatie(String nummer) {
-        throw new UnsupportedOperationException();
+    public List<Halte> GeefLijnInformatie(int nummer) 
+    {
+        Lijn lijn = null;
+        List<Halte> lijnHaltes = new ArrayList();
+        for(Lijn l : lijnen){
+            if(l.getNummer() == nummer){
+                lijn = l;
+            }
+        }
+        if(lijn != null){
+            ArrayList<String> namen = lijn.getHalteNamen();
+            System.out.println(namen);
+            
+            for(String s : namen){
+                for(Halte a: haltes){
+                    if(a.getNaam().equals(s)){
+                        lijnHaltes.add(a);
+                        break;
+                    }
+                }
+            }
+        }
+        return lijnHaltes;
     }
 
     /**
