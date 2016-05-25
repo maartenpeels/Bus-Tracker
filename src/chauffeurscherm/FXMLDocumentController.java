@@ -10,10 +10,12 @@ import domein.Stop;
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,10 +35,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
 /**
@@ -76,7 +80,11 @@ public class FXMLDocumentController implements Initializable {
         this.lvItems = FXCollections.observableArrayList();
         //this.lvIncomingNotifications.setItems(lvItems);
         admin = new BusDriverAdmin();
-        
+        try {        
+            showLoginForm();
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Task task = new Task() {
             @Override
             protected Object call() throws Exception {
@@ -148,7 +156,32 @@ public class FXMLDocumentController implements Initializable {
             
         }
     }
-    
+    private void showLoginForm() throws Exception
+    {
+        
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("Chauffeurssysteem - Inloggen - Voer busnummer in");
+        dialog.setHeaderText("Voer hier uw geplande busnummer in");
+        dialog.setContentText("Busnummer:");
+
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        List<String> choices = new ArrayList<>();
+        if (result.isPresent()){
+            System.out.println("Searching for bus: " + result.get());
+            choices = admin.getRitbyName(result.get());
+        }
+        ChoiceDialog<String> dialogBusSelect = new ChoiceDialog<>(null, choices);
+        dialog.setTitle("Chauffeurssysteem - Inloggen - Selecteer rit");
+        dialog.setHeaderText("Selecteer hieronder uw geplande rit");
+        dialog.setContentText("Rit:");
+
+        Optional<String> resultBusSelect = dialogBusSelect.showAndWait();
+        if (resultBusSelect.isPresent()){
+            this.admin.setRit(resultBusSelect.get());
+            System.out.println("Gebruiker Rit: " + resultBusSelect.get());
+        }
+    }
     private void updateLabels(){
         Platform.runLater( () -> this.lineLabel.setText("Buslijn:"));
         Platform.runLater( () -> this.busstopLabel.setText("Volgende haltes:"));

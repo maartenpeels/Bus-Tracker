@@ -14,7 +14,7 @@ public class BusDriverAdmin {
     private Rit rit;
     private DataLink dbKoppeling;
     
-    private static final String BUS_ID = "CXX_20160523_L150_70_0";
+    private String BUS_ID = "CXX_20160523_L150_70_0";
 
     /**
      * Maak een nieuwe administratie aan
@@ -22,7 +22,10 @@ public class BusDriverAdmin {
     public BusDriverAdmin() {
         this.dbKoppeling = new DataLink(restServer, restKey);
     }
-
+    public ArrayList<String> getRitbyName(String searchString) throws Exception
+    {
+        return this.dbKoppeling.getRittenbyBusID(searchString);
+    }
     public void laadDataIn() {
         try {
             this.rit = dbKoppeling.getNextStops(BUS_ID);
@@ -30,7 +33,10 @@ public class BusDriverAdmin {
             Logger.getLogger(BusDriverAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public void setRit(String newRit)
+    {
+        this.BUS_ID = newRit;
+    }
     public Rit getRit()
     {
         return rit;

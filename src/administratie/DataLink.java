@@ -161,7 +161,30 @@ public class DataLink {
        
        return rit;
    }
-   
+    public ArrayList<String> getRittenbyBusID(String busId) throws Exception
+    { 
+       
+       ArrayList<String> bussen = new ArrayList<>();
+       String query = "ritten&location="+busId;
+       
+       JSONObject respObj = this.getJSONfromWeb(query);
+       int count = Integer.parseInt(respObj.get("count").toString());
+       
+       if(count > 0)
+       {
+            JSONArray respArr = (JSONArray) respObj.get("data");
+            for (Object respData : respArr)
+            {
+                JSONObject respRow = (JSONObject) respData;
+                String busID = respRow.get("id").toString();
+                bussen.add(busID);
+                
+            }
+       }else{
+           return new ArrayList<String>();
+       }
+       return bussen;
+   }
    public ArrayList<Rit> getActuals()
    {
        return new ArrayList<Rit>();
