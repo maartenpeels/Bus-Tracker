@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -161,6 +162,16 @@ public class DataLink {
        
        return rit;
    }
+   public boolean addMelding(Melding m) throws Exception {
+
+        String query = "addmelding&from=" + m.getZender() + "&to=&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Chauffeur";
+        System.out.println(query);
+        JSONObject meldingResult = this.getJSONfromWeb(query);
+        JSONObject objects = (JSONObject) meldingResult;
+        String status = objects.get("status").toString();
+        System.out.println(meldingResult);
+        return meldingResult.toString().contains("succes");
+    }
     public ArrayList<String> getRittenbyBusID(String busId) throws Exception
     { 
        
@@ -220,7 +231,33 @@ public class DataLink {
         System.out.println("Added " + output.size() + " messages to application");
         return output;
     }
-   
+    public ArrayList<Melding> getMeldingen(String busID) throws Exception {
+        ArrayList<Melding> output = new ArrayList<>();
+        String query = "meldingen&to=" + busID;
+        JSONObject meldingenData = this.getJSONfromWeb(query);
+        JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
+        for (Object meldingData : meldingenArray) {
+            JSONObject objects = (JSONObject) meldingData;
+            //System.out.println(meldingData.toString());
+            Integer meldingID = Integer.parseInt(objects.get("id").toString());
+            String meldingTo = objects.get("to").toString();
+            String meldingFrom;
+            try {
+                meldingFrom = objects.get("from").toString();
+            } catch (Exception ex) {
+                meldingFrom = "";
+            }
+            String meldingTekst = objects.get("message").toString();
+
+            String meldingDateTime = objects.get("time").toString();
+            DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime meldingTime = LocalDateTime.parse(meldingDateTime, frm);
+            Melding addMelding = new Melding(meldingID, meldingTekst, meldingFrom, meldingTo, meldingTime);
+            output.add(addMelding);
+        }
+        System.out.println("Added " + output.size() + " messages to application");
+        return output;
+    }
     public boolean sendMessage(Melding melding) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
 //        String query = "addmelding"+(melding.getZender().equals("-1") ? "" : "&from="+melding.getZender())+"&to="+melding.getOntvanger()+"&mtekst="+melding.getBeschrijving()+"&mtype=Beheerder";

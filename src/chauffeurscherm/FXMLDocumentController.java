@@ -6,6 +6,7 @@
 package chauffeurscherm;
 
 import administratie.BusDriverAdmin;
+import domein.Melding;
 import domein.Stop;
 import java.io.IOException;
 import java.net.URL;
@@ -34,6 +35,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
@@ -55,6 +58,8 @@ public class FXMLDocumentController implements Initializable {
     //For main busdriver screen 
     @FXML
     private Label lineLabel;
+    @FXML
+    private TextField notificationTextInput;
     @FXML
     private Label busstopLabel;
     @FXML
@@ -85,20 +90,20 @@ public class FXMLDocumentController implements Initializable {
         } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Task task = new Task() {
+        Runnable task = new Runnable() {
             @Override
-            protected Object call() throws Exception {
-                admin.laadDataIn();
-                
-                updateLabels();
-                updateListBox();
-                
-                System.out.println("Update next stops done!");
-                
-                return true;
+            public void run(){
+                try {
+                    admin.laadDataIn();
+                    updateLabels();
+                    updateListBox();
+                    laadMeldingen();
+                } catch (Exception ex) {
+                    //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Update next stops & notifications done!");
             }
         };
-        
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
         
@@ -110,19 +115,36 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-    
-    @FXML
-    public void handleSendNotification(){
-        if(!this.cbNotifications.getSelectionModel().isEmpty()){
-            //this.ca.verstuurMelding(cbNotifications.getSelectionModel().getSelectedItem());
-            NotificationLabel notlab = new NotificationLabel();
-            notlab.setCategorie(this.cbNotifications.getSelectionModel().getSelectedItem());
-            notlab.setParent(lvIncomingNotifications);
-            this.lvItems.add(notlab);
+    public void laadMeldingen() throws Exception
+    {
+        
+        ArrayList<Melding> meldingenArray = this.admin.getMeldingen();
+        ObservableList<String> meldingenTekstArray = FXCollections.observableArrayList();
+        for(Melding m : meldingenArray)
+        {
+            //System.out.println(m.getOntvanger());
+            //System.out.println(m.getZender());
+            meldingenTekstArray.add((m.getZender() == null || m.getZender().isEmpty() ? "Beheerder" : m.getOntvanger()) + " > " + m.getBeschrijving());
         }
-        else{
-            //TODO error afhandelen
-            System.out.println("geen item geselecteerd");
+        lvIncomingNotifications.setItems(meldingenTekstArray);
+    }
+    @FXML
+    public void handleSendNotification() throws Exception{
+        //System.out.println(notificationTextInput.getText());
+        if(this.admin.sendMelding(notificationTextInput.getText()))
+        {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Melding toevoegen");
+            alert.setContentText("Melding is verstuurd!");
+            alert.showAndWait();
+            notificationTextInput.setText("");
+        }
+        else
+        {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Melding toevoegen");
+            alert.setContentText("Fout tijdens toevoegen!");
+            alert.showAndWait();
         }
     }
     
@@ -138,7 +160,7 @@ public class FXMLDocumentController implements Initializable {
             //this.lvLines.setItems();
         }
     }
-    
+    /*
     @FXML
     public void handleLogin(){
         if(lvLines.getSelectionModel().getSelectedItem() == null){//change to !=
@@ -156,6 +178,12 @@ public class FXMLDocumentController implements Initializable {
             
         }
     }
+
+    */
+    @FXML
+    public void sendNotification(){
+        
+    }
     private void showLoginForm() throws Exception
     {
         List<String> choices = new ArrayList<>();
@@ -163,7 +191,7 @@ public class FXMLDocumentController implements Initializable {
         {
             TextInputDialog dialog = new TextInputDialog("");
             dialog.setTitle("Chauffeurssysteem - Inloggen - Voer busnummer in");
-            dialog.setHeaderText("Voer hier uw geplande busnummer in");
+            dialog.setHeaderText("Voer hier uw geplande busnummer in, Lege invoer geeft een lijst van alle actuele ritten");
             dialog.setContentText("Busnummer:");
 
             // Traditional way to get the response value.
@@ -177,26 +205,43 @@ public class FXMLDocumentController implements Initializable {
                     break;
                 }
             }
+            else
+            {
+                System.out.println("Applicatie sluiten");
+                System.exit(0);
+            }
         }
-        ChoiceDialog<String> dialogBusSelect = new ChoiceDialog<>(null, choices);
-        dialogBusSelect.setTitle("Chauffeurssysteem - Inloggen - Selecteer rit");
-        dialogBusSelect.setHeaderText("Selecteer hieronder uw geplande rit");
-        dialogBusSelect.setContentText("Rit:");
+        while(true)
+        {
+            ChoiceDialog<String> dialogBusSelect = new ChoiceDialog<>(null, choices);
+            dialogBusSelect.setTitle("Chauffeurssysteem - Inloggen - Selecteer rit");
+            dialogBusSelect.setHeaderText("Selecteer hieronder uw geplande rit");
+            dialogBusSelect.setContentText("Rit:");
 
-        Optional<String> resultBusSelect = dialogBusSelect.showAndWait();
-        if (resultBusSelect.isPresent()){
-            this.admin.setRit(resultBusSelect.get());
-            System.out.println("Gebruiker Rit: " + resultBusSelect.get());
+            Optional<String> resultBusSelect = dialogBusSelect.showAndWait();
+            if (resultBusSelect.isPresent()){
+                if(resultBusSelect.get().length() > 0)
+                {
+                    this.admin.setRit(resultBusSelect.get());
+                    break;
+                }
+            }
+            else
+            {
+                System.out.println("Applicatie sluiten");
+                System.exit(0);
+            }
         }
+        System.out.println("Geselecteerde rit: " + admin.getRitID());
     }
     private void updateLabels(){
-        Platform.runLater( () -> this.lineLabel.setText("Buslijn:"));
-        Platform.runLater( () -> this.busstopLabel.setText("Volgende haltes:"));
-        Platform.runLater( () -> this.expectedArrivalTime.setText("Verwachtte aankomsttijd volgende halte:\n" + DateTimeFormatter.ofPattern("HH:mm:ss").format(admin.getRit().getArrivalTime())));
+        lineLabel.setText("Buslijn:");
+        busstopLabel.setText("Volgende haltes:");
+        expectedArrivalTime.setText("Verwachtte aankomsttijd volgende halte:\n" + DateTimeFormatter.ofPattern("HH:mm:ss").format(admin.getRit().getArrivalTime()));
     } 
     
     private void updateListBox(){
         ObservableList<String> stops = FXCollections.observableArrayList(admin.getRit().getNextStops());
-        this.lv_nextStops.setItems(stops);
+        lv_nextStops.setItems(stops);
     }
 }

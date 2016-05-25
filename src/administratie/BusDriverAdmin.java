@@ -1,7 +1,9 @@
 package administratie;
 
+import domein.Melding;
 import java.util.ArrayList;
 import domein.Rit;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,8 +39,23 @@ public class BusDriverAdmin {
     {
         this.BUS_ID = newRit;
     }
+    public boolean sendMelding(String meldingText) throws Exception
+    {
+        Melding m = new Melding(0, meldingText, this.BUS_ID, "", LocalDateTime.now());
+        boolean result = this.dbKoppeling.addMelding(m);
+        //System.out.print(result);
+        return result;
+    }
+    public ArrayList<Melding> getMeldingen() throws Exception
+    {
+        return this.dbKoppeling.getMeldingen(this.BUS_ID);
+    }
     public Rit getRit()
     {
         return rit;
+    }
+    public String getRitID()
+    {
+        return this.BUS_ID;
     }
 }

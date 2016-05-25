@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
+<?import chauffeurscherm.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import chauffeurscherm.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="584.0" prefWidth="616.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chauffeurscherm.FXMLDocumentController">
-   <children>
-      <Label id="lineLabel" fx:id="lineLabel" layoutX="249.0" layoutY="20.0" text="Buslijn:">
-         <font>
-            <Font name="System Bold" size="23.0" />
-         </font>
-      </Label>
-      <TitledPane animated="false" collapsible="false" layoutX="25.0" layoutY="66.0" prefHeight="332.0" prefWidth="250.0" text="Melding doorgeven aan beheerder">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="276.0" prefWidth="248.0">
-               <children>
-                  <ComboBox id="cbNotifications" fx:id="cbNotifications" layoutX="12.0" layoutY="21.0" prefHeight="25.0" prefWidth="222.0" />
-                  <ListView id="notificationsList" layoutX="12.0" layoutY="64.0" prefHeight="179.0" prefWidth="219.0" />
-                  <Button id="btnSendNotification" layoutX="17.0" layoutY="267.0" mnemonicParsing="false" onAction="#handleSendNotification" prefHeight="25.0" prefWidth="215.0" text="Verstuur melding" />
-               </children>
-            </AnchorPane>
-        </content>
-      </TitledPane>
-      <TitledPane animated="false" collapsible="false" layoutX="316.0" layoutY="66.0" prefHeight="332.0" prefWidth="272.0" text="Haltes">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="380.0" prefWidth="270.0">
-               <children>
-                  <Label id="busstopLabel" fx:id="busstopLabel" layoutX="14.0" layoutY="14.0" text="Volgende halte: Kerkakers" />
-                  <ListView id="haltesList" fx:id="lv_nextStops" layoutX="11.0" layoutY="42.0" prefHeight="207.0" prefWidth="250.0" />
-                  <Label fx:id="expectedArrivalTime" layoutX="13.0" layoutY="269.0" text="Verwachte aankomsttijd:" />
-               </children>
-            </AnchorPane>
-        </content>
-      </TitledPane>
-      <TitledPane animated="false" collapsible="false" layoutX="22.0" layoutY="409.0" prefHeight="174.0" prefWidth="572.0" text="Binnengekomen meldingen">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <ListView fx:id="lvIncomingNotifications" layoutX="6.0" layoutY="6.0" prefHeight="140.0" prefWidth="556.0" />
-               </children>
-            </AnchorPane>
-        </content>
-      </TitledPane>
-   </children>
+<AnchorPane id="AnchorPane" prefHeight="584.0" prefWidth="616.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="chauffeurscherm.FXMLDocumentController">
+  <children>
+    <Label fx:id="lineLabel" layoutX="249.0" layoutY="20.0" text="Buslijn:">
+      <font>
+        <Font name="System Bold" size="23.0" />
+      </font>
+    </Label>
+    <TitledPane animated="false" collapsible="false" layoutX="25.0" layoutY="66.0" prefHeight="332.0" prefWidth="250.0" text="Melding doorgeven aan beheerder">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="276.0" prefWidth="248.0">
+          <children>
+            <ComboBox fx:id="cbNotifications" layoutX="12.0" layoutY="21.0" prefHeight="25.0" prefWidth="222.0" />
+            <Button id="btnSendNotification" layoutX="17.0" layoutY="267.0" mnemonicParsing="false" onAction="#handleSendNotification" prefHeight="25.0" prefWidth="215.0" text="Verstuur melding" />
+            <TextField fx:id="notificationTextInput" layoutX="12.0" layoutY="56.0" prefHeight="193.0" prefWidth="215.0" />
+          </children>
+        </AnchorPane>
+      </content>
+    </TitledPane>
+    <TitledPane animated="false" collapsible="false" layoutX="316.0" layoutY="66.0" prefHeight="332.0" prefWidth="272.0" text="Haltes">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="380.0" prefWidth="270.0">
+          <children>
+            <Label fx:id="busstopLabel" layoutX="14.0" layoutY="14.0" text="Volgende halte: Kerkakers" />
+            <ListView id="haltesList" fx:id="lv_nextStops" layoutX="11.0" layoutY="42.0" prefHeight="207.0" prefWidth="250.0" />
+            <Label fx:id="expectedArrivalTime" layoutX="13.0" layoutY="269.0" text="Verwachte aankomsttijd:" />
+          </children>
+        </AnchorPane>
+      </content>
+    </TitledPane>
+    <TitledPane animated="false" collapsible="false" layoutX="22.0" layoutY="409.0" prefHeight="174.0" prefWidth="572.0" text="Binnengekomen meldingen">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <children>
+            <ListView fx:id="lvIncomingNotifications" layoutX="6.0" layoutY="6.0" prefHeight="140.0" prefWidth="556.0" />
+          </children>
+        </AnchorPane>
+      </content>
+    </TitledPane>
+  </children>
 </AnchorPane>
