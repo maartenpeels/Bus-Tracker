@@ -1,34 +1,27 @@
 package com.busenzo.administratie;
 
 import java.util.ArrayList;
-import com.busenzo.domein.Bus;
 import com.busenzo.domein.Lijn;
 import com.busenzo.domein.Halte;
 import com.busenzo.domein.Melding;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 public class Administratie {
 
-    private ArrayList<Bus> bussen;
     private ArrayList<Lijn> lijnen;
     private ArrayList<Halte> haltes;
     private ArrayList<Melding> meldingen;
     private DatabaseKoppeling dbKoppeling;
 
     /**
-     * Maak een nieuwe administratie aan
+     * Construct a new administration. All lists should be initialized and a databaselink should be setup
+     * with the server and key coming from a properties file
      */
     public Administratie(){
-        this.bussen = new ArrayList<>();
         this.lijnen = new ArrayList<>();
         this.haltes = new ArrayList<>();
         this.meldingen = new ArrayList<>();
@@ -45,6 +38,10 @@ public class Administratie {
         this.dbKoppeling = new DatabaseKoppeling(props[0], props[1]);
     }
 
+    /**
+     * Load all available data (busstops, lines, routedata and notifications) from the database. All data is
+     * added to the lists in this class.
+     */
     public void laadDataIn() {
         try {
             this.haltes.addAll(dbKoppeling.getHalteData());
@@ -57,23 +54,7 @@ public class Administratie {
     }
 
     /**
-     * Zoek naar een specifieke bus
-     *
-     * @param id: ID (chassisnummer) van de bus
-     * @return De bus met het ingevoerde id, null als deze niet bestaat
-     */
-    public Bus zoekBus(int id) {
-        for (Bus b : this.bussen) {
-            if (b.getNummer() == id) {
-                return b;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Update de locaties van alle bussen (deze worden opgehaald uit de
-     * database)
+     * Update the locations of all the currently active busses. These are returnt from the database
      */
     public void haalBusLocaties() {
         this.lijnen.clear();
@@ -86,32 +67,9 @@ public class Administratie {
     }
 
     /**
-     * Haal alle lijnen op die bij een specifieke halte stoppen
-     *
-     * @param halteNaam: De haltenaam waarvan je de lijnen wil weten, mag geen
-     * lege string zijn.
-     * @return Een lijst van alle lijnen die bij deze halte stoppen, kan een
-     * lege lijst zijn als de halte niet gevonden wordt
-     */
-    public List<Lijn> geefHalteInformatie(String halteNaam) {
-        if (halteNaam.isEmpty()) {
-            throw new IllegalArgumentException();
-        } else {
-            for (Halte h : this.haltes) {
-                if (h.getNaam().equals(halteNaam)) {
-                    return h.HaalLijnen();
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Haal de haltes op van een specifieke lijn
-     *
-     * @param nummer: Het lijnnummer waarvan je de haltes wil weten.
-     * @return Een lijst van haltes waar deze lijn stopt, kan leeg zijn als het
-     * lijnnummer niet gevonden wordt
+     * Get a list of all busstops a specific line stops at
+     * @param nummer: the linenumber of which you want to know the stops
+     * @return a list of all busstops this line stops at. Can be empty if the number isn't found
      */
     public List<Halte> geefLijnInformatie(int nummer) 
     {
@@ -139,99 +97,26 @@ public class Administratie {
     }
 
     /**
-     * Voeg een nieuwe bus toe aan de administratie
-     *
-     * @param bus: De toe te voegen bus, er mag nog geen bus bestaan met
-     * hetzelfde chassisnummer
-     */
-    public void addBus(Bus bus) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Voeg meerdere nieuwe bussen toe aan de administratie
-     *
-     * @param bussen: Een lijst met bussen die toegevoegd worden. Bussen worden
-     * alleen toegevoegd als er nog geen bus bestaat met dat specifieke
-     * chassisnummer
-     */
-    public void addBussen(List<Bus> bussen) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Verwijder een specifieke bus uit de administratie
-     *
-     * @param bus De te verwijderen bus
-     */
-    public void removeBus(Bus bus) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Voeg een halte toe aan de administratie
-     *
-     * @param halte De toe te voegen halte, deze wordt alleen toegevoegd als
-     * deze halte nog niet bestaat
-     */
-    public void addHalte(Halte halte) {
-        if (!haltes.contains(halte)) {
-            this.haltes.add(halte);
-        }
-    }
-
-    /**
-     * Voeg meerdere haltes toe aan de administratie
-     *
-     * @param haltes Een lijst van toe te voegen haltes, haltes worden alleen
-     * toegevoegd als deze nog niet bestaan
-     */
-    public void addHaltes(List<Halte> haltes) {
-        for (Halte h : haltes) {
-            if (!this.haltes.contains(h)) {
-                this.haltes.add(h);
-            }
-        }
-    }
-
-    /**
-     * Voeg een specifieke lijn toe aan de administratie
-     *
-     * @param lijn De toe te voegen lijn. Deze wordt alleen toegevoegd als deze
-     * lijn nog niet bestaat.
-     */
-    public void addLijn(Lijn lijn) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Voeg meerdere lijnene toe aan de administratie
-     *
-     * @param lijnen De toe te voegen lijnen. Lijnen worden alleen toegevoegd
-     * als ze nog niet bestaan
-     */
-    public void addLijnen(List<Lijn> lijnen) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * haal de lijst van haltes op
-     *
-     * @return een onwijzigbare lijst van haltes
+     * return a list of all busstops
+     * @return an unmodifiable list of busstops
      */
     public List<Halte> getHaltes() {
         return Collections.unmodifiableList(haltes);
     }
 
     /**
-     * haal een lijst van bussen op
-     *
-     * @return onwijzigbare lijst van bussen
+     * get a list of all active busses
+     * @return an unmodifiable list of line objects (which contain the busses)
      */
     public List<Lijn> getBussen() {
         return Collections.unmodifiableList(lijnen);
     }
 
+    /**
+     * search for a specific line which contains the given searchterm.
+     * @param naam the term the user wants to search for
+     * @return a list of all line objects which contain the searchterm in their number
+     */
     public List<Lijn> zoekLijn(String naam) {
         ArrayList<Lijn> output = new ArrayList<>();
         for (Lijn l : this.lijnen) {
@@ -243,69 +128,47 @@ public class Administratie {
         return output;
     }
 
+    /**
+     * search for all busstops with the searchterm in their name.
+     * @param naam the term the user wants to search for
+     * @return 
+     */
     public List<Halte> zoekHalte(String naam) {
         ArrayList<Halte> output = new ArrayList<>();
-        if (naam.length() > 0) {
+        if (!naam.isEmpty()) {
             for (Halte h : this.haltes) {
                 if (h.getNaam().toLowerCase().contains(naam.toLowerCase())) {
                     output.add(h);
                 }
             }
         }
-
         return output;
     }
+    
+    /**
+     * Get a list of all notifications
+     * @return an unmodifiablelist of all notifications
+     */
     public List<Melding> getAllMeldingen() {
-        return this.meldingen;
+        return Collections.unmodifiableList(meldingen);
     }
+    
+    /**
+     * Add a new notifications to the database
+     * @param m the notification which has to be added
+     * @return true if the notification was succesfully added, otherwise false
+     * @throws Exception if a connection to the database cant be made
+     */
     public boolean addMelding (Melding m) throws Exception
     {
         return dbKoppeling.addMelding(m);
     }
-
+    
     /**
-     * haal de lijst van meldingen op na een bepaald id
-     *
-     * @return een onwijzigbare lijst van meldingen
+     * Get the current databaseconnection
+     * @return databaselink object 
      */
-    /*
-    public List<Melding> getMeldingen(int laatsteId, int van, int naar) throws Exception {
-        ArrayList<Melding> output = new ArrayList<>();
-        String query = "";
-
-        if (van == -1) {
-            query = "meldingen&to=" + naar + "&last=" + laatsteId;
-        } else if (naar == -1) {
-            query = "meldingen&from=" + van + "&last=" + laatsteId;
-        } else {
-            return null;
-        }
-
-        JSONObject meldingData = dbKoppeling.getJSONfromWeb(query);
-        JSONArray meldingArray = (JSONArray) meldingData.get("data");
-        for (Object meldingArray1 : meldingArray) {
-            JSONObject objects = (JSONObject) meldingArray1;
-
-            String beschrijving = objects.get("message").toString();
-
-            String tijd = objects.get("time").toString();
-            DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime vat = LocalDateTime.parse(tijd, frm);
-
-            String van1 = objects.get("from").toString();
-
-            String naar1 = objects.get("to").toString();
-            
-            if (van == -1) {
-                Melding m = new Melding(beschrijving, "", naar1, vat);
-                output.add(m);
-            } else if (naar == -1) {
-                Melding m = new Melding(beschrijving, van1, "", vat);
-                output.add(m);
-            }
-        }
-
-        return output;
+    public DatabaseKoppeling getDatabaseKoppeling(){
+        return this.dbKoppeling;
     }
-*/
 }
