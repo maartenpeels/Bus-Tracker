@@ -93,17 +93,23 @@ public class FXMLDocumentController implements Initializable {
         Runnable task = new Runnable() {
             @Override
             public void run(){
-                try {
-                    admin.laadDataIn();
-                    updateLabels();
-                    updateListBox();
-                    laadMeldingen();
-                } catch (Exception ex) {
-                    //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Platform.runLater(new Runnable(){
+                    @Override
+                    public void run(){
+                        try {
+                            admin.laadDataIn();
+                            updateLabels();
+                            updateListBox();
+                            laadMeldingen();
+                        } catch (Exception ex) {
+                            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
                 System.out.println("Update next stops & notifications done!");
             }
         };
+        
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
         
