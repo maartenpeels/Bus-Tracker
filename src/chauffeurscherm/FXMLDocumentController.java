@@ -158,23 +158,30 @@ public class FXMLDocumentController implements Initializable {
     }
     private void showLoginForm() throws Exception
     {
-        
-        TextInputDialog dialog = new TextInputDialog("");
-        dialog.setTitle("Chauffeurssysteem - Inloggen - Voer busnummer in");
-        dialog.setHeaderText("Voer hier uw geplande busnummer in");
-        dialog.setContentText("Busnummer:");
-
-        // Traditional way to get the response value.
-        Optional<String> result = dialog.showAndWait();
         List<String> choices = new ArrayList<>();
-        if (result.isPresent()){
-            System.out.println("Searching for bus: " + result.get());
-            choices = admin.getRitbyName(result.get());
+        while(true)
+        {
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("Chauffeurssysteem - Inloggen - Voer busnummer in");
+            dialog.setHeaderText("Voer hier uw geplande busnummer in");
+            dialog.setContentText("Busnummer:");
+
+            // Traditional way to get the response value.
+            Optional<String> result = dialog.showAndWait();
+           
+            if (result.isPresent()){
+                System.out.println("Searching for bus: " + result.get());
+                choices = admin.getRitbyName(result.get());
+                if(choices.size() > 0)
+                {
+                    break;
+                }
+            }
         }
         ChoiceDialog<String> dialogBusSelect = new ChoiceDialog<>(null, choices);
-        dialog.setTitle("Chauffeurssysteem - Inloggen - Selecteer rit");
-        dialog.setHeaderText("Selecteer hieronder uw geplande rit");
-        dialog.setContentText("Rit:");
+        dialogBusSelect.setTitle("Chauffeurssysteem - Inloggen - Selecteer rit");
+        dialogBusSelect.setHeaderText("Selecteer hieronder uw geplande rit");
+        dialogBusSelect.setContentText("Rit:");
 
         Optional<String> resultBusSelect = dialogBusSelect.showAndWait();
         if (resultBusSelect.isPresent()){
