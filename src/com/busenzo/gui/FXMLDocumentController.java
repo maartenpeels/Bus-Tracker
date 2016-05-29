@@ -138,7 +138,15 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         this.refreshData = new Runnable() {
             @Override
             public void run() {
-                reloadData();
+                 Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        reloadData();
+                        showBusses();
+                        showStops();
+                    }
+                 });
             }
         };
          //set listview selected item change listner    
@@ -325,17 +333,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     
     public void loadMapBussen() {
         for (Lijn l : this.admin.getBussen()) {
-            Platform.runLater(new Runnable() {
-
-                @Override
-                public void run() {
                     BusMarker bm = new BusMarker(new MarkerOptions(), l);
                     mapMarkers.add(bm);
                     bm.setVisible(false);
                     map.addMarker(bm);
                     map.addUIEventHandler(bm, UIEventType.click, fdc);
-                }
-            });
         }
     }
 
