@@ -543,6 +543,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
        // Text van de TextArea ophalen
        String meldingBechrijving = taNotificationText.getText();
        
+       if(meldingBechrijving.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Geen bericht ingevuld! Probeer opnieuw.");
+           return;
+       }
+       
        // Aanmaken van nieuwe melding
        Melding m = new Melding(0, meldingBechrijving,"-1",selectie[0],LocalDateTime.now());
        admin.addMelding(m);
