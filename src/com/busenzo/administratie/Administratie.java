@@ -171,4 +171,12 @@ public class Administratie {
     public DatabaseKoppeling getDatabaseKoppeling(){
         return this.dbKoppeling;
     }
+    
+    public void addHalte(Halte h){
+        this.haltes.add(h);
+    }
+    
+    public void addLijn(Lijn l){
+        this.lijnen.add(l);
+    }
 }

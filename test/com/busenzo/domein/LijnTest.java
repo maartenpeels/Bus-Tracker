@@ -121,5 +121,33 @@ public class LijnTest {
         
         assertFalse(lijn1.getRitten().isEmpty());
     }
-
+    
+    @Test
+    public void testClearRitten(){
+        Lijn lijn1 = new Lijn("1", 1, Richting.HEEN, "test lijn");
+        LocalDateTime ldt1 = LocalDateTime.of(2000, Month.JANUARY, 1, 12, 0);
+        LocalDateTime ldt2 = LocalDateTime.of(2000, Month.JANUARY, 1, 13, 0);
+        
+        Rit rit1 = new Rit(ldt1, lijn1);
+        Rit rit2 = new Rit(ldt2, lijn1);
+                
+        lijn1.addRit(rit1);
+        lijn1.addRit(rit2);
+        
+        assertFalse(lijn1.getRitten().isEmpty());
+        lijn1.clearRitten();
+        assertTrue(lijn1.getRitten().isEmpty());
+    }
+    
+    @Test
+    public void testGetHalteNamen(){
+        Lijn lijn1 = new Lijn("1", 1, Richting.HEEN, "test lijn");
+        Halte halte1 = new Halte("1", "test halte", "51.4456651", "5.4656342");
+        Halte halte2 = new Halte("2", "test halte 2", "51.4456651", "5.4656342");
+        lijn1.addHalte(halte1);
+        lijn1.addHalte(halte2);
+        assertEquals("2 elementen in lijst", 2, lijn1.getHalteNamen().size());
+        assertEquals("namen zijn gelijk", "test halte", lijn1.getHalteNamen().get(0));
+        assertEquals("namen zijn gelijk", "test halte 2", lijn1.getHalteNamen().get(1));
+    }
 }

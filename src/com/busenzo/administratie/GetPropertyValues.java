@@ -23,7 +23,7 @@ public class GetPropertyValues {
     public String[] getPropValues() throws IOException {
         try {
             Properties prop = new Properties();
-            String propFileName = "/resources/config.properties";
+            String propFileName = "/resources/config.properties"; 
 
              inputStream = getClass().getResourceAsStream(propFileName);
                         

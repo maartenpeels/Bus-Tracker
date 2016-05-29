@@ -48,7 +48,7 @@ public class DatabaseKoppeling {
      * JSON webrequest URL opgebouwd via Restserver/restkey/query Geeft JSON
      * object terug
      */
-    public JSONObject getJSONfromWeb(String query) throws Exception {
+    private JSONObject getJSONfromWeb(String query) throws Exception {
         //String getUrl = this.restServer + "/" + this.restKey + "/" + query;
         String getUrl = restServer + "api.php?key=" + restKey + "&action=" + query;
 
@@ -128,6 +128,11 @@ public class DatabaseKoppeling {
         return "";
     }
 
+    /**
+     * Get a list of all busstops from the database
+     * @return an arraylist of all busstops
+     * @throws Exception 
+     */
     public ArrayList<Halte> getHalteData() throws Exception {
         ArrayList<Halte> output = new ArrayList<>();
         String query = "stops";
@@ -146,6 +151,11 @@ public class DatabaseKoppeling {
         return output;
     }
 
+    /**
+     * Get the route data for all currently known lines
+     * @param lijnen a list of currently known lines
+     * @throws Exception 
+     */
     public void getRouteData(List<Lijn> lijnen) throws Exception {
         Random ran = new Random();
         //TODO: aanpassen in lijn
@@ -186,6 +196,12 @@ public class DatabaseKoppeling {
         System.out.println("Added " + ride + " current rides to application");
     }
 
+    /**
+     * return a list of all line data from the database
+     * @param haltes a list of all busstops for which line data has to be pulled
+     * @return an arraylist of line objects for the given busstops
+     * @throws Exception 
+     */
     public ArrayList<Lijn> getLineData(List<Halte> haltes) throws Exception {
         ArrayList<Lijn> output = new ArrayList<>();
         String query = "lijnen";
@@ -220,9 +236,9 @@ public class DatabaseKoppeling {
     }
 
     /**
-     *
-     * @param m = melding
-     * @return result
+     * add a notification to the database
+     * @param m the notification which has to be added
+     * @return result true if the notification is succesfully added, otherwise false
      * @throws Exception URLEncoder toegevoegd om speciale characters in het
      * tekstveld te converteren
      */
@@ -240,6 +256,11 @@ public class DatabaseKoppeling {
         return false;
     }
 
+    /**
+     * get a list of all notifications from the database
+     * @return an ArrayList of all notifications present in the database
+     * @throws Exception 
+     */
     public ArrayList<Melding> getMeldingen() throws Exception {
         ArrayList<Melding> output = new ArrayList<>();
         String query = "meldingen";

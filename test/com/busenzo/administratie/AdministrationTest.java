@@ -5,50 +5,36 @@
  */
 package com.busenzo.administratie;
 
-import com.busenzo.domein.Bus;
 import com.busenzo.domein.Halte;
 import com.busenzo.domein.Lijn;
 import com.busenzo.domein.Richting;
-import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import java.util.List;
 
 public class AdministrationTest {
     
-    Administratie admin;
-    Bus bus1, bus2, bus3;
-    Halte halte1, halte2, halte3;
-    Lijn lijn1, lijn2, lijn3;
-    ArrayList<Bus> inputBus;
-    ArrayList<Halte> inputHalte;
-    ArrayList<Lijn> inputLijn;
+    private Administratie admin;
+    private Halte h1, h2, h3;
+    private Lijn l1, l2, l3;
     
     @Before
     public void setUp(){
         admin = new Administratie();
-        inputBus = new ArrayList<>();
-        inputHalte = new ArrayList<>();
-        inputLijn = new ArrayList<>();
-        bus1 = new Bus(123);
-        bus2 = new Bus(456);
-        bus3 = new Bus(789);
-        inputBus.add(bus1);
-        inputBus.add(bus2);
-        inputBus.add(bus3);
-        halte1 = new Halte("1", "testhalte1", "1", "1");
-        halte2 = new Halte("2", "testhalte2", "2", "2");
-        halte3 = new Halte("3", "testhalte3", "3", "3");
-        inputHalte.add(halte1);
-        inputHalte.add(halte2);
-        inputHalte.add(halte3);
-        lijn1 = new Lijn("1", 1, Richting.HEEN, "lijn 1");
-        lijn2 = new Lijn("2", 2, Richting.HEEN, "lijn 2");
-        lijn3 = new Lijn("3", 3, Richting.HEEN, "lijn 3");
-        inputLijn.add(lijn1);
-        inputLijn.add(lijn2);
-        inputLijn.add(lijn3);
+        h1 = new Halte("1", "testhalte", "3.4", "5.7");
+        h2 = new Halte("2", "testhalte2", "3.4", "5.7");
+        h3 = new Halte("3", "ietsanders", "3.4", "5.7");
+        admin.addHalte(h1);
+        admin.addHalte(h2);
+        admin.addHalte(h3);
+        l1 = new Lijn("1", 1, Richting.HEEN, "test lijn");
+        l2 = new Lijn("101", 2, Richting.HEEN, "test lijn2");
+        l3 = new Lijn("3", 2, Richting.HEEN, "test lijn3");
+        admin.addLijn(l1);
+        admin.addLijn(l2);
+        admin.addLijn(l3);
     }
     
     /**
@@ -85,9 +71,14 @@ public class AdministrationTest {
      * param nummer: the linenumber of which you want to know the stops
      * return a list of all busstops this line stops at. Can be empty if the number isn't found
     */
-    @Test@Ignore
+    @Test
     public void testGetLineInformation(){
-        
+        l1.addHalte(h1);
+        l1.addHalte(h2);
+        l1.addHalte(h3);
+        List<Halte> actual = admin.geefLijnInformatie(1);
+        Assert.assertEquals("3 haltes in lijn 1", 3, actual.size());
+        Assert.assertEquals("eerste halte is h1", h1, actual.get(0));
     }
     
     /**
@@ -95,9 +86,17 @@ public class AdministrationTest {
      * param naam the term the user wants to search for
      * return a list of all line objects which contain the searchterm in their number
      */
-    @Test@Ignore
+    @Test
     public void testSearchLine() {
-        
+        List<Lijn> actual = admin.zoekLijn("1");
+        Assert.assertEquals("1 element in lijst", 1, actual.size());
+        Assert.assertEquals("lijnen zijn gelijk", l1, actual.get(0));
+        actual = admin.zoekLijn("2");
+        Assert.assertEquals("2 lijnen gevonden", 2, actual.size());
+        Assert.assertEquals("lijnen zijn gelijk", l2, actual.get(0));
+        Assert.assertEquals("lijnen zijn gelijk", l3, actual.get(1));
+        actual = admin.zoekLijn("dezelijnbestaatniet");
+        Assert.assertTrue(actual.isEmpty());
     }
     
     /**
@@ -105,9 +104,17 @@ public class AdministrationTest {
      * param naam the term the user wants to search for
      * return 
      */
-    @Test@Ignore
+    @Test
     public void testSearchBusstop() {
-        
+        List<Halte> actual = admin.zoekHalte("anders");
+        Assert.assertEquals("1 element in lijst", 1, actual.size());
+        Assert.assertEquals("haltes zijn gelijk", h3, actual.get(0));
+        actual = admin.zoekHalte("halte");
+        Assert.assertEquals("2 elementen in lijst", 2, actual.size());
+        Assert.assertEquals("haltes zijn gelijk", h1, actual.get(0));
+        Assert.assertEquals("haltes zijn gelijk", h2, actual.get(1));
+        actual = admin.zoekHalte("dezehaltebestaatniet");
+        Assert.assertTrue(actual.isEmpty());
     }
     
     /**
@@ -117,9 +124,8 @@ public class AdministrationTest {
      * throws Exception if a connection to the database cant be made
      */
     @Test@Ignore
-    public void testAddNotification (){
+    public void testAddNotification(){
         
     } 
-    
-    
+      
 }

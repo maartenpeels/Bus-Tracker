@@ -10,9 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
 
 /**
  *
@@ -34,7 +32,7 @@ public class GetPropertyValuesTest {
         try {
             String[] actual = propval.getPropValues();
             Assert.assertEquals("Server address is equal", expectedServer, actual[0]);
-            Assert.assertEquals("Server address is equal", expectedKey, actual[1]);
+            Assert.assertEquals("API key is equal", expectedKey, actual[1]);
         } catch (IOException ex) {
             Logger.getLogger(GetPropertyValuesTest.class.getName()).log(Level.SEVERE, null, ex);
         }
