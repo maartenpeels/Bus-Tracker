@@ -49,7 +49,7 @@ public class BusTest {
         Bus b = new Bus(123);
         Lijn lijn1 = new Lijn("1", 1, Richting.HEEN, "test lijn");
         LocalDateTime ldt1 = LocalDateTime.of(2000, Month.JANUARY, 1, 12, 0);
-        Rit r = new Rit(ldt1, lijn1);
+        Rit r = new Rit(ldt1, lijn1, "1");
         Assert.assertNull(b.getHuidigeRit());
         b.setHuidigeRit(r);
         Assert.assertEquals(r, b.getHuidigeRit());

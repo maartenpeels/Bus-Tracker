@@ -7,12 +7,6 @@ package com.busenzo.domein;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -95,7 +89,7 @@ public class LijnTest {
         Lijn lijn2 = new Lijn("2", 2, Richting.HEEN, "test lijn 2");
         LocalDateTime ldt1 = LocalDateTime.of(2000, Month.JANUARY, 1, 12, 0);
         
-        Rit rit1 = new Rit(ldt1, lijn1);
+        Rit rit1 = new Rit(ldt1, lijn1, "1");
         
         // toevoegen rit over correcte lijn
         assertTrue(lijn1.addRit(rit1));
@@ -113,8 +107,8 @@ public class LijnTest {
         LocalDateTime ldt1 = LocalDateTime.of(2000, Month.JANUARY, 1, 12, 0);
         LocalDateTime ldt2 = LocalDateTime.of(2000, Month.JANUARY, 1, 13, 0);
         
-        Rit rit1 = new Rit(ldt1, lijn1);
-        Rit rit2 = new Rit(ldt2, lijn1);
+        Rit rit1 = new Rit(ldt1, lijn1, "1");
+        Rit rit2 = new Rit(ldt2, lijn1, "1");
                 
         lijn1.addRit(rit1);
         lijn1.addRit(rit2);
@@ -128,8 +122,8 @@ public class LijnTest {
         LocalDateTime ldt1 = LocalDateTime.of(2000, Month.JANUARY, 1, 12, 0);
         LocalDateTime ldt2 = LocalDateTime.of(2000, Month.JANUARY, 1, 13, 0);
         
-        Rit rit1 = new Rit(ldt1, lijn1);
-        Rit rit2 = new Rit(ldt2, lijn1);
+        Rit rit1 = new Rit(ldt1, lijn1, "1");
+        Rit rit2 = new Rit(ldt2, lijn1, "1");
                 
         lijn1.addRit(rit1);
         lijn1.addRit(rit2);

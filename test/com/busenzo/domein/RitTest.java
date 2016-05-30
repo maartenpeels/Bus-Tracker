@@ -7,10 +7,6 @@ package com.busenzo.domein;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -26,7 +22,7 @@ public class RitTest {
     @Test
     public void testRitConstructor() {        
         // rit met geldige lijn
-        Rit rit1 = new Rit(testLDT, testLijn);
+        Rit rit1 = new Rit(testLDT, testLijn, "1");
         
         assertEquals(testLijn, rit1.getLijn());
         assertEquals(testLDT, rit1.getVerwachteAankomstTijd());
@@ -34,7 +30,7 @@ public class RitTest {
     
     @Test
     public void testSetGetBus() {
-        Rit rit1 = new Rit(testLDT, testLijn);
+        Rit rit1 = new Rit(testLDT, testLijn, "1");
         Bus bus1 = new Bus(1);
         
         // get bus van rit zonder bus toe te voegen
@@ -48,26 +44,26 @@ public class RitTest {
     @Test
     public void testGetLijn() {
         // rit met geldige lijn
-        Rit rit1 = new Rit(testLDT, testLijn);
+        Rit rit1 = new Rit(testLDT, testLijn, "1");
         
         assertEquals(testLijn, rit1.getLijn());
         
         // rit zonder lijn
-        Rit rit2 = new Rit(testLDT, null);
+        Rit rit2 = new Rit(testLDT, null, "1");
         
         assertEquals(null, rit2.getLijn());
     }
     
     @Test
     public void testGetVerwachteAankomstTijd() {
-        Rit rit1 = new Rit(testLDT, testLijn);
+        Rit rit1 = new Rit(testLDT, testLijn, "1");
         
         assertEquals(testLDT, rit1.getVerwachteAankomstTijd());
     }
     
     @Test
     public void testSetGetAankomstTijd() {
-        Rit rit1 = new Rit(testLDT, testLijn);
+        Rit rit1 = new Rit(testLDT, testLijn, "1");
         
         LocalDateTime ldt = LocalDateTime.of(2000, Month.JANUARY, 1, 14, 0);
         rit1.setAankomstTijd(ldt);
