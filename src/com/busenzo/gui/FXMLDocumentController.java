@@ -182,7 +182,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         mapView.addMapInializedListener(this);
         showMeldingen();
         for (Lijn bus : admin.getBussen()) {
-	   cbSelectBus.getItems().add(bus.getId() + " - " + bus.getNummer());
+            for(Rit r : bus.getRitten())
+            {
+                cbSelectBus.getItems().add(r.getRitID() + " - " + bus.getNummer());
+            }
 	}
 
     }

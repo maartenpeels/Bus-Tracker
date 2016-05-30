@@ -8,15 +8,17 @@ public class Rit {
     private LocalDateTime aankomstTijd;
     private Bus bus;
     private Lijn lijn;
+    private String ID;
 
     /**
      * Maak een rit aan op een bepaalde lijn
      * @param verwachtteAankomstTijd De verwachtte aankomsttijd bij de eindhalte
      * @param lijn: De lijn waarbij deze rit hoort, nooit null
      */
-    public Rit(LocalDateTime verwachtteAankomstTijd, Lijn lijn) {
+    public Rit(LocalDateTime verwachtteAankomstTijd, Lijn lijn, String ritID) {
         this.lijn = lijn;
         this.verwachteAankomstTijd = verwachtteAankomstTijd;
+        this.ID = ritID;
     }
 
     /**
@@ -26,7 +28,10 @@ public class Rit {
     public Bus getBus() {
         return this.bus;
     }
-    
+    public String getRitID()
+    {
+        return this.ID;
+    }
     public void setAankomstTijd(LocalDateTime aankomstTijd)
     {
         this.aankomstTijd = aankomstTijd;

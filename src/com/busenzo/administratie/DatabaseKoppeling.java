@@ -179,11 +179,12 @@ public class DatabaseKoppeling {
             }
             String busLat = objects.get("lat").toString();
             String busLon = objects.get("lon").toString();
+            String busid = objects.get("id").toString();
             for (Lijn l : lijnen) {
                 if (ritID.equals(l.getId())) {
                     ride++;
                     //System.out.println("Added rit to line " + l.getId());
-                    Rit r = new Rit(vat, l);
+                    Rit r = new Rit(vat, l, busid);
                     Bus b = new Bus(ran.nextInt(99999));
                     b.updateLocatie(Double.parseDouble(busLat), Double.parseDouble(busLon));
                     //Is random.. moet nog veranderd worden!1!
