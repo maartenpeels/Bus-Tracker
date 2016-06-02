@@ -426,6 +426,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                             m.setVisible(true);
                             busFound = true;
                             if (lijnCount < 1){
+                                lblBusId.setText("-");
+                                lblBusNumber.setText("-");
                                 InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
                                 infoWindowOptions.content(l.getBeschrijving());
                                 InfoWindow pointerInfoWindow = new InfoWindow(infoWindowOptions);
@@ -500,6 +502,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                         lblBusId.setText("" + b.getNummer());
                         lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
+                        cbSelectBus.getSelectionModel().select(r.getRitID() + " - " + b.getNummer());
                         searchBussen(b.getHuidigeRit().getLijn().getNummer() + "");
                     }
                 }
