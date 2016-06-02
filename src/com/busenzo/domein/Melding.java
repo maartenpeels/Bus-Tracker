@@ -64,7 +64,7 @@ public class Melding {
      * @return Het chassisnummer (id) van de bus welke de melding verzonden heeft, of -1 als de melding
      * door de beheerder is gedaan
      */
-    public String getZender() {
+    public String getSender() {
         return zender;
     }
     
@@ -77,7 +77,7 @@ public class Melding {
      * @return Het chassisnummer (id) van de bus welke de melding ontvangen heeft, of -1 als de ontvanger
      * de beheerder is
      */
-    public String getOntvanger() {
+    public String getReceiver() {
         return ontvanger;
     }
     

@@ -149,7 +149,7 @@ public class Administratie {
      * Get a list of all notifications
      * @return an unmodifiablelist of all notifications
      */
-    public List<Melding> getAllMeldingen() {
+    public List<Melding> getAllNotifications() {
         return Collections.unmodifiableList(meldingen);
     }
     

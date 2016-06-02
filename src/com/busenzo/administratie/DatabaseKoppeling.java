@@ -245,7 +245,7 @@ public class DatabaseKoppeling {
      */
     public boolean addMelding(Melding m) throws Exception {
 
-        String query = "addmelding" + (m.getZender() == "-1" ? "" : "&from=" + m.getZender()) + "&to=" + m.getOntvanger() + "&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Beheerder";
+        String query = "addmelding" + (m.getSender() == "-1" ? "" : "&from=" + m.getSender()) + "&to=" + m.getReceiver() + "&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Beheerder";
         System.out.println(query);
         JSONObject halteData = this.getJSONfromWeb(query);
         JSONObject objects = (JSONObject) halteData;
