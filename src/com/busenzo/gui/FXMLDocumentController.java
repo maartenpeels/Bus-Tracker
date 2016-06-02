@@ -310,6 +310,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         boolean busFound = searchBussen(tfSearch.getText().trim());
         if (busFound) {
             cbBusses.setSelected(false);
+            cbStops.setSelected(false);
         }
         lblBusId.setText("-");
         lblBusNumber.setText("-");
