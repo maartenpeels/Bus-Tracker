@@ -146,6 +146,23 @@ public class Administratie {
     }
     
     /**
+     * search for all busstops with the specified coords
+     * @param coords the coords
+     * @return 
+     */
+    public List<Halte> zoekHalte(double[] coords) {
+        ArrayList<Halte> output = new ArrayList<>();
+        for (Halte h : this.haltes) {
+            if (h.getCoordinaten()[0] == coords[0]
+                    && h.getCoordinaten()[1] == coords[1]) {
+                output.add(h);
+            }
+        }
+        return output;
+    }
+    
+    
+    /**
      * Get a list of all notifications
      * @return an unmodifiablelist of all notifications
      */

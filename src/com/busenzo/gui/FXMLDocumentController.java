@@ -475,7 +475,50 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 .strokeWeight(2);
 
         poly = new Polyline(polyOpts);
-        map.addMapShape(poly);
+        map.addMapShape(poly);  
+    }
+    
+    public void drawRouteFromBus(Bus b) {
+        
+        ArrayList<Halte> stops = (ArrayList<Halte>) this.admin.geefLijnInformatie(b.getHuidigeRit().getLijn().getNummer());
+        
+        Halte currentStop = stops.get(0);
+        int currentStopIndex = 0;
+        
+        for(Halte h : stops)
+        {
+            Halte temp = admin.zoekHalte(b.getCoordinaten()).get(0);
+            if(h.getId() == temp.getId())
+            {
+                //TODO: Pls help, heb laatste halte van bus nodig dmv de coordinaten(dit werkt niet)
+                currentStop = h;
+                break;
+            }
+            currentStopIndex++;
+        }
+        
+        stops.subList(0, currentStopIndex-1).clear();
+        
+        int size = stops.size()>8 ? 8 : stops.size();
+        DirectionsWaypoint[] waypoints = new DirectionsWaypoint[size];
+        
+        for(int i = 0; i <= size; i++)
+        {
+            Halte ht = stops.get(i);
+            double lat = ht.getCoordinaten()[0];
+            double lon = ht.getCoordinaten()[1];
+            LatLong latlon = new LatLong(lat, lon);
+            DirectionsWaypoint point = new DirectionsWaypoint(latlon);
+            waypoints[i] = point;
+        }
+        
+        DirectionsRequest req = new DirectionsRequest(
+                 new LatLong(stops.get(0).getCoordinaten()[0], stops.get(0).getCoordinaten()[1])
+                ,new LatLong(stops.get(stops.size()).getCoordinaten()[0], stops.get(stops.size()).getCoordinaten()[1])
+                ,TravelModes.DRIVING
+                ,waypoints);
+        
+        //TODO: help, hoe voeg ik toe aan map?
     }
 
     public void reloadData() {
@@ -520,6 +563,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     double cordsY = b.getCoordinaten()[1];
                     if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                         busLocated = true;
+                        drawRouteFromBus(b);
                         lblBusId.setText("" + b.getNummer());
                         lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
                         cbSelectBus.getSelectionModel().select(r.getRitID() + " - " + b.getNummer());

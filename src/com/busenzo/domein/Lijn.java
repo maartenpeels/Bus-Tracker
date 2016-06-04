@@ -88,6 +88,15 @@ public class Lijn {
         }
         return halteNamen;
     }
+    
+    /**
+     * Haal de ritten op die bij deze lijn horen.
+     *
+     * @return Een lijst van ritten die bij deze lijn horen
+     */
+    public ArrayList<Halte> getHaltes(){
+        return haltes;
+    }
 
     /**
      * Voeg een rit toe aan de lijn.
