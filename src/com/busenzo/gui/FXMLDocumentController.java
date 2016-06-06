@@ -484,22 +484,24 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         
         Halte currentStop = stops.get(0);
         int currentStopIndex = 0;
+        int t = 0;
         
         for(Halte h : stops)
         {
             Halte temp = admin.zoekHalte(b.getCoordinaten()).get(0);
-            if(h.getId() == temp.getId())
+            if(h.getNaam().equals(temp.getNaam()))
             {
-                //TODO: Pls help, heb laatste halte van bus nodig dmv de coordinaten(dit werkt niet)
+                //TODO: Pls help, heb laatste halte van bus nodig dmv de bus(dit werkt niet, denk ik)
                 currentStop = h;
+                currentStopIndex = t;
                 break;
             }
-            currentStopIndex++;
+            t++;
         }
         
-        stops.subList(0, currentStopIndex-1).clear();
+        stops.subList(0, currentStopIndex).clear();
         
-        int size = stops.size()>8 ? 8 : stops.size();
+        int size = stops.size()>6 ? 6 : stops.size();
         DirectionsWaypoint[] waypoints = new DirectionsWaypoint[size];
         
         for(int i = 0; i <= size; i++)
@@ -510,15 +512,20 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             LatLong latlon = new LatLong(lat, lon);
             DirectionsWaypoint point = new DirectionsWaypoint(latlon);
             waypoints[i] = point;
+            
+            System.out.println("Way: " + ht.getNaam());
         }
         
         DirectionsRequest req = new DirectionsRequest(
-                 new LatLong(stops.get(0).getCoordinaten()[0], stops.get(0).getCoordinaten()[1])
-                ,new LatLong(stops.get(stops.size()).getCoordinaten()[0], stops.get(stops.size()).getCoordinaten()[1])
+                 new LatLong(stops.get(stops.size()).getCoordinaten()[0], stops.get(stops.size()).getCoordinaten()[1])
+                ,new LatLong(stops.get(0).getCoordinaten()[0], stops.get(0).getCoordinaten()[1])
                 ,TravelModes.DRIVING
                 ,waypoints);
         
-        //TODO: help, hoe voeg ik toe aan map?
+        DirectionsService ds = new DirectionsService();
+        DirectionsRenderer renderer = new DirectionsRenderer(true, map, directions);
+        ds.getRoute(req, this, renderer);
+        
     }
 
     public void reloadData() {
