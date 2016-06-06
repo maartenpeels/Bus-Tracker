@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import javax.net.ssl.HttpsURLConnection;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -162,6 +161,7 @@ public class DataLink {
        
        return rit;
    }
+   
    public boolean addMelding(Melding m) throws Exception {
 
         String query = "addmelding&from=" + m.getZender() + "&to=&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Chauffeur";
@@ -172,6 +172,7 @@ public class DataLink {
         System.out.println(meldingResult);
         return meldingResult.toString().contains("succes");
     }
+   
     public ArrayList<String> getRittenbyBusID(String busId) throws Exception
     { 
        
@@ -196,6 +197,7 @@ public class DataLink {
        }
        return bussen;
    }
+    
    public ArrayList<Rit> getActuals()
    {
        return new ArrayList<Rit>();
@@ -257,14 +259,5 @@ public class DataLink {
         }
         System.out.println("Added " + output.size() + " messages to application");
         return output;
-    }
-    public boolean sendMessage(Melding melding) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        String query = "addmelding"+(melding.getZender().equals("-1") ? "" : "&from="+melding.getZender())+"&to="+melding.getOntvanger()+"&mtekst="+melding.getBeschrijving()+"&mtype=Beheerder";
-//        JSONObject halteData = this.getJSONfromWeb(query);
-//        JSONObject objects = (JSONObject) halteData;
-//        String status = objects.get("status").toString();
-//        
-//        return status.equals("succes"); 
     }
 }

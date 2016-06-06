@@ -7,44 +7,23 @@ package chauffeurscherm;
 
 import administratie.BusDriverAdmin;
 import domein.Melding;
-import domein.Stop;
-import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
-import javafx.stage.Stage;
 
 /**
  *
@@ -54,8 +33,9 @@ public class FXMLDocumentController implements Initializable {
     
     private BusDriverAdmin admin;
     private ObservableList<NotificationLabel> lvItems;
+    private final String EXARTIME = "Verwachtte aankomsttijd volgende halte:\n";
+    private final String BUSLINE = "Buslijn: ";
     
-    //For main busdriver screen 
     @FXML
     private Label lineLabel;
     @FXML
@@ -63,33 +43,16 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label busstopLabel;
     @FXML
-    private ComboBox<String> cbNotifications;
-    @FXML
     private ListView<String> lv_nextStops;
     @FXML
     private Label expectedArrivalTime;
     @FXML
     private ListView lvIncomingNotifications;
-    //For login screen
-    @FXML
-    private Button chooseLine;
-    @FXML
-    private TextField tfChooseLine;
-    @FXML
-    private Button login;
-    @FXML
-    private ListView lvLines;
        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.lvItems = FXCollections.observableArrayList();
-        //this.lvIncomingNotifications.setItems(lvItems);
-        admin = new BusDriverAdmin();
-        try {        
-            showLoginForm();
-        } catch (Exception ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        initLabels();
         Runnable task = new Runnable() {
             @Override
             public void run(){
@@ -111,7 +74,7 @@ public class FXMLDocumentController implements Initializable {
         };
         
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(task, 5, 30, TimeUnit.SECONDS);
         
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -121,6 +84,7 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
+    
     public void laadMeldingen() throws Exception
     {
         
@@ -134,7 +98,7 @@ public class FXMLDocumentController implements Initializable {
         }
         lvIncomingNotifications.setItems(meldingenTekstArray);
     }
-    @FXML
+    
     public void handleSendNotification() throws Exception{
         //System.out.println(notificationTextInput.getText());
         if(this.admin.sendMelding(notificationTextInput.getText()))
@@ -154,100 +118,29 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
-    @FXML
-    public void handleChooseLine(){
-        String searchTerm = tfChooseLine.getText().trim();
-        if(searchTerm.isEmpty() /**|| admin.searchLine(searchTerm) == null**/){
-            
-        }
-        else{
-            this.lvLines.setVisible(true);
-            this.login.setVisible(true);
-            //this.lvLines.setItems();
-        }
-    }
-    /*
-    @FXML
-    public void handleLogin(){
-        if(lvLines.getSelectionModel().getSelectedItem() == null){//change to !=
-            try {
-                Stage stage = (Stage)this.login.getScene().getWindow();
-                Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            }
-        else{
-            
-        }
-    }
-
-    */
-    @FXML
-    public void sendNotification(){
-        
-    }
-    private void showLoginForm() throws Exception
-    {
-        List<String> choices = new ArrayList<>();
-        while(true)
-        {
-            TextInputDialog dialog = new TextInputDialog("");
-            dialog.setTitle("Chauffeurssysteem - Inloggen - Voer busnummer in");
-            dialog.setHeaderText("Voer hier uw geplande busnummer in, Lege invoer geeft een lijst van alle actuele ritten");
-            dialog.setContentText("Busnummer:");
-
-            // Traditional way to get the response value.
-            Optional<String> result = dialog.showAndWait();
-           
-            if (result.isPresent()){
-                System.out.println("Searching for bus: " + result.get());
-                choices = admin.getRitbyName(result.get());
-                if(choices.size() > 0)
-                {
-                    break;
-                }
-            }
-            else
-            {
-                System.out.println("Applicatie sluiten");
-                System.exit(0);
-            }
-        }
-        while(true)
-        {
-            ChoiceDialog<String> dialogBusSelect = new ChoiceDialog<>(null, choices);
-            dialogBusSelect.setTitle("Chauffeurssysteem - Inloggen - Selecteer rit");
-            dialogBusSelect.setHeaderText("Selecteer hieronder uw geplande rit");
-            dialogBusSelect.setContentText("Rit:");
-
-            Optional<String> resultBusSelect = dialogBusSelect.showAndWait();
-            if (resultBusSelect.isPresent()){
-                if(resultBusSelect.get().length() > 0)
-                {
-                    this.admin.setRit(resultBusSelect.get());
-                    break;
-                }
-            }
-            else
-            {
-                System.out.println("Applicatie sluiten");
-                System.exit(0);
-            }
-        }
-        System.out.println("Geselecteerde rit: " + admin.getRitID());
-    }
-    private void updateLabels(){
-        lineLabel.setText("Buslijn:");
+    private void initLabels(){
+        lineLabel.setText(BUSLINE);
         busstopLabel.setText("Volgende haltes:");
-        expectedArrivalTime.setText("Verwachtte aankomsttijd volgende halte:\n" + DateTimeFormatter.ofPattern("HH:mm:ss").format(admin.getRit().getArrivalTime()));
+        expectedArrivalTime.setText(this.EXARTIME);
     } 
+    
+    private void updateLabels(){
+        if(lineLabel.getText().equals(BUSLINE)){
+            lineLabel.setText(BUSLINE+ admin.getRitID().split("_")[2].substring(1));
+        }
+        expectedArrivalTime.setText(this.EXARTIME+DateTimeFormatter.ofPattern("HH:mm:ss").format(admin.getRit().getArrivalTime()));
+    }
     
     private void updateListBox(){
         ObservableList<String> stops = FXCollections.observableArrayList(admin.getRit().getNextStops());
         lv_nextStops.setItems(stops);
+    }
+    
+    public void setAdmin(BusDriverAdmin bda){
+        this.admin = bda;
+    }
+    
+    public void setRoute(String routeNr){
+        this.admin.setRit(routeNr);
     }
 }
