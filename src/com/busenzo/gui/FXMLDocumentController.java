@@ -80,6 +80,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private Administratie admin;
     private String lastSearchedListObject = "";
     private FXMLDocumentController fdc;
+    
 
     @FXML
     private ArrayList<Marker> mapMarkers = new ArrayList<>();
@@ -90,6 +91,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     @FXML
     private CheckBox cbStops;
+    
+    @FXML
+    private CheckBox cbHalteOff;
 
     @FXML
     private Label lblSelectedStop;
@@ -127,6 +131,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private TextArea taNotificationText;
 
     private Polyline poly;
+    private Halte selectedHalte;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -540,6 +545,21 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         System.out.println("Refreshing done");
     }
 
+    @FXML
+    public void changeHalteSetting(){
+        double cordsX = selectedHalte.getCoordinaten()[0];
+        double cordsY = selectedHalte.getCoordinaten()[1];
+        NumberFormat formatter = new DecimalFormat("#0.000000");
+        for(Marker m : mapMarkers){
+            // marker positie vergelijken met geselecteerde halte coordinaten en plaatje aanpassen
+        }
+        if(cbHalteOff.isSelected()){
+           selectedHalte.active = false;
+        } else {
+           selectedHalte.active = true;
+        }
+    }
+    
     public boolean clickedStop(LatLong pos) {
         boolean stopLocated = false;
         ObservableList<String> items = FXCollections.observableArrayList();
@@ -553,7 +573,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 lblBusNumber.setText("-");
                 items.add(a.getNaam());
                 lvStops.setItems(items);
-
+                selectedHalte = a;
+                if(a.active)
+                    cbHalteOff.setSelected(false);
+                else 
+                    cbHalteOff.setSelected(true);
             }
         }
         return stopLocated;

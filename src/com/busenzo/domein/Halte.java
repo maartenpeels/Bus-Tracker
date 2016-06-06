@@ -6,6 +6,7 @@ public class Halte {
     private double lon;
     private double lat;
     private String id;
+    public boolean active = true;
 
     /**
      * Maak een nieuwe halte aan, er mag nog geen halte bestaan met dezelfde naam en lat/lon
@@ -45,4 +46,5 @@ public class Halte {
         double[] cords = {this.lat, this.lon};
         return cords;
     }
+    
 }
