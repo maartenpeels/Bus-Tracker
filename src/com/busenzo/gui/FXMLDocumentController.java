@@ -170,7 +170,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     String[] haltenaamSplit = haltenaam.split(", ");
                     searchStops(haltenaamSplit[1], true);
                 } catch (InterruptedException ex) {
-                    System.out.println(ex.getMessage() + " setonmouseclick Handle");
+                    Logger.getGlobal().log(Level.INFO, ex.getMessage() + " setonmouseclick Handle");
                     //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                     Thread.currentThread().interrupt();
                 }
@@ -179,7 +179,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                System.out.println("Application shutdown detected.. Quitting current jobs");
+                Logger.getGlobal().log(Level.INFO, "Application shutdown detected.. Quitting current jobs");
                 executor.shutdown();
             }
         });
@@ -222,7 +222,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             this.showMapBusses();
         } else {
             this.clearMapBusses();
-            System.out.println("deselected markers");
+            Logger.getGlobal().log(Level.INFO, "deselected markers");
         }
     }
 
@@ -241,10 +241,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
                     if (m.find() && !m.group(1).equals(lastSearchedListObject)) {
                         lastSearchedListObject = m.group(1);
-                        System.out.println("Found message id: " + m.group(1));
+                        Logger.getGlobal().log(Level.INFO, "Found message id: " + m.group(1));
                         for (Melding melding : admin.getAllNotifications()) {
                             if (melding.getID().equals(Integer.parseInt(m.group(1)))) {
-                                System.out.println(melding.getBeschrijving());
+                                Logger.getGlobal().log(Level.INFO, melding.getBeschrijving());
                                 Alert alert = new Alert(AlertType.INFORMATION);
                                 alert.setTitle("Melding informatie");
                                 alert.setHeaderText("Bericht van: " + (melding.getSender() == "" ? "Beheerder" : melding.getSender()) + "\nNaar: " + (melding.getReceiver() == "" ? "Beheerder" : melding.getReceiver()) + "\nOp: " + melding.getTijdstip().toString().replace("T", " "));
@@ -270,7 +270,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             this.showMapStops();
         } else {
             this.clearMapStops();
-            System.out.println("deselected markers");
+            Logger.getGlobal().log(Level.INFO, "deselected markers");
         }
     }
 
@@ -325,7 +325,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } else {
             countSearchBusOrStop = 0;
             if (!stopFound && !busFound) {
-                System.out.println("No bus or stop found");
+                Logger.getGlobal().log(Level.INFO, "No bus or stop found");
                 JOptionPane.showMessageDialog(null, "Geen bus of halte gevonden, aub wijzig uw zoekterm!");
             }
         }
@@ -468,11 +468,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         }
         ArrayList<String> haltes = l.getHalteNamen();
         ArrayList<LatLong> positions = new ArrayList();
-        System.out.println(haltes.size());
+        Logger.getGlobal().log(Level.INFO, haltes.size() + "");
         for (Halte a : this.admin.geefLijnInformatie(l.getNummer())) {
             positions.add(new LatLong(a.getCoordinaten()[0], a.getCoordinaten()[1]));
         }
-        System.out.println(positions.size());
+        Logger.getGlobal().log(Level.INFO, positions.size() + "");
         MVCArray pmvc = new MVCArray(positions.toArray());
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(pmvc)
@@ -518,7 +518,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             DirectionsWaypoint point = new DirectionsWaypoint(latlon);
             waypoints[i] = point;
             
-            System.out.println("Way: " + ht.getNaam());
+            Logger.getGlobal().log(Level.INFO, "Way: " + ht.getNaam());
         }
         
         DirectionsRequest req = new DirectionsRequest(
@@ -534,7 +534,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     public void reloadData() {
-        System.out.println("Starting data refreshing");
+        Logger.getGlobal().log(Level.INFO, "Starting data refreshing");
         try {
             this.admin.haalBusLocaties();
             this.clearBusMarkers();
@@ -542,7 +542,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } catch (Exception ex) {
             //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Refreshing done");
+        Logger.getGlobal().log(Level.INFO, "Refreshing done");
     }
 
     @FXML
@@ -663,7 +663,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             Melding m = new Melding(0, meldingBechrijving, "-1", selectie[0], LocalDateTime.now());
             admin.addMelding(m);
 
-            System.out.println("Melding verzonden van: Beheerder naar: " + m.getReceiver() + ". Met als melding: " + m.getBeschrijving());
+            Logger.getGlobal().log(Level.INFO, "Melding verzonden van: Beheerder naar: " + m.getReceiver() + ". Met als melding: " + m.getBeschrijving());
         }
     }
 

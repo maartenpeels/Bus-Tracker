@@ -96,8 +96,11 @@ public class DatabaseKoppeling {
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            Logger.getGlobal().log(Level.SEVERE, "MalformedURLException occurred!");
+            
         } catch (IOException e) {
             e.printStackTrace();
+            Logger.getGlobal().log(Level.SEVERE, "IOException occurred!");
         }
 
         return ret;
@@ -122,6 +125,7 @@ public class DatabaseKoppeling {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                Logger.getGlobal().log(Level.SEVERE, "IOException occurred!");
                 return "";
             }
         }
@@ -147,7 +151,7 @@ public class DatabaseKoppeling {
             Halte addHalte = new Halte(halteID, halteNaam, halteLon, halteLat);
             output.add(addHalte);
         }
-        System.out.println("Added " + output.size() + " to application");
+        Logger.getGlobal().log(Level.INFO, "Added " + output.size() + " to application");
         return output;
     }
 
@@ -183,7 +187,7 @@ public class DatabaseKoppeling {
             for (Lijn l : lijnen) {
                 if (ritID.equals(l.getId())) {
                     ride++;
-                    //System.out.println("Added rit to line " + l.getId());
+                    //Logger.getGlobal().log(Level.INFO, "Added rit to line " + l.getId());
                     Rit r = new Rit(vat, l, busid);
                     Bus b = new Bus(ran.nextInt(99999));
                     b.updateLocatie(Double.parseDouble(busLat), Double.parseDouble(busLon));
@@ -194,7 +198,7 @@ public class DatabaseKoppeling {
                 }
             }
         }
-        System.out.println("Added " + ride + " current rides to application");
+        Logger.getGlobal().log(Level.INFO, "Added " + ride + " current rides to application");
     }
 
     /**
@@ -216,7 +220,7 @@ public class DatabaseKoppeling {
             Richting direction = objects.get("direction").toString().equals("0") ? Richting.HEEN : Richting.TERUG;
             String beschrijving = objects.get("name").toString();//direction, halte->id
             Lijn addLijn = new Lijn(lijnId, lijnNummer, direction, beschrijving);
-            //System.out.println("I hadded a line with id " + lijnId);
+            //Logger.getGlobal().log(Level.INFO, "I hadded a line with id " + lijnId);
             //ArrayList<Halte> tempHaltes = new ArrayList<>();
             JSONArray haltesArray = (JSONArray) objects.get("stops");
             for (Object haltesArray1 : haltesArray) {
@@ -231,8 +235,8 @@ public class DatabaseKoppeling {
             }
             output.add(addLijn);
         }
-        System.out.println("Added " + output.size() + " buslines to application");
-        System.out.println("Added " + blconnection + " busline -> busstop connections");
+        Logger.getGlobal().log(Level.INFO, "Added " + output.size() + " buslines to application");
+        Logger.getGlobal().log(Level.INFO, "Added " + blconnection + " busline -> busstop connections");
         return output;
     }
 
@@ -246,7 +250,7 @@ public class DatabaseKoppeling {
     public boolean addMelding(Melding m) throws Exception {
 
         String query = "addmelding" + (m.getSender() == "-1" ? "" : "&from=" + m.getSender()) + "&to=" + m.getReceiver() + "&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Beheerder";
-        System.out.println(query);
+        Logger.getGlobal().log(Level.INFO, query);
         JSONObject halteData = this.getJSONfromWeb(query);
         JSONObject objects = (JSONObject) halteData;
         String status = objects.get("status").toString();
@@ -269,7 +273,7 @@ public class DatabaseKoppeling {
         JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
         for (Object meldingData : meldingenArray) {
             JSONObject objects = (JSONObject) meldingData;
-            //System.out.println(meldingData.toString());
+            //Logger.getGlobal().log(Level.INFO, meldingData.toString());
             Integer meldingID = Integer.parseInt(objects.get("id").toString());
             String meldingTo = objects.get("to").toString();
             String meldingFrom;
@@ -286,7 +290,7 @@ public class DatabaseKoppeling {
             Melding addMelding = new Melding(meldingID, meldingTekst, meldingFrom, meldingTo, meldingTime);
             output.add(addMelding);
         }
-        System.out.println("Added " + output.size() + " messages to application");
+        Logger.getGlobal().log(Level.INFO, "Added " + output.size() + " messages to application");
         return output;
     }
 }
