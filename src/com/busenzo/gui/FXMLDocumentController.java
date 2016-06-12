@@ -625,6 +625,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 busLocated = clickedBus(pos);
             } catch (InterruptedException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Thread.currentThread().interrupt();
             }
             if (!busLocated) {
                 clickedStop(pos);
