@@ -33,8 +33,8 @@ public class MeldingTest {
     public void testMeldingConstructor(){
         Melding melding = new Melding(1, "beschrijving", "zender", "ontvanger", ldt);
         Assert.assertEquals("beschrijving", melding.getBeschrijving());
-        Assert.assertSame("zender", melding.getZender());
-        Assert.assertSame("ontvanger", melding.getOntvanger());
+        Assert.assertSame("zender", melding.getSender());
+        Assert.assertSame("ontvanger", melding.getReceiver());
         Assert.assertTrue(melding.getActief());
     }
 }

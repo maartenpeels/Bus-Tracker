@@ -34,10 +34,13 @@ import com.lynden.gmapsfx.service.directions.TravelModes;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -74,7 +77,7 @@ import netscape.javascript.JSObject;
  *
  * @author Beheerders
  */
-public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler, DirectionsServiceCallback {
+public class FXMLDocumentController implements Initializable, MapComponentInitializedListener, UIEventHandler, DirectionsServiceCallback, Observer {
 
     private Administratie admin;
     private String lastSearchedListObject = "";
@@ -136,7 +139,13 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        admin = new Administratie();
+        try {
+            admin = new Administratie();
+            admin.addObserver(this);
+        } catch (RemoteException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         admin.laadDataIn();
         this.fdc = this;
         this.executor = Executors.newSingleThreadScheduledExecutor();
@@ -229,7 +238,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     public void showNotifications() {
         ObservableList<String> items = FXCollections.observableArrayList();
 
-        for (Melding m : admin.getAllNotifications()) {
+        for (Melding m : admin.getMeldingen()) {
             items.add((m.getSender() == "" ? "Beheerder" : m.getSender()) + " > " + (m.getReceiver() == "" ? "Beheerder" : m.getReceiver()) + " (" + m.getID() + ")");
             this.lbNotifications.setItems(items);
             this.lbNotifications.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -242,7 +251,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     if (m.find() && !m.group(1).equals(lastSearchedListObject)) {
                         lastSearchedListObject = m.group(1);
                         Logger.getGlobal().log(Level.INFO, "Found message id: " + m.group(1));
-                        for (Melding melding : admin.getAllNotifications()) {
+                        for (Melding melding : admin.getMeldingen()) {
                             if (melding.getID().equals(Integer.parseInt(m.group(1)))) {
                                 Logger.getGlobal().log(Level.INFO, melding.getBeschrijving());
                                 Alert alert = new Alert(AlertType.INFORMATION);
@@ -662,10 +671,16 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
             // Aanmaken van nieuwe melding
             Melding m = new Melding(0, meldingBechrijving, "-1", selectie[0], LocalDateTime.now());
-            admin.addMelding(m);
+            admin.sendMessage(m);
 
             Logger.getGlobal().log(Level.INFO, "Melding verzonden van: Beheerder naar: " + m.getReceiver() + ". Met als melding: " + m.getBeschrijving());
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("updated!");
+        showNotifications();
     }
 
 }
