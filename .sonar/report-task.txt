@@ -1,5 +1,5 @@
 projectKey=BusTracker
 serverUrl=http://localhost:9000
 dashboardUrl=http://localhost:9000/dashboard/index/BusTracker
-ceTaskId=AVVFJiVqTS9paxc2-5tM
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AVVFJiVqTS9paxc2-5tM
+ceTaskId=AVVFNtDSTS9paxc2-5tN
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AVVFNtDSTS9paxc2-5tN
