@@ -23,6 +23,7 @@ public class Administratie extends Observable implements IMessageService{
     private ArrayList<Halte> haltes;
     private ArrayList<Melding> meldingen;
     private DatabaseKoppeling dbKoppeling;
+    private final boolean enableRMIServer = true;
     
     private HashMap<String, IMessageClient> connections;
 
@@ -37,6 +38,7 @@ public class Administratie extends Observable implements IMessageService{
         this.haltes = new ArrayList<>();
         this.meldingen = new ArrayList<>();
         
+        
         GetPropertyValues properties = new GetPropertyValues();
         
         String[] props = new String[2];
@@ -47,7 +49,7 @@ public class Administratie extends Observable implements IMessageService{
         }
         
         this.dbKoppeling = new DatabaseKoppeling(props[0], props[1]);
-        
+        if(this.enableRMIServer) dbKoppeling.setIP();
         new MessageServer(this);
         connections = new HashMap<>();
     }
@@ -129,7 +131,10 @@ public class Administratie extends Observable implements IMessageService{
     public List<Lijn> getBussen() {
         return Collections.unmodifiableList(lijnen);
     }
-
+    public void setIP()
+    {
+        
+    }
     /**
      * search for a specific line which contains the given searchterm.
      * @param naam the term the user wants to search for

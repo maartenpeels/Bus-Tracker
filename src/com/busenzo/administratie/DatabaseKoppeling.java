@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -202,7 +203,47 @@ public class DatabaseKoppeling {
         }
         Logger.getGlobal().log(Level.INFO, "Added " + ride + " current rides to application");
     }
-
+    public void setIP()
+    {
+        try
+        {
+            InetAddress IP = InetAddress.getLocalHost();
+            String localIP = IP.getHostAddress();
+            if(localIP.startsWith("192") || localIP.startsWith("172") || localIP.startsWith("10") || localIP.startsWith("127") || localIP.length() == 0)
+            {
+                if(setConfig("master_ip", localIP))
+                {
+                    Logger.getGlobal().log(Level.INFO, "Sent local IP: {0} to remote host", localIP);
+                }
+                else
+                {
+                    Logger.getGlobal().log(Level.WARNING, "Error setting IP to {0}: ", localIP);
+                }
+            }
+            else
+            {
+                Logger.getGlobal().log(Level.WARNING, "Error detecting local IP, are your network interfaces enabled?");
+            }
+        }
+        catch(Exception e)
+        {
+             Logger.getGlobal().log(Level.WARNING, "Error broadcasting local ip, are you connected to a network?");
+        }
+    }
+    public boolean setConfig(String key, String value) 
+    {
+         String query = "set&name="+key+"&value="+URLEncoder.encode(value);
+         try
+         {
+             JSONObject respObj = this.getJSONfromWeb(query);
+             if(respObj.get("status").toString().equals("success")) return true;
+             return false;
+         }
+         catch (Exception e)
+         {
+             return false;
+         }
+    }
     /**
      * return a list of all line data from the database
      *
