@@ -36,7 +36,7 @@ public class DatabaseKoppeling {
 
     private String restServer;
     private String restKey;
-    
+
     private InputStream inputStream;
 
     public DatabaseKoppeling(String restServer, String restKey) {
@@ -97,7 +97,7 @@ public class DatabaseKoppeling {
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Logger.getGlobal().log(Level.SEVERE, "MalformedURLException occurred!");
-            
+
         } catch (IOException e) {
             e.printStackTrace();
             Logger.getGlobal().log(Level.SEVERE, "IOException occurred!");
@@ -134,8 +134,9 @@ public class DatabaseKoppeling {
 
     /**
      * Get a list of all busstops from the database
+     *
      * @return an arraylist of all busstops
-     * @throws Exception 
+     * @throws Exception
      */
     public ArrayList<Halte> getHalteData() throws Exception {
         ArrayList<Halte> output = new ArrayList<>();
@@ -157,8 +158,9 @@ public class DatabaseKoppeling {
 
     /**
      * Get the route data for all currently known lines
+     *
      * @param lijnen a list of currently known lines
-     * @throws Exception 
+     * @throws Exception
      */
     public void getRouteData(List<Lijn> lijnen) throws Exception {
         Random ran = new Random();
@@ -203,9 +205,10 @@ public class DatabaseKoppeling {
 
     /**
      * return a list of all line data from the database
+     *
      * @param haltes a list of all busstops for which line data has to be pulled
      * @return an arraylist of line objects for the given busstops
-     * @throws Exception 
+     * @throws Exception
      */
     public ArrayList<Lijn> getLineData(List<Halte> haltes) throws Exception {
         ArrayList<Lijn> output = new ArrayList<>();
@@ -242,8 +245,10 @@ public class DatabaseKoppeling {
 
     /**
      * add a notification to the database
+     *
      * @param m the notification which has to be added
-     * @return result true if the notification is succesfully added, otherwise false
+     * @return result true if the notification is succesfully added, otherwise
+     * false
      * @throws Exception URLEncoder toegevoegd om speciale characters in het
      * tekstveld te converteren
      */
@@ -263,13 +268,17 @@ public class DatabaseKoppeling {
 
     /**
      * get a list of all notifications from the database
+     *
      * @return an ArrayList of all notifications present in the database
-     * @throws Exception 
+     * @throws Exception
      */
     public ArrayList<Melding> getMeldingen() throws Exception {
         ArrayList<Melding> output = new ArrayList<>();
         String query = "meldingen";
         JSONObject meldingenData = this.getJSONfromWeb(query);
+        if (!meldingenData.get("status").toString().equals("success")) {
+                return new ArrayList<Melding>();
+        }
         JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
         for (Object meldingData : meldingenArray) {
             JSONObject objects = (JSONObject) meldingData;
