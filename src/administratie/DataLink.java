@@ -1,8 +1,8 @@
 package administratie;
 
-import domein.Melding;
-import domein.Rit;
-import domein.Stop;
+import com.busenzo.domein.Melding;
+import com.busenzo.domein.Rit;
+import com.busenzo.domein.Stop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-package domein;
+package com.busenzo.domein;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

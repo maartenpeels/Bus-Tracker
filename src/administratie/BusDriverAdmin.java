@@ -1,14 +1,20 @@
 package administratie;
 
-import domein.Melding;
+import com.busenzo.domein.Melding;
 import java.util.ArrayList;
-import domein.Rit;
+import com.busenzo.domein.Rit;
+import com.busenzo.rmi.IMessageClient;
+import com.busenzo.rmi.IMessageService;
+import com.busenzo.rmi.MessageConnector;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class BusDriverAdmin implements ILogin {
+public class BusDriverAdmin extends Observable implements ILogin, IMessageClient {
 
     private String restServer = "http://37.97.149.53/busenzo/api/";
     //private String restServer = "https://busenzo.stefanvlems.nl/api/";
@@ -17,12 +23,27 @@ public class BusDriverAdmin implements ILogin {
     private DataLink dbKoppeling;
     
     private String BUS_ID = "CXX_20160523_L150_70_0";
+    
+    private IMessageService messageService;
+    private List<Melding> messages;
+
 
     /**
      * Maak een nieuwe administratie aan
      */
-    public BusDriverAdmin() {
+    public BusDriverAdmin() throws RemoteException {
+        UnicastRemoteObject.exportObject(this, 0);
+
         this.dbKoppeling = new DataLink(restServer, restKey);
+        messages = new ArrayList<>();
+        
+        try {
+            MessageConnector messageConnector = new MessageConnector();
+            messageService = messageConnector.getMessageService();
+
+        } catch (RemoteException ex) {
+            Logger.getLogger(BusDriverAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
@@ -39,22 +60,26 @@ public class BusDriverAdmin implements ILogin {
         }
     }
     
-    public void setRit(String newRit)
-    {
+    public void setRit(String newRit) throws RemoteException {
         this.BUS_ID = newRit;
+        
+        connectClient();
     }
     
     public boolean sendMelding(String meldingText) throws Exception
     {
         Melding m = new Melding(0, meldingText, this.BUS_ID, "", LocalDateTime.now());
-        boolean result = this.dbKoppeling.addMelding(m);
-        //System.out.print(result);
-        return result;
+        return messageService.addMessage(m);
     }
     
-    public ArrayList<Melding> getMeldingen() throws Exception
+    public List<Melding> getMeldingen() throws Exception
     {
-        return this.dbKoppeling.getMeldingen(this.BUS_ID);
+        return messages;
+    }
+    
+    public boolean connectClient() throws RemoteException {
+        System.out.println(getRitID());
+        return messageService.connect(getRitID(), this);
     }
     
     public Rit getRit()
@@ -65,5 +90,24 @@ public class BusDriverAdmin implements ILogin {
     public String getRitID()
     {
         return this.BUS_ID;
+    }
+
+    @Override
+    public boolean addMessage(Melding message) throws RemoteException {
+        System.out.println(message.getBeschrijving());
+
+        messages.add(message);
+
+        // notify GUI to show message
+        this.setChanged();
+        this.notifyObservers();
+        
+
+        return true;
+    }
+
+    @Override
+    public boolean removeMessage(Melding message) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

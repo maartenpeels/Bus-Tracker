@@ -10,6 +10,7 @@ import administratie.DataLink;
 import administratie.ILogin;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -52,7 +53,11 @@ public class FXMLLoginController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        admin = new BusDriverAdmin();
+        try {
+            admin = new BusDriverAdmin();
+        } catch (RemoteException ex) {
+            Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
 
     @FXML
@@ -80,7 +85,7 @@ public class FXMLLoginController implements Initializable {
     }
 
     @FXML
-    private void handleLogin(ActionEvent event) {
+    private void handleLogin(ActionEvent event) throws RemoteException {
         if(!this.lvLines.getSelectionModel().getSelectedItem().isEmpty()){
             this.showMainScreen(this.lvLines.getSelectionModel().getSelectedItem());
         }
@@ -96,7 +101,7 @@ public class FXMLLoginController implements Initializable {
         alert.showAndWait();
     }
     
-    private void showMainScreen(String routeNr) {
+    private void showMainScreen(String routeNr) throws RemoteException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
 
         Stage stage = (Stage) this.login.getScene().getWindow();

@@ -1,9 +1,11 @@
-package domein;
+package com.busenzo.domein;
 
+import java.io.Serializable;
+import java.rmi.Remote;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Melding {
+public class Melding implements Serializable, Remote {
     private Integer meldingID;
     private LocalDateTime tijdstip;
     private String beschrijving;
@@ -12,6 +14,7 @@ public class Melding {
     private String ontvanger;
     private Categorie categorie;
 
+    private static final long serialVersionUID = 1L;
     /**
      * Maak een nieuwe melding aan. Ontvanger of zender is altijd -1.
      * @param beschrijving: Beschrijving van de melding, mag geen lege string zijn

@@ -6,14 +6,20 @@
 package chauffeurscherm;
 
 import administratie.BusDriverAdmin;
-import domein.Melding;
+import com.busenzo.domein.Melding;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,13 +35,13 @@ import javafx.scene.control.TextField;
  *
  * @author Jules
  */
-public class FXMLDocumentController implements Initializable {
-    
+public class FXMLDocumentController implements Initializable, Observer {
+
     private BusDriverAdmin admin;
     private ObservableList<NotificationLabel> lvItems;
     private final String EXARTIME = "Verwachtte aankomsttijd volgende halte:\n";
     private final String BUSLINE = "Buslijn: ";
-    
+
     @FXML
     private Label lineLabel;
     @FXML
@@ -48,17 +54,17 @@ public class FXMLDocumentController implements Initializable {
     private Label expectedArrivalTime;
     @FXML
     private ListView lvIncomingNotifications;
-       
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.lvItems = FXCollections.observableArrayList();
         initLabels();
         Runnable task = new Runnable() {
             @Override
-            public void run(){
-                Platform.runLater(new Runnable(){
+            public void run() {
+                Platform.runLater(new Runnable() {
                     @Override
-                    public void run(){
+                    public void run() {
                         try {
                             admin.laadDataIn();
                             updateLabels();
@@ -72,10 +78,10 @@ public class FXMLDocumentController implements Initializable {
                 System.out.println("Update next stops & notifications done!");
             }
         };
-        
+
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(task, 5, 30, TimeUnit.SECONDS);
-        
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -83,64 +89,73 @@ public class FXMLDocumentController implements Initializable {
                 service.shutdown();
             }
         });
-    }
-    
-    public void laadMeldingen() throws Exception
-    {
         
-        ArrayList<Melding> meldingenArray = this.admin.getMeldingen();
+
+    }
+
+    public void laadMeldingen() throws Exception {
+
+        List<Melding> meldingenArray = admin.getMeldingen();
         ObservableList<String> meldingenTekstArray = FXCollections.observableArrayList();
-        for(Melding m : meldingenArray)
-        {
-            //System.out.println(m.getOntvanger());
-            //System.out.println(m.getZender());
+        for (Melding m : meldingenArray) {
             meldingenTekstArray.add((m.getZender() == null || m.getZender().isEmpty() ? "Beheerder" : m.getOntvanger()) + " > " + m.getBeschrijving());
         }
-        lvIncomingNotifications.setItems(meldingenTekstArray);
+
+        // moet zo worden aangeroepen omdat de call vanuit een RMI thread komt ipv JavaFX thread
+        Platform.runLater(() -> {
+            lvIncomingNotifications.setItems(meldingenTekstArray);
+        });
     }
-    
-    public void handleSendNotification() throws Exception{
+
+    public void handleSendNotification() throws Exception {
         //System.out.println(notificationTextInput.getText());
-        if(this.admin.sendMelding(notificationTextInput.getText()))
-        {
+        if (this.admin.sendMelding(notificationTextInput.getText())) {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Melding toevoegen");
             alert.setContentText("Melding is verstuurd!");
             alert.showAndWait();
             notificationTextInput.setText("");
-        }
-        else
-        {
+        } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Melding toevoegen");
             alert.setContentText("Fout tijdens toevoegen!");
             alert.showAndWait();
         }
     }
-    
-    private void initLabels(){
+
+    private void initLabels() {
         lineLabel.setText(BUSLINE);
         busstopLabel.setText("Volgende haltes:");
         expectedArrivalTime.setText(this.EXARTIME);
-    } 
-    
-    private void updateLabels(){
-        if(lineLabel.getText().equals(BUSLINE)){
-            lineLabel.setText(BUSLINE+ admin.getRitID().split("_")[2].substring(1));
-        }
-        expectedArrivalTime.setText(this.EXARTIME+DateTimeFormatter.ofPattern("HH:mm:ss").format(admin.getRit().getArrivalTime()));
     }
-    
-    private void updateListBox(){
+
+    private void updateLabels() {
+        if (lineLabel.getText().equals(BUSLINE)) {
+            lineLabel.setText(BUSLINE + admin.getRitID().split("_")[2].substring(1));
+        }
+        expectedArrivalTime.setText(this.EXARTIME + DateTimeFormatter.ofPattern("HH:mm:ss").format(admin.getRit().getArrivalTime()));
+    }
+
+    private void updateListBox() {
         ObservableList<String> stops = FXCollections.observableArrayList(admin.getRit().getNextStops());
         lv_nextStops.setItems(stops);
     }
-    
-    public void setAdmin(BusDriverAdmin bda){
+
+    public void setAdmin(BusDriverAdmin bda) throws RemoteException {
         this.admin = bda;
+        admin.addObserver(this);
     }
-    
-    public void setRoute(String routeNr){
+
+    public void setRoute(String routeNr) throws RemoteException {
         this.admin.setRit(routeNr);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        try {
+            laadMeldingen();
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

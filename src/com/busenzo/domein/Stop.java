@@ -1,4 +1,4 @@
-package domein;
+package com.busenzo.domein;
 
 /**
  *
