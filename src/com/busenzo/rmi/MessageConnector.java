@@ -5,6 +5,7 @@
  */
 package com.busenzo.rmi;
 
+import administratie.BusDriverAdmin;
 import com.busenzo.domein.Melding;
 import java.beans.PropertyChangeEvent;
 import java.io.FileInputStream;
@@ -15,6 +16,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,8 +26,12 @@ import java.util.Scanner;
 public class MessageConnector extends UnicastRemoteObject {
 
     private IMessageService messageService;
+    private final String IP;
+    private final int PORT = 1099;
+    private final String SERVICE = "messages";
 
-    public MessageConnector() throws RemoteException {
+    public MessageConnector(String IP) throws RemoteException {
+        this.IP = IP;
         if (!connect()) {
             System.out.println("No connection!");
         } else {
@@ -39,7 +46,8 @@ public class MessageConnector extends UnicastRemoteObject {
             // TODO: property file uitlezen voor IP adres!
             // met hard ip address werkt het wel, goed genoeg voor nu
             
-            String rmiLink = "145.93.136.95:1099/messages";
+            String rmiLink = IP + ":" + PORT + "/" + SERVICE;
+            Logger.getLogger(BusDriverAdmin.class.getName()).log( Level.INFO, "RMI connection string: {0}", rmiLink);
             IMessageService ms = (IMessageService) Naming.lookup("rmi://" + rmiLink);
 
             messageService = ms;

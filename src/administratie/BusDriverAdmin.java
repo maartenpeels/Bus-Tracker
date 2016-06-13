@@ -35,10 +35,11 @@ public class BusDriverAdmin extends Observable implements ILogin, IMessageClient
         UnicastRemoteObject.exportObject(this, 0);
 
         this.dbKoppeling = new DataLink(restServer, restKey);
+        String IP =  this.dbKoppeling.getConfig("master_ip");
         messages = new ArrayList<>();
         
         try {
-            MessageConnector messageConnector = new MessageConnector();
+            MessageConnector messageConnector = new MessageConnector(IP);
             messageService = messageConnector.getMessageService();
 
         } catch (RemoteException ex) {

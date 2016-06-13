@@ -75,7 +75,19 @@ public class DataLink {
         }
 
     }
-    
+   public String getConfig(String key) 
+   {
+        String query = "get&name="+key;
+        try
+        {
+            JSONObject respObj = this.getJSONfromWeb(query);
+            return respObj.get("data").toString();
+        }
+        catch (Exception e)
+        {
+            return "";
+        }
+   }
    private String httpsGet(final String https_url) {
         String ret = "";
 
