@@ -209,7 +209,7 @@ public class DatabaseKoppeling {
         {
             InetAddress IP = InetAddress.getLocalHost();
             String localIP = IP.getHostAddress();
-            if(localIP.startsWith("192") || localIP.startsWith("172") || localIP.startsWith("10") || localIP.startsWith("127") || localIP.length() == 0)
+            if(localIP.startsWith("192") || localIP.startsWith("172") || localIP.startsWith("10") || localIP.startsWith("127") || localIP.length() == 0|| localIP.startsWith("145"))
             {
                 if(setConfig("master_ip", localIP))
                 {
