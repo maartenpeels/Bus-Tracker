@@ -98,7 +98,7 @@ public class FXMLDocumentController implements Initializable, Observer {
         List<Melding> meldingenArray = admin.getMeldingen();
         ObservableList<String> meldingenTekstArray = FXCollections.observableArrayList();
         for (Melding m : meldingenArray) {
-            meldingenTekstArray.add((m.getZender() == null || m.getZender().isEmpty() ? "Beheerder" : m.getOntvanger()) + " > " + m.getBeschrijving());
+            meldingenTekstArray.add((m.getZender() == null || m.getZender().isEmpty() ? "Beheerder" : m.getZender()) + " > " + m.getBeschrijving());
         }
 
         // moet zo worden aangeroepen omdat de call vanuit een RMI thread komt ipv JavaFX thread
