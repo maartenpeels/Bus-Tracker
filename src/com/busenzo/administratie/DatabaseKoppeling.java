@@ -133,6 +133,11 @@ public class DatabaseKoppeling {
         return "";
     }
 
+    public void changeHalteStatus(Halte h, int active) throws Exception{
+        String query = "changehalte&id=" + h.getId() + "&value=" + active;
+        getJSONfromWeb(query);
+    }
+    
     /**
      * Get a list of all busstops from the database
      *
@@ -150,10 +155,12 @@ public class DatabaseKoppeling {
             String halteNaam = objects.get("name").toString();
             String halteLat = objects.get("lat").toString();
             String halteLon = objects.get("lon").toString();
+            String active = objects.get("active").toString();
             Halte addHalte = new Halte(halteID, halteNaam, halteLon, halteLat);
+            if(active.equals("0")) addHalte.active = false;
             output.add(addHalte);
         }
-        Logger.getGlobal().log(Level.INFO, "Added " + output.size() + " to application");
+        System.out.println("Added " + output.size() + " to application");
         return output;
     }
 

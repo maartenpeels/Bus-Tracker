@@ -6,6 +6,7 @@
 package com.busenzo.gui;
 
 import com.busenzo.administratie.Administratie;
+import com.busenzo.administratie.DatabaseKoppeling;
 import com.busenzo.domein.*;
 import com.busenzo.gui.markers.BusMarker;
 import com.busenzo.gui.markers.HalteMarker;
@@ -355,7 +356,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     public void loadMapStops() {
         for (Halte a : this.admin.getHaltes()) {
-            HalteMarker hm = new HalteMarker(new MarkerOptions(), a);
+            HalteMarker hm = new HalteMarker(new MarkerOptions(), a, a.active);
             this.mapMarkers.add(hm);
             hm.setVisible(false);
             map.addMarker(hm);
@@ -555,18 +556,30 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     @FXML
-    public void changeHalteSetting(){
+    public void changeHalteSetting() throws Exception{
         double cordsX = selectedHalte.getCoordinaten()[0];
         double cordsY = selectedHalte.getCoordinaten()[1];
         NumberFormat formatter = new DecimalFormat("#0.000000");
-        for(Marker m : mapMarkers){
-            // marker positie vergelijken met geselecteerde halte coordinaten en plaatje aanpassen
-        }
+        HalteMarker hm;
+        boolean active = true;
+        DatabaseKoppeling db = admin.getDatabaseKoppeling();
+        
         if(cbHalteOff.isSelected()){
            selectedHalte.active = false;
+           active = false;
+           db.changeHalteStatus(selectedHalte, 0);
+           admin.notifyBusses(selectedHalte, active);
         } else {
            selectedHalte.active = true;
+           active = true;
+           db.changeHalteStatus(selectedHalte, 1);
+           admin.notifyBusses(selectedHalte, active);
         }
+         hm = new HalteMarker(new MarkerOptions(), selectedHalte, active);
+        this.mapMarkers.add(hm);
+        hm.setVisible(true);
+        map.addMarker(hm);
+        map.addUIEventHandler(hm, UIEventType.click, this);   
     }
     
     public boolean clickedStop(LatLong pos) {
