@@ -139,6 +139,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private Polyline poly;
     private Halte selectedHalte;
     private List<Lijn> selectedHalteLijnen = new ArrayList<>();
+    private boolean clickedBus;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -179,9 +180,20 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             @Override
             public void handle(MouseEvent event) {
                 try {
-                    String haltenaam = lvStops.getSelectionModel().getSelectedItem().toString();
-                    String[] haltenaamSplit = haltenaam.split(", ");
-                    searchStops(haltenaamSplit[1], true);
+                    if (clickedBus) {
+                        String haltenaam = lvStops.getSelectionModel().getSelectedItem().toString();
+                        String[] haltenaamSplit = haltenaam.split(", ");
+                        searchStops(haltenaamSplit[1], true);
+                    } else {
+                        String lijnString = lvStops.getSelectionModel().getSelectedItem().toString();
+                        for (Lijn l : selectedHalteLijnen) {
+                            System.out.println(l.getNummer() + "");
+                            if (l.getNummer() == Integer.valueOf(lijnString)) {
+                                drawRoute(l);
+                                break;
+                            }
+                        }
+                    }
                 } catch (InterruptedException ex) {
                     Logger.getGlobal().log(Level.INFO, ex.getMessage() + " setonmouseclick Handle");
                     //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -599,11 +611,14 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 lblInfo.setText("Geselecteerde halte:");
                 lblBusId.setText("");
                 lblBusNumber.setText(a.getNaam());
-                for(Lijn l : admin.getLijnenAtHalte(a)){
-                    if(!items.contains(Integer.toString(l.getNummer())))
-                    items.add(Integer.toString(l.getNummer()));
+                selectedHalteLijnen = admin.getLijnenAtHalte(a);
+                for (Lijn l : selectedHalteLijnen) {
+                    if (!items.contains(Integer.toString(l.getNummer()))) {
+                        items.add(Integer.toString(l.getNummer()));
+                    }
                 }
                 lvStops.setItems(items);
+                clickedBus = false;
                 selectedHalte = a;
                 if (a.active) {
                     cbHalteOff.setSelected(false);
@@ -616,18 +631,19 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     @FXML
-    public void listItemChanged(){
+    public void listItemChanged() {
+        System.out.println("ggg");
         if (lvStops.getSelectionModel().getSelectedIndex() > -1) {
             String lijnString = cbSelectBus.getSelectionModel().getSelectedItem().toString();
-            for(Lijn l : selectedHalteLijnen){
-                if(l.getNummer() == Integer.valueOf(lijnString)){
+            for (Lijn l : selectedHalteLijnen) {
+                if (l.getNummer() == Integer.valueOf(lijnString)) {
                     drawRoute(l);
                     break;
                 }
             }
         }
     }
-    
+
     public boolean clickedBus(LatLong pos) throws InterruptedException {
         boolean busLocated = false;
         NumberFormat formatter = new DecimalFormat("#0.00000");
@@ -643,6 +659,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                         lblInfo.setText("Geselecteerde bus:");
                         drawRoute(b.getHuidigeRit().getLijn());
                         lblBusId.setText("" + b.getNummer());
+                        clickedBus = true;
                         System.out.println("" + b.getNummer());
                         lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
                         cbSelectBus.getSelectionModel().select(r.getRitID() + " - " + b.getNummer());
