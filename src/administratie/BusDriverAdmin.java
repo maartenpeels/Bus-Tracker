@@ -98,6 +98,12 @@ public class BusDriverAdmin extends Observable implements ILogin, IMessageClient
         System.out.println(message.getBeschrijving());
 
         messages.add(message);
+        
+        try {
+            dbKoppeling.addMelding(message);
+        } catch (Exception ex) {
+            Logger.getLogger(BusDriverAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // notify GUI to show message
         this.setChanged();
