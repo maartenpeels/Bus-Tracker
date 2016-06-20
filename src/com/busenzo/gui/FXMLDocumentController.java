@@ -105,6 +105,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private Label lblBusNumber;
     @FXML
     private Label lblBusId;
+    @FXML
+    private Label lblInfo;
 
     @FXML
     private TextField tfSearch;
@@ -592,9 +594,13 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             double cordsY = a.getCoordinaten()[1];
             if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                 stopLocated = true;
-                lblBusId.setText("-");
-                lblBusNumber.setText("-");
-                items.add(a.getNaam());
+                lblInfo.setText("Geselecteerde halte:");
+                lblBusId.setText("");
+                lblBusNumber.setText(a.getNaam());
+                for(Lijn l : admin.getLijnenAtHalte(a)){
+                    if(!items.contains(Integer.toString(l.getNummer())))
+                    items.add(Integer.toString(l.getNummer()));
+                }
                 lvStops.setItems(items);
                 selectedHalte = a;
                 if(a.active)
@@ -618,8 +624,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                         busLocated = true;
                         //drawRouteFromBus(b);
+                        lblInfo.setText("Geselecteerde bus:");
                         drawRoute(b.getHuidigeRit().getLijn());
                         lblBusId.setText("" + b.getNummer());
+                        System.out.println("" + b.getNummer());
                         lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
                         cbSelectBus.getSelectionModel().select(r.getRitID() + " - " + b.getNummer());
                         searchBusses(b.getHuidigeRit().getLijn().getNummer() + "");
