@@ -40,6 +40,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -137,6 +138,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     private Polyline poly;
     private Halte selectedHalte;
+    private List<Lijn> selectedHalteLijnen = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -612,6 +614,19 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         return stopLocated;
     }
 
+    @FXML
+    public void listItemChanged(){
+        if (lvStops.getSelectionModel().getSelectedIndex() > -1) {
+            String lijnString = cbSelectBus.getSelectionModel().getSelectedItem().toString();
+            for(Lijn l : selectedHalteLijnen){
+                if(l.getNummer() == Integer.valueOf(lijnString)){
+                    drawRoute(l);
+                    break;
+                }
+            }
+        }
+    }
+    
     public boolean clickedBus(LatLong pos) throws InterruptedException {
         boolean busLocated = false;
         NumberFormat formatter = new DecimalFormat("#0.00000");
