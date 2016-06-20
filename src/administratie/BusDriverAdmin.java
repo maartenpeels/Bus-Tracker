@@ -6,6 +6,7 @@ import com.busenzo.domein.Rit;
 import com.busenzo.rmi.IMessageClient;
 import com.busenzo.rmi.IMessageService;
 import com.busenzo.rmi.MessageConnector;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
@@ -31,20 +32,36 @@ public class BusDriverAdmin extends Observable implements ILogin, IMessageClient
     /**
      * Maak een nieuwe administratie aan
      */
-    public BusDriverAdmin() throws RemoteException {
+    public BusDriverAdmin() throws RemoteException, IOException {
         UnicastRemoteObject.exportObject(this, 0);
-
-        this.dbKoppeling = new DataLink(restServer, restKey);
+        
+        GetPropertyValues properties = new GetPropertyValues();
+        
+        String[] props = new String[2];
+         
+        try {
+           props = properties.getPropValues();
+        } catch (IOException ex) {
+            Logger.getLogger(BusDriverAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.dbKoppeling = new DataLink(props[0], props[1]);
         String IP =  this.dbKoppeling.getConfig("master_ip");
         messages = new ArrayList<>();
+           
+       
         
         try {
             MessageConnector messageConnector = new MessageConnector(IP);
             messageService = messageConnector.getMessageService();
-
+         
         } catch (RemoteException ex) {
             Logger.getLogger(BusDriverAdmin.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+     
+        System.out.println(props[0] + props[1]);
+        
+        
     }
     
     @Override

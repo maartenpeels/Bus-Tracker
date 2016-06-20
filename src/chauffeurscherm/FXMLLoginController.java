@@ -57,7 +57,10 @@ public class FXMLLoginController implements Initializable {
             admin = new BusDriverAdmin();
         } catch (RemoteException ex) {
             Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }    
 
     @FXML
