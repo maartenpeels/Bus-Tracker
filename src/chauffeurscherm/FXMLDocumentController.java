@@ -7,6 +7,7 @@ package chauffeurscherm;
 
 import administratie.BusDriverAdmin;
 import com.busenzo.domein.Melding;
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.time.format.DateTimeFormatter;
@@ -24,12 +25,18 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 /**
  *
@@ -97,14 +104,54 @@ public class FXMLDocumentController implements Initializable, Observer {
 
         List<Melding> meldingenArray = admin.getMeldingen();
         ObservableList<String> meldingenTekstArray = FXCollections.observableArrayList();
+        //ObservableList<NotificationLabel> meldingenGraphic = FXCollections.observableArrayList();
         for (Melding m : meldingenArray) {
             meldingenTekstArray.add((m.getZender() == null || m.getZender().isEmpty() ? "Beheerder" : m.getZender()) + " > " + m.getBeschrijving());
+//            NotificationLabel notlab = new NotificationLabel();
+//            notlab.setParent(lvIncomingNotifications);
+//            notlab.setDescription(m.getBeschrijving());
+//            notlab.setCategorie(m.getZender());
+//            meldingenGraphic.add(notlab);
         }
 
         // moet zo worden aangeroepen omdat de call vanuit een RMI thread komt ipv JavaFX thread
         Platform.runLater(() -> {
             lvIncomingNotifications.setItems(meldingenTekstArray);
         });
+    }
+    
+    @FXML
+    public void handleClose(){
+        System.exit(0);
+    }
+    
+    @FXML
+    public void handleLogoff(){
+        logOff();
+        showLogInScreen();
+    }
+    
+    private void logOff(){
+        //Clear data
+    }
+    
+    private void showLogInScreen(){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLLogin.fxml"));
+
+        Stage stage = (Stage) this.lvIncomingNotifications.getScene().getWindow();
+        try {
+            stage.setScene(new Scene((Pane) loader.load()));
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        FXMLDocumentController controller = loader.<FXMLDocumentController>getController();
+        
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2); 
+        stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);  
+
+        stage.show();
     }
 
     public void handleSendNotification() throws Exception {
