@@ -106,7 +106,7 @@ public class FXMLDocumentController implements Initializable, Observer {
         ObservableList<String> meldingenTekstArray = FXCollections.observableArrayList();
         //ObservableList<NotificationLabel> meldingenGraphic = FXCollections.observableArrayList();
         for (Melding m : meldingenArray) {
-            meldingenTekstArray.add((m.getZender() == null || m.getZender().isEmpty() ? "Beheerder" : m.getZender()) + " > " + m.getBeschrijving());
+            meldingenTekstArray.add((m.getZender() == null || m.getZender().isEmpty() ? "Beheerder" : "Beheerder") + " > " + m.getBeschrijving());
 //            NotificationLabel notlab = new NotificationLabel();
 //            notlab.setParent(lvIncomingNotifications);
 //            notlab.setDescription(m.getBeschrijving());
