@@ -348,6 +348,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         map.setZoom(12);
         this.clearMapBusses();
         this.clearMapStops();
+        this.map.removeMapShape(poly);
     }
 
     public void showBusDetails() {
@@ -616,7 +617,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     double cordsY = b.getCoordinaten()[1];
                     if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                         busLocated = true;
-                        drawRouteFromBus(b);
+                        //drawRouteFromBus(b);
+                        drawRoute(b.getHuidigeRit().getLijn());
                         lblBusId.setText("" + b.getNummer());
                         lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
                         cbSelectBus.getSelectionModel().select(r.getRitID() + " - " + b.getNummer());
