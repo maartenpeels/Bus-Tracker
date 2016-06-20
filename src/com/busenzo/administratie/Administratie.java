@@ -246,6 +246,12 @@ public class Administratie extends Observable implements IMessageService {
         System.out.println("Message: " + message.getBeschrijving() + " - from " + message.getSender());
 
         meldingen.add(message);
+        
+        try {
+            dbKoppeling.addMelding(message);
+        } catch (Exception ex) {
+            Logger.getLogger(Administratie.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // notify GUI
         this.setChanged();
