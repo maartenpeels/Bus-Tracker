@@ -231,6 +231,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             this.showMapBusses();
         } else {
             this.clearMapBusses();
+            map.removeMapShape(poly);
             Logger.getGlobal().log(Level.INFO, "deselected markers");
         }
     }
