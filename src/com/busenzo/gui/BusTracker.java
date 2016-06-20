@@ -14,7 +14,10 @@ import javax.swing.JOptionPane;
 import com.busenzo.administratie.Administratie;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.WindowEvent;
+import javax.swing.JFrame;
 
 /**
  *
@@ -35,7 +38,15 @@ public class BusTracker extends Application {
                 System.exit(0);
             }
         });
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
 
+        stage.setX(bounds.getMinX());
+        stage.setY(bounds.getMinY());
+        stage.setWidth(bounds.getWidth()+40);
+        stage.setHeight(bounds.getHeight());
+
+        //stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
     }
@@ -44,9 +55,9 @@ public class BusTracker extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-       
+
         launch(args);
-        
+
     }
 
 }

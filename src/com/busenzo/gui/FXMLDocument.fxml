@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -8,15 +10,17 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import com.lynden.gmapsfx.GoogleMapView?>
 <?scenebuilder-classpath-element ../../../../GMapsFX-2.0.5-SNAPSHOT.jar?>
 
-<AnchorPane id="AnchorPane" prefHeight="559.0" prefWidth="1076.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="559.0" prefWidth="1076.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.busenzo.gui.FXMLDocumentController">
   <children>
-    <AnchorPane id="Map" disable="false" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="656.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane id="Map" disable="false" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="656.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="208.5" AnchorPane.rightAnchor="211.5" AnchorPane.topAnchor="0.0">
       <children>
         <GoogleMapView fx:id="mapView" maxHeight="700.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="78.0" prefWidth="21.0" spacing="10.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-900.0" AnchorPane.topAnchor="88.0" />
@@ -33,20 +37,20 @@
         <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="255.0" text="-" />
         <Label fx:id="lblBusId" layoutX="78.0" layoutY="255.0" text="-" />
         <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of lijnnummer:" />
-        <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
-        <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
+        <!--        <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
+                <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />-->
         <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
         <CheckBox fx:id="cbStops" layoutX="5.0" layoutY="49.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
         <ImageView fx:id="busEnzoLogo" fitHeight="34.0" fitWidth="40.0" layoutX="148.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
-            <CheckBox fx:id="cbHalteOff" layoutX="7.0" layoutY="480.0" mnemonicParsing="false" onAction="#changeHalteSetting" prefHeight="17.0" prefWidth="186.0" text="halte uitschakelen" />
-<!--        <Label fx:id="lblSelectedStop" layoutX="5.0" layoutY="210.0" prefHeight="16.0" prefWidth="170.0" text="&lt;geselecteerde halte&gt;" />-->
+        <CheckBox fx:id="cbHalteOff" layoutX="7.0" layoutY="480.0" mnemonicParsing="false" onAction="#changeHalteSetting" prefHeight="17.0" prefWidth="186.0" text="halte uitschakelen" />
+        <!--        <Label fx:id="lblSelectedStop" layoutX="5.0" layoutY="210.0" prefHeight="16.0" prefWidth="170.0" text="&lt;geselecteerde halte&gt;" />-->
       </children>
     </AnchorPane>
     <AnchorPane prefHeight="542.0" prefWidth="186.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
       <children>
         <Label fx:id="lblNotification" layoutX="5.0" layoutY="7.0" text="Meldingen:" />
         <ListView id="meldingList" fx:id="lbNotifications" layoutX="5.0" layoutY="62.0" prefHeight="177.0" prefWidth="170.0" />
-        <Button id="verstuurButton" fx:id="btnDeleteNotification" layoutX="5.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Melding verwijderen" />
+        <Button id="verstuurButtonn" fx:id="btnDeleteNotification" layoutX="5.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Melding verwijderen" />
         <Label fx:id="lblSendNotification" layoutX="5.0" layoutY="294.0" text="Melding versturen naar:" />
         <ComboBox fx:id="cbSelectBus" editable="true" layoutX="5.0" layoutY="317.0" prefHeight="26.0" prefWidth="170.0" />
         <Separator layoutX="5.0" layoutY="284.0" prefHeight="3.0" prefWidth="170.0" />
@@ -55,5 +59,14 @@
         <ComboBox fx:id="cbNotificationType" layoutX="5.0" layoutY="28.0" prefHeight="26.0" prefWidth="170.0" />
       </children>
     </AnchorPane>
+    <ToolBar layoutY="-2.0" prefWidth="1079.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="0.0">
+      <items>
+        <Label text="Zoeken halte of lijnnummer:" />
+        <TextField fx:id="tfSearch" prefWidth="170.0" />
+        <Button id="verstuurButton" fx:id="btnSearch" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
+        <Region prefHeight="25.0" prefWidth="740.0" />
+        <Button contentDisplay="LEFT" maxWidth="-1.0" minWidth="-1.0" mnemonicParsing="false" onAction="#exitButtonClick" prefWidth="100.0" text="Exit" />
+      </items>
+    </ToolBar>
   </children>
 </AnchorPane>

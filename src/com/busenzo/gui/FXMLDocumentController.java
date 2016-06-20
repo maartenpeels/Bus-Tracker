@@ -84,7 +84,6 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private String lastSearchedListObject = "";
     private FXMLDocumentController fdc;
     ///100!!!
-    
 
     @FXML
     private ArrayList<Marker> mapMarkers = new ArrayList<>();
@@ -95,7 +94,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     @FXML
     private CheckBox cbStops;
-    
+
     @FXML
     private CheckBox cbHalteOff;
 
@@ -148,7 +147,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } catch (RemoteException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         admin.laadDataIn();
         this.fdc = this;
         this.executor = Executors.newSingleThreadScheduledExecutor();
@@ -261,6 +260,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                                 alert.setTitle("Melding informatie");
                                 alert.setHeaderText("Bericht van: " + (melding.getSender() == "" ? "Beheerder" : melding.getSender()) + "\nNaar: " + (melding.getReceiver() == "" ? "Beheerder" : melding.getReceiver()) + "\nOp: " + melding.getTijdstip().toString().replace("T", " "));
                                 alert.setContentText(melding.getBeschrijving());
+
                                 //ButtonType buttonTyperemovemelding = new ButtonType("Verwijder");
                                 ButtonType buttonTypeCancel = new ButtonType("Sluiten", ButtonData.CANCEL_CLOSE);
                                 alert.getButtonTypes().setAll(buttonTypeCancel);
@@ -342,6 +342,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             }
         }
 
+    }
+
+    public void exitButtonClick() throws InterruptedException {
+        Platform.exit();
+        System.exit(0);
     }
 
     public void resetMap() {
@@ -493,22 +498,20 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 .strokeWeight(2);
 
         poly = new Polyline(polyOpts);
-        map.addMapShape(poly);  
+        map.addMapShape(poly);
     }
-    
+
     public void drawRouteFromBus(Bus b) {
-        
+
         ArrayList<Halte> stops = (ArrayList<Halte>) this.admin.geefLijnInformatie(b.getHuidigeRit().getLijn().getNummer());
-        
+
         Halte currentStop = stops.get(0);
         int currentStopIndex = 0;
         int t = 0;
-        
-        for(Halte h : stops)
-        {
+
+        for (Halte h : stops) {
             Halte temp = admin.zoekHalte(b.getCoordinaten()).get(0);
-            if(h.getNaam().equals(temp.getNaam()))
-            {
+            if (h.getNaam().equals(temp.getNaam())) {
                 //TODO: Pls help, heb laatste halte van bus nodig dmv de bus(dit werkt niet, denk ik)
                 currentStop = h;
                 currentStopIndex = t;
@@ -516,34 +519,30 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             }
             t++;
         }
-        
+
         stops.subList(0, currentStopIndex).clear();
-        
-        int size = stops.size()>6 ? 6 : stops.size();
+
+        int size = stops.size() > 6 ? 6 : stops.size();
         DirectionsWaypoint[] waypoints = new DirectionsWaypoint[size];
-        
-        for(int i = 0; i <= size; i++)
-        {
+
+        for (int i = 0; i <= size; i++) {
             Halte ht = stops.get(i);
             double lat = ht.getCoordinaten()[0];
             double lon = ht.getCoordinaten()[1];
             LatLong latlon = new LatLong(lat, lon);
             DirectionsWaypoint point = new DirectionsWaypoint(latlon);
             waypoints[i] = point;
-            
+
             Logger.getGlobal().log(Level.INFO, "Way: " + ht.getNaam());
         }
-        
+
         DirectionsRequest req = new DirectionsRequest(
-                 new LatLong(stops.get(stops.size()).getCoordinaten()[0], stops.get(stops.size()).getCoordinaten()[1])
-                ,new LatLong(stops.get(0).getCoordinaten()[0], stops.get(0).getCoordinaten()[1])
-                ,TravelModes.DRIVING
-                ,waypoints);
-        
+                new LatLong(stops.get(stops.size()).getCoordinaten()[0], stops.get(stops.size()).getCoordinaten()[1]), new LatLong(stops.get(0).getCoordinaten()[0], stops.get(0).getCoordinaten()[1]), TravelModes.DRIVING, waypoints);
+
         DirectionsService ds = new DirectionsService();
         DirectionsRenderer renderer = new DirectionsRenderer(true, map, directions);
         ds.getRoute(req, this, renderer);
-        
+
     }
 
     public void reloadData() {
@@ -559,32 +558,32 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     @FXML
-    public void changeHalteSetting() throws Exception{
+    public void changeHalteSetting() throws Exception {
         double cordsX = selectedHalte.getCoordinaten()[0];
         double cordsY = selectedHalte.getCoordinaten()[1];
         NumberFormat formatter = new DecimalFormat("#0.000000");
         HalteMarker hm;
         boolean active = true;
         DatabaseKoppeling db = admin.getDatabaseKoppeling();
-        
-        if(cbHalteOff.isSelected()){
-           selectedHalte.active = false;
-           active = false;
-           db.changeHalteStatus(selectedHalte, 0);
-           admin.notifyBusses(selectedHalte, active);
+
+        if (cbHalteOff.isSelected()) {
+            selectedHalte.active = false;
+            active = false;
+            db.changeHalteStatus(selectedHalte, 0);
+            admin.notifyBusses(selectedHalte, active);
         } else {
-           selectedHalte.active = true;
-           active = true;
-           db.changeHalteStatus(selectedHalte, 1);
-           admin.notifyBusses(selectedHalte, active);
+            selectedHalte.active = true;
+            active = true;
+            db.changeHalteStatus(selectedHalte, 1);
+            admin.notifyBusses(selectedHalte, active);
         }
-         hm = new HalteMarker(new MarkerOptions(), selectedHalte, active);
+        hm = new HalteMarker(new MarkerOptions(), selectedHalte, active);
         this.mapMarkers.add(hm);
         hm.setVisible(true);
         map.addMarker(hm);
-        map.addUIEventHandler(hm, UIEventType.click, this);   
+        map.addUIEventHandler(hm, UIEventType.click, this);
     }
-    
+
     public boolean clickedStop(LatLong pos) {
         boolean stopLocated = false;
         ObservableList<String> items = FXCollections.observableArrayList();
@@ -603,10 +602,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                 }
                 lvStops.setItems(items);
                 selectedHalte = a;
-                if(a.active)
+                if (a.active) {
                     cbHalteOff.setSelected(false);
-                else 
+                } else {
                     cbHalteOff.setSelected(true);
+                }
             }
         }
         return stopLocated;
