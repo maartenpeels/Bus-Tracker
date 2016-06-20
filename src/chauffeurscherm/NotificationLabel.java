@@ -7,6 +7,7 @@
 package chauffeurscherm;
 
 import java.io.IOException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -22,7 +23,7 @@ import javafx.scene.layout.AnchorPane;
 public class NotificationLabel extends AnchorPane {
 
 //*******************************Datavelden*********************************
-    private final String categorie = "Categorie: ";
+    private final String categorie = "Verzender: ";
     private final String description = "Omschrijving: ";
     
     @FXML
@@ -63,11 +64,16 @@ public class NotificationLabel extends AnchorPane {
 
 //*******************************Methoden***********************************
     public void setCategorie(String newCat){
-        this.lblCategorie.setText(this.categorie + newCat);
+        if(newCat.equals("-1")){
+            lblCategorie.setText(categorie + "Beheerder");
+        }
+        else{
+            lblCategorie.setText(categorie + newCat);
+        }
     }
     
     public void setDescription(String desc){
-        this.lblDescription.setText(this.description + desc);
+        lblDescription.setText(description + desc);
     }
     
     @FXML
