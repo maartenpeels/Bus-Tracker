@@ -320,13 +320,13 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     int countSearchBusOrStop = 0;
 
     public void searchBusOrStop() throws InterruptedException {
-
         boolean stopFound = searchStops(tfSearch.getText().trim(), false);
         boolean busFound = searchBusses(tfSearch.getText().trim());
         if (busFound) {
             cbBusses.setSelected(false);
             cbStops.setSelected(false);
         }
+
         lblBusId.setText("-");
         lblBusNumber.setText("-");
         if (countSearchBusOrStop == 0) {
@@ -618,6 +618,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                         busLocated = true;
                         //drawRouteFromBus(b);
+                        cbStops.setSelected(false);
                         drawRoute(b.getHuidigeRit().getLijn());
                         lblBusId.setText("" + b.getNummer());
                         lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
@@ -645,6 +646,16 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         } else if (cbStops.isSelected() && !cbBusses.isSelected()) {
             clickedStop(pos);
         } else if (!cbStops.isSelected() && !cbBusses.isSelected()) {
+            try {
+                busLocated = clickedBus(pos);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Thread.currentThread().interrupt();
+            }
+            if (!busLocated) {
+                clickedStop(pos);
+            }
+        } else if (cbStops.isSelected() && cbBusses.isSelected()) {
             try {
                 busLocated = clickedBus(pos);
             } catch (InterruptedException ex) {
