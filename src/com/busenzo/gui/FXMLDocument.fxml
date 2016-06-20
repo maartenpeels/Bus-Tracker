@@ -14,11 +14,12 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
+
 <?import javafx.scene.layout.VBox?>
 <?import com.lynden.gmapsfx.GoogleMapView?>
 <?scenebuilder-classpath-element ../../../../GMapsFX-2.0.5-SNAPSHOT.jar?>
 
-<AnchorPane id="AnchorPane" prefHeight="559.0" prefWidth="1076.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.busenzo.gui.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="559.0" prefWidth="1076.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
   <children>
     <AnchorPane id="Map" disable="false" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="656.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="208.5" AnchorPane.rightAnchor="211.5" AnchorPane.topAnchor="0.0">
       <children>
@@ -29,18 +30,17 @@
     <AnchorPane prefHeight="542.0" prefWidth="194.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
       <children>
         <Label layoutX="5.0" layoutY="1.0" text="Filters:" />
-        <Button id="verstuurButton" fx:id="btnReset" layoutX="5.0" layoutY="172.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
-        <ListView id="meldingList" fx:id="lvStops" layoutX="5.0" layoutY="302.0" prefHeight="170.0" prefWidth="170.0" />
+        <Button id="verstuurButton" fx:id="btnReset" layoutX="5.0" layoutY="97.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
+        <ListView id="meldingList" fx:id="lvStops" layoutX="5.0" layoutY="302.0" prefHeight="170.0" prefWidth="170.0" onMouseClicked="#listItemChanged" />
         <Button id="verstuurButton" fx:id="btnRedirect" layoutX="5.0" layoutY="510.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
         <Label layoutX="5.0" layoutY="280.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
         <Label layoutX="5.0" layoutY="238.0" text="Geselecteerde bus:" />
         <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="255.0" text="-" />
         <Label fx:id="lblBusId" layoutX="78.0" layoutY="255.0" text="-" />
-        <Label layoutX="5.0" layoutY="77.0" text="Zoeken halte of lijnnummer:" />
         <!--        <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
                 <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />-->
-        <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
-        <CheckBox fx:id="cbStops" layoutX="5.0" layoutY="49.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
+        <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="31.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
+        <CheckBox fx:id="cbStops" layoutX="7.0" layoutY="56.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
         <ImageView fx:id="busEnzoLogo" fitHeight="34.0" fitWidth="40.0" layoutX="148.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
         <CheckBox fx:id="cbHalteOff" layoutX="7.0" layoutY="480.0" mnemonicParsing="false" onAction="#changeHalteSetting" prefHeight="17.0" prefWidth="186.0" text="halte uitschakelen" />
         <!--        <Label fx:id="lblSelectedStop" layoutX="5.0" layoutY="210.0" prefHeight="16.0" prefWidth="170.0" text="&lt;geselecteerde halte&gt;" />-->
