@@ -12,33 +12,25 @@ import com.busenzo.domein.Melding;
 import com.busenzo.domein.Richting;
 import com.busenzo.domein.Rit;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.net.ssl.HttpsURLConnection;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class DatabaseKoppeling {
 
-    private String restServer;
-    private String restKey;
-
-    private InputStream inputStream;
+    private final String restServer;
+    private final String restKey;
 
     public DatabaseKoppeling(String restServer, String restKey) {
         this.restServer = restServer;
@@ -85,54 +77,12 @@ public class DatabaseKoppeling {
 
     }
 
-    private String httpsGet(final String https_url) {
-        String ret = "";
-
-        URL url;
-        try {
-
-            url = new URL(https_url);
-            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-            ret = getContent(con);
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            Logger.getGlobal().log(Level.SEVERE, "MalformedURLException occurred!");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Logger.getGlobal().log(Level.SEVERE, "IOException occurred!");
-        }
-
-        return ret;
-    }
-
-    private String getContent(HttpsURLConnection con) {
-        if (con != null) {
-
-            try {
-
-                BufferedReader br
-                        = new BufferedReader(
-                                new InputStreamReader(con.getInputStream()));
-
-                String input;
-                StringBuilder rtndata = new StringBuilder();
-                while ((input = br.readLine()) != null) {
-                    rtndata.append(input);
-                }
-                br.close();
-                return rtndata.toString();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Logger.getGlobal().log(Level.SEVERE, "IOException occurred!");
-                return "";
-            }
-        }
-        return "";
-    }
-
+     /**
+     * changes active status of halte h
+     * @param h Current halte
+     * @param active integer 1 (active) or 0 (inactive)
+     * @throws Exception
+     */
     public void changeHalteStatus(Halte h, int active) throws Exception{
         String query = "changehalte&id=" + h.getId() + "&value=" + active;
         getJSONfromWeb(query);
@@ -173,9 +123,9 @@ public class DatabaseKoppeling {
     public void getRouteData(List<Lijn> lijnen) throws Exception {
         Random ran = new Random();
         //TODO: aanpassen in lijn
-        for (Lijn l : lijnen) {
+        lijnen.stream().forEach((l) -> {
             l.clearRitten();
-        }
+        });
         String query = "ritten";
         JSONObject rittenData = this.getJSONfromWeb(query);
         JSONArray rittenArray = (JSONArray) rittenData.get("data");
@@ -208,8 +158,13 @@ public class DatabaseKoppeling {
                 }
             }
         }
-        Logger.getGlobal().log(Level.INFO, "Added " + ride + " current rides to application");
+        Logger.getGlobal().log(Level.INFO, "Added {0} current rides to application", ride);
     }
+     /**
+     * gets ip address of active starting with local subnet identifier
+     * pushes ip to database trough setConfig function
+     * 
+     */
     public void setIP()
     {
         try
@@ -237,14 +192,19 @@ public class DatabaseKoppeling {
              Logger.getGlobal().log(Level.WARNING, "Error broadcasting local ip, are you connected to a network?");
         }
     }
+    /**
+     * sets config item with specific key to value
+     * @param key containing config item name
+     * @param value containing new value for item with key
+     * @return true if configur
+     */
     public boolean setConfig(String key, String value) 
     {
          String query = "set&name="+key+"&value="+URLEncoder.encode(value);
          try
          {
              JSONObject respObj = this.getJSONfromWeb(query);
-             if(respObj.get("status").toString().equals("success")) return true;
-             return false;
+             return respObj.get("status").toString().equals("success");
          }
          catch (Exception e)
          {
@@ -286,8 +246,8 @@ public class DatabaseKoppeling {
             }
             output.add(addLijn);
         }
-        Logger.getGlobal().log(Level.INFO, "Added " + output.size() + " buslines to application");
-        Logger.getGlobal().log(Level.INFO, "Added " + blconnection + " busline -> busstop connections");
+        Logger.getGlobal().log(Level.INFO, "Added {0} buslines to application", output.size());
+        Logger.getGlobal().log(Level.INFO, "Added {0} busline -> busstop connections", blconnection);
         return output;
     }
 
@@ -302,16 +262,13 @@ public class DatabaseKoppeling {
      */
     public boolean addMelding(Melding m) throws Exception {
 
-        String query = "addmelding" + (m.getSender() == "-1" ? "" : "&from=" + m.getSender()) + "&to=" + m.getReceiver() + "&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Beheerder";
+        String query = "addmelding" + ("-1".equals(m.getSender()) ? "" : "&from=" + m.getSender()) + "&to=" + m.getReceiver() + "&mtekst=" + URLEncoder.encode(m.getBeschrijving()) + "&mtype=Beheerder";
         Logger.getGlobal().log(Level.INFO, query);
         JSONObject halteData = this.getJSONfromWeb(query);
         JSONObject objects = (JSONObject) halteData;
         String status = objects.get("status").toString();
 
-        if (status == "succes") {
-            return true;
-        }
-        return false;
+        return "succes".equals(status);
     }
 
     /**
@@ -325,7 +282,7 @@ public class DatabaseKoppeling {
         String query = "meldingen";
         JSONObject meldingenData = this.getJSONfromWeb(query);
         if (!meldingenData.get("status").toString().equals("success")) {
-                return new ArrayList<Melding>();
+                return new ArrayList<>();
         }
         JSONArray meldingenArray = (JSONArray) meldingenData.get("data");
         for (Object meldingData : meldingenArray) {
@@ -347,7 +304,7 @@ public class DatabaseKoppeling {
             Melding addMelding = new Melding(meldingID, meldingTekst, meldingFrom, meldingTo, meldingTime);
             output.add(addMelding);
         }
-        Logger.getGlobal().log(Level.INFO, "Added " + output.size() + " messages to application");
+        Logger.getGlobal().log(Level.INFO, "Added {0} messages to application", output.size());
         return output;
     }
 }
