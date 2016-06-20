@@ -40,6 +40,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -104,6 +105,8 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private Label lblBusNumber;
     @FXML
     private Label lblBusId;
+    @FXML
+    private Label lblInfo;
 
     @FXML
     private TextField tfSearch;
@@ -135,6 +138,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
 
     private Polyline poly;
     private Halte selectedHalte;
+    private List<Lijn> selectedHalteLijnen = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -592,9 +596,13 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             double cordsY = a.getCoordinaten()[1];
             if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                 stopLocated = true;
-                lblBusId.setText("-");
-                lblBusNumber.setText("-");
-                items.add(a.getNaam());
+                lblInfo.setText("Geselecteerde halte:");
+                lblBusId.setText("");
+                lblBusNumber.setText(a.getNaam());
+                for(Lijn l : admin.getLijnenAtHalte(a)){
+                    if(!items.contains(Integer.toString(l.getNummer())))
+                    items.add(Integer.toString(l.getNummer()));
+                }
                 lvStops.setItems(items);
                 selectedHalte = a;
                 if (a.active) {
@@ -607,6 +615,19 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         return stopLocated;
     }
 
+    @FXML
+    public void listItemChanged(){
+        if (lvStops.getSelectionModel().getSelectedIndex() > -1) {
+            String lijnString = cbSelectBus.getSelectionModel().getSelectedItem().toString();
+            for(Lijn l : selectedHalteLijnen){
+                if(l.getNummer() == Integer.valueOf(lijnString)){
+                    drawRoute(l);
+                    break;
+                }
+            }
+        }
+    }
+    
     public boolean clickedBus(LatLong pos) throws InterruptedException {
         boolean busLocated = false;
         NumberFormat formatter = new DecimalFormat("#0.00000");
@@ -619,9 +640,10 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                     if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                         busLocated = true;
                         //drawRouteFromBus(b);
-                        cbStops.setSelected(false);
+                        lblInfo.setText("Geselecteerde bus:");
                         drawRoute(b.getHuidigeRit().getLijn());
                         lblBusId.setText("" + b.getNummer());
+                        System.out.println("" + b.getNummer());
                         lblBusNumber.setText("" + b.getHuidigeRit().getLijn().getNummer());
                         cbSelectBus.getSelectionModel().select(r.getRitID() + " - " + b.getNummer());
                         searchBusses(b.getHuidigeRit().getLijn().getNummer() + "");
