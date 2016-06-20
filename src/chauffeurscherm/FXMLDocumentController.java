@@ -144,8 +144,6 @@ public class FXMLDocumentController implements Initializable, Observer {
         } catch (IOException ex) {
             Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        FXMLDocumentController controller = loader.<FXMLDocumentController>getController();
         
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2); 
