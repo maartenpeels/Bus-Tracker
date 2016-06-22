@@ -33,7 +33,7 @@
         <Button id="verstuurButton" fx:id="btnReset" layoutX="5.0" layoutY="97.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
         <ListView id="meldingList" fx:id="lvStops" layoutX="5.0" layoutY="302.0" prefHeight="170.0" prefWidth="170.0" onMouseClicked="#listItemChanged" />
         <Button id="verstuurButton" fx:id="btnRedirect" layoutX="5.0" layoutY="510.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
-        <Label layoutX="5.0" layoutY="280.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
+        <Label fx:id="lblList" layoutX="5.0" layoutY="280.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
         <Label fx:id="lblInfo" layoutX="5.0" layoutY="238.0" text="Geselecteerde bus:" />
         <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="255.0" text="-" />
         <Label fx:id="lblBusId" layoutX="78.0" layoutY="255.0" text="-" />

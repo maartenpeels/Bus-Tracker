@@ -109,6 +109,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private Label lblInfo;
 
     @FXML
+    private Label lblList;
+
+    @FXML
     private TextField tfSearch;
 
     @FXML
@@ -609,6 +612,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                 stopLocated = true;
                 lblInfo.setText("Geselecteerde halte:");
+                lblList.setText("Lijnen:");
                 lblBusId.setText("");
                 lblBusNumber.setText(a.getNaam());
                 selectedHalteLijnen = admin.getLijnenAtHalte(a);
@@ -657,6 +661,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                         busLocated = true;
                         //drawRouteFromBus(b);
                         lblInfo.setText("Geselecteerde bus:");
+                        lblList.setText("Haltes:");
                         drawRoute(b.getHuidigeRit().getLijn());
                         lblBusId.setText("" + b.getNummer());
                         clickedBus = true;
