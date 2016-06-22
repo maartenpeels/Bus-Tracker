@@ -114,6 +114,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     private Label lblHaltesLijnen;
     
     @FXML
+    private Label lblList;
+
+    @FXML
     private TextField tfSearch;
 
     @FXML
