@@ -34,6 +34,7 @@ import com.lynden.gmapsfx.service.directions.DirectionsWaypoint;
 import com.lynden.gmapsfx.service.directions.TravelModes;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
+import java.awt.Dialog;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.text.DecimalFormat;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -108,6 +110,9 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     @FXML
     private Label lblInfo;
 
+    @FXML
+    private Label lblHaltesLijnen;
+    
     @FXML
     private TextField tfSearch;
 
@@ -360,8 +365,18 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     }
 
     public void exitButtonClick() throws InterruptedException {
-        Platform.exit();
-        System.exit(0);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Applicatie afsluiten");
+        alert.setHeaderText("Applicatie afsluiten");
+        alert.setContentText("Weet u zeker dat u de applicatie wilt afsluiten");
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        
+        
+        if(result.get() == ButtonType.OK) {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     public void resetMap() {
@@ -609,6 +624,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             if (formatter.format(pos.getLongitude()).equals(formatter.format(cordsY)) && formatter.format(pos.getLatitude()).equals(formatter.format(cordsX))) {
                 stopLocated = true;
                 lblInfo.setText("Geselecteerde halte:");
+                lblHaltesLijnen.setText("Lijnen:");
                 lblBusId.setText("");
                 lblBusNumber.setText(a.getNaam());
                 selectedHalteLijnen = admin.getLijnenAtHalte(a);
@@ -657,6 +673,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
                         busLocated = true;
                         //drawRouteFromBus(b);
                         lblInfo.setText("Geselecteerde bus:");
+                        lblHaltesLijnen.setText("Haltes:");
                         drawRoute(b.getHuidigeRit().getLijn());
                         lblBusId.setText("" + b.getNummer());
                         clickedBus = true;

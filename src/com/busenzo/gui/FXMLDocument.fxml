@@ -19,53 +19,48 @@
 <?import com.lynden.gmapsfx.GoogleMapView?>
 <?scenebuilder-classpath-element ../../../../GMapsFX-2.0.5-SNAPSHOT.jar?>
 
-<AnchorPane id="AnchorPane" prefHeight="559.0" prefWidth="1076.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="596.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busenzo.gui.FXMLDocumentController">
   <children>
-    <AnchorPane id="Map" disable="false" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="656.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="208.5" AnchorPane.rightAnchor="211.5" AnchorPane.topAnchor="0.0">
+    <AnchorPane id="Map" disable="false" focusTraversable="false" layoutX="286.0" layoutY="37.0" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="722.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="286.0" AnchorPane.rightAnchor="202.0" AnchorPane.topAnchor="37.0">
       <children>
         <GoogleMapView fx:id="mapView" maxHeight="700.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="78.0" prefWidth="21.0" spacing="10.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-900.0" AnchorPane.topAnchor="88.0" />
       </children>
     </AnchorPane>
-    <AnchorPane prefHeight="542.0" prefWidth="194.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+    <AnchorPane layoutX="1023.0" layoutY="43.0" prefHeight="511.0" prefWidth="181.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="43.0">
       <children>
-        <Label layoutX="5.0" layoutY="1.0" text="Filters:" />
-        <Button id="verstuurButton" fx:id="btnReset" layoutX="5.0" layoutY="97.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
-        <ListView id="meldingList" fx:id="lvStops" layoutX="5.0" layoutY="302.0" prefHeight="170.0" prefWidth="170.0" onMouseClicked="#listItemChanged" />
-        <Button id="verstuurButton" fx:id="btnRedirect" layoutX="5.0" layoutY="510.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
-        <Label layoutX="5.0" layoutY="280.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
-        <Label fx:id="lblInfo" layoutX="5.0" layoutY="238.0" text="Geselecteerde bus:" />
-        <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="255.0" text="-" />
-        <Label fx:id="lblBusId" layoutX="78.0" layoutY="255.0" text="-" />
+        <Button id="verstuurButton" fx:id="btnReset" layoutY="62.0" mnemonicParsing="false" onAction="#resetMap" prefHeight="25.0" prefWidth="170.0" text="Reset map" />
+        <ListView id="meldingList" fx:id="lvStops" layoutY="267.0" onMouseClicked="#listItemChanged" prefHeight="170.0" prefWidth="170.0" />
+        <Button id="verstuurButton" fx:id="btnRedirect" layoutY="475.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Omleiding geven" />
+        <Label fx:id="lblHaltesLijnen" layoutX="5.0" layoutY="245.0" prefHeight="16.0" prefWidth="54.0" text="Haltes:" />
+        <Label fx:id="lblInfo" layoutX="5.0" layoutY="203.0" text="Geselecteerde bus:" />
+        <Label fx:id="lblBusNumber" layoutX="5.0" layoutY="220.0" maxWidth="170.0" text="-" />
+        <Label fx:id="lblBusId" layoutX="80.0" layoutY="220.0" text="-" />
         <!--        <TextField fx:id="tfSearch" layoutX="5.0" layoutY="99.0" prefWidth="170.0" />
                 <Button id="verstuurButton" fx:id="btnSearch" layoutX="5.0" layoutY="134.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />-->
-        <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="31.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
-        <CheckBox fx:id="cbStops" layoutX="7.0" layoutY="56.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
-        <ImageView fx:id="busEnzoLogo" fitHeight="34.0" fitWidth="40.0" layoutX="148.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
-        <CheckBox fx:id="cbHalteOff" layoutX="7.0" layoutY="480.0" mnemonicParsing="false" onAction="#changeHalteSetting" prefHeight="17.0" prefWidth="186.0" text="halte uitschakelen" />
+        <CheckBox fx:id="cbBusses" layoutX="5.0" layoutY="3.0" mnemonicParsing="false" onAction="#showBusses" text="Bussen weergeven" />
+        <CheckBox fx:id="cbStops" layoutX="5.0" layoutY="28.0" mnemonicParsing="false" onAction="#showStops" text="Haltes weergeven" />
+        <CheckBox fx:id="cbHalteOff" layoutX="5.0" layoutY="445.0" mnemonicParsing="false" onAction="#changeHalteSetting" prefHeight="18.0" prefWidth="140.0" text="Halte uitschakelen" />
+        <Button id="verstuurButton" fx:id="btnSearch" layoutY="163.0" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
+        <TextField fx:id="tfSearch" layoutY="128.0" prefWidth="170.0" />
+        <Label layoutX="5.0" layoutY="103.0" text="Zoeken halte of lijnnummer:" />
         <!--        <Label fx:id="lblSelectedStop" layoutX="5.0" layoutY="210.0" prefHeight="16.0" prefWidth="170.0" text="&lt;geselecteerde halte&gt;" />-->
       </children>
     </AnchorPane>
-    <AnchorPane prefHeight="542.0" prefWidth="186.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+    <AnchorPane layoutX="14.0" layoutY="45.0" prefHeight="542.0" prefWidth="254.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="41.0">
       <children>
-        <Label fx:id="lblNotification" layoutX="5.0" layoutY="7.0" text="Meldingen:" />
-        <ListView id="meldingList" fx:id="lbNotifications" layoutX="5.0" layoutY="62.0" prefHeight="177.0" prefWidth="170.0" />
-        <Button id="verstuurButtonn" fx:id="btnDeleteNotification" layoutX="5.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Melding verwijderen" />
+        <Label fx:id="lblNotification" layoutX="5.0" layoutY="5.0" text="Inkomende meldingen:" />
+        <ListView id="meldingList" fx:id="lbNotifications" layoutY="27.0" prefHeight="248.0" prefWidth="253.0" />
         <Label fx:id="lblSendNotification" layoutX="5.0" layoutY="294.0" text="Melding versturen naar:" />
-        <ComboBox fx:id="cbSelectBus" editable="true" layoutX="5.0" layoutY="317.0" prefHeight="26.0" prefWidth="170.0" />
-        <Separator layoutX="5.0" layoutY="284.0" prefHeight="3.0" prefWidth="170.0" />
-        <TextArea fx:id="taNotificationText" layoutX="5.0" layoutY="351.0" prefHeight="152.0" prefWidth="170.0" />
-        <Button fx:id="btnSendNotification" layoutX="5.0" layoutY="510.0" mnemonicParsing="false" onMouseClicked="#sendMessage" prefHeight="26.0" prefWidth="170.0" text="Bericht versturen" />
-        <ComboBox fx:id="cbNotificationType" layoutX="5.0" layoutY="28.0" prefHeight="26.0" prefWidth="170.0" />
+        <ComboBox fx:id="cbSelectBus" editable="true" layoutY="317.0" prefHeight="26.0" prefWidth="253.0" />
+        <Separator layoutY="284.0" prefHeight="3.0" prefWidth="253.0" />
+        <TextArea fx:id="taNotificationText" layoutY="351.0" prefHeight="152.0" prefWidth="253.0" />
+        <Button fx:id="btnSendNotification" layoutY="510.0" mnemonicParsing="false" onMouseClicked="#sendMessage" prefHeight="26.0" prefWidth="253.0" text="Bericht versturen" />
       </children>
     </AnchorPane>
-    <ToolBar layoutY="-2.0" prefWidth="1079.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="0.0">
+    <ToolBar prefHeight="38.0" prefWidth="1076.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
       <items>
-        <Label text="Zoeken halte of lijnnummer:" />
-        <TextField fx:id="tfSearch" prefWidth="170.0" />
-        <Button id="verstuurButton" fx:id="btnSearch" mnemonicParsing="false" onAction="#searchBusOrStop" prefHeight="25.0" prefWidth="170.0" text="Zoeken" />
-        <Region prefHeight="25.0" prefWidth="740.0" />
-        <Button contentDisplay="LEFT" maxWidth="-1.0" minWidth="-1.0" mnemonicParsing="false" onAction="#exitButtonClick" prefWidth="100.0" text="Exit" />
+        <Button contentDisplay="LEFT" maxWidth="-1.0" minWidth="-1.0" mnemonicParsing="false" onAction="#exitButtonClick" prefHeight="26.0" prefWidth="140.0" text="Applicatie afsluiten" />
       </items>
     </ToolBar>
   </children>
