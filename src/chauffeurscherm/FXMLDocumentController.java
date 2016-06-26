@@ -78,7 +78,7 @@ public class FXMLDocumentController implements Initializable, Observer {
                             updateListBox();
                             laadMeldingen();
                         } catch (Exception ex) {
-                            //Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 });
@@ -96,7 +96,6 @@ public class FXMLDocumentController implements Initializable, Observer {
                 service.shutdown();
             }
         });
-        
 
     }
 
@@ -119,23 +118,23 @@ public class FXMLDocumentController implements Initializable, Observer {
             lvIncomingNotifications.setItems(meldingenTekstArray);
         });
     }
-    
+
     @FXML
-    public void handleClose(){
+    public void handleClose() {
         System.exit(0);
     }
-    
+
     @FXML
-    public void handleLogoff(){
+    public void handleLogoff() {
         logOff();
         showLogInScreen();
     }
-    
-    private void logOff(){
+
+    private void logOff() {
         //Clear data
     }
-    
-    private void showLogInScreen(){
+
+    private void showLogInScreen() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLLogin.fxml"));
 
         Stage stage = (Stage) this.lvIncomingNotifications.getScene().getWindow();
@@ -144,10 +143,10 @@ public class FXMLDocumentController implements Initializable, Observer {
         } catch (IOException ex) {
             Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2); 
-        stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);  
+        stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
 
         stage.show();
     }

@@ -17,9 +17,6 @@ import java.util.logging.Logger;
 
 public class BusDriverAdmin extends Observable implements ILogin, IMessageClient {
 
-    private String restServer = "http://37.97.149.53/busenzo/api/";
-    //private String restServer = "https://busenzo.stefanvlems.nl/api/";
-    private String restKey = "9709d02bfb3b1460fd0dd45f6706a81a8c33afaf";
     private Rit rit;
     private DataLink dbKoppeling;
     
@@ -48,8 +45,6 @@ public class BusDriverAdmin extends Observable implements ILogin, IMessageClient
         this.dbKoppeling = new DataLink(props[0], props[1]);
         String IP =  this.dbKoppeling.getConfig("master_ip");
         messages = new ArrayList<>();
-           
-       
         
         try {
             MessageConnector messageConnector = new MessageConnector(IP);
