@@ -255,7 +255,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
             this.showMapBusses();
         } else {
             this.clearMapBusses();
-            map.removeMapShape(poly);
+            if(poly != null)
+            {
+                map.removeMapShape(poly);
+            }
+            
             Logger.getGlobal().log(Level.INFO, "deselected markers");
         }
     }
@@ -345,6 +349,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
     int countSearchBusOrStop = 0;
 
     public void searchBusOrStop() throws InterruptedException {
+        if (tfSearch.getText().isEmpty())
+        {
+            return;
+        }
+        
         boolean stopFound = searchStops(tfSearch.getText().trim(), false);
         boolean busFound = searchBusses(tfSearch.getText().trim());
         if (busFound) {
@@ -371,7 +380,7 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Applicatie afsluiten");
         alert.setHeaderText("Applicatie afsluiten");
-        alert.setContentText("Weet u zeker dat u de applicatie wilt afsluiten");
+        alert.setContentText("Weet u zeker dat u de applicatie wilt afsluiten?");
         
         Optional<ButtonType> result = alert.showAndWait();
         
@@ -388,7 +397,11 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         map.setZoom(12);
         this.clearMapBusses();
         this.clearMapStops();
-        this.map.removeMapShape(poly);
+        
+        if(poly != null)
+        {
+            this.map.removeMapShape(poly);
+        }        
     }
 
     public void showBusDetails() {
