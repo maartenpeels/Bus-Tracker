@@ -246,7 +246,7 @@ public class Administratie extends Observable implements IMessageService {
         System.out.println("Message: " + message.getBeschrijving() + " - from " + message.getSender());
 
         meldingen.add(message);
-        
+
         try {
             dbKoppeling.addMelding(message);
         } catch (Exception ex) {
@@ -296,24 +296,24 @@ public class Administratie extends Observable implements IMessageService {
         return halteLijnen;
     }
 
-    public void notifyBusses(Halte h, boolean active) throws Exception {
+    public int notifyBusses(Halte h, boolean active) throws Exception {
         List<Lijn> halteLijnen = getLijnenAtHalte(h);
         List<Bus> busses = new ArrayList<>();
+        int chauffeurs = 0;
         String description = "Beste Chauffeur, halte: " + h.getNaam() + " is niet beschikbaar. U wordt verzocht deze halte over te slaan.";
-        
-        for(Lijn l : halteLijnen){
-            for(Rit r : l.getRitten()){
-                busses.add(r.getBus());
+
+        if (active) {
+            description = "Beste Chauffeur, halte: " + h.getNaam() + " is weer beschikbaar. U wordt verzocht om weer bij deze halte te stoppen.";
+        }
+
+        for (Lijn l : halteLijnen) {
+            for (Rit r : l.getRitten()) {
+                Melding m = new Melding(0, description, "-1", r.getRitID(), LocalDateTime.now());
+                sendMessage(m);
+                Logger.getGlobal().log(Level.INFO, "Melding verzonden van: Beheerder naar: " + m.getReceiver() + ". Met als melding: " + m.getBeschrijving());
+                chauffeurs++;
             }
         }
-        
-        if(active)
-            description = "Beste Chauffeur, halte: " + h.getNaam() + " is weer beschikbaar. U wordt verzocht om weer bij deze halte te stoppen.";
-        
-        System.out.println(halteLijnen.size() + " - " + busses.size());
-        for(Bus b : busses){
-            Melding m = new Melding(0, description, "-1", Integer.toString(b.getNummer()), LocalDateTime.now());
-            sendMessage(m);
-        }
+        return chauffeurs;
     }
 }

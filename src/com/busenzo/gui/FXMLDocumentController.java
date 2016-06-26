@@ -611,23 +611,26 @@ public class FXMLDocumentController implements Initializable, MapComponentInitia
         HalteMarker hm;
         boolean active = true;
         DatabaseKoppeling db = admin.getDatabaseKoppeling();
-
+        int chauffeurs;
+        
         if (cbHalteOff.isSelected()) {
             selectedHalte.active = false;
             active = false;
             db.changeHalteStatus(selectedHalte, 0);
-            admin.notifyBusses(selectedHalte, active);
+            chauffeurs = admin.notifyBusses(selectedHalte, active);
         } else {
             selectedHalte.active = true;
             active = true;
             db.changeHalteStatus(selectedHalte, 1);
-            admin.notifyBusses(selectedHalte, active);
+            chauffeurs = admin.notifyBusses(selectedHalte, active);
         }
         hm = new HalteMarker(new MarkerOptions(), selectedHalte, active);
         this.mapMarkers.add(hm);
         hm.setVisible(true);
         map.addMarker(hm);
         map.addUIEventHandler(hm, UIEventType.click, this);
+        JOptionPane.showMessageDialog(null, chauffeurs + " chauffeurs zijn gewaarschuwd over deze halte.");
+        
     }
 
     public boolean clickedStop(LatLong pos) {
